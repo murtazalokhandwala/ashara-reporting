@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ashara 1448H Toronto — PMO Dashboard</title>
+<meta name="theme-color" content="#0F2744">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+html{height:100%;width:100%}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F2F2F7;color:#1C1C1E;width:100%;min-height:100vh;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+.app{width:100%;max-width:480px;margin:0 auto;background:#fff;min-height:100vh;box-sizing:border-box}
+
+/* LOGIN */
+.login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:#0F2744}
+.login-box{background:#fff;border-radius:20px;padding:32px 24px;width:100%;max-width:360px;text-align:center}
+.login-icon{font-size:48px;margin-bottom:12px}
+.login-title{font-size:22px;font-weight:700;color:#0F2744;margin-bottom:6px}
+.login-sub{font-size:14px;color:#8E8E93;margin-bottom:24px;line-height:1.5}
+.login-input{width:100%;padding:14px;border-radius:12px;border:1.5px solid #E5E5EA;font-size:16px;font-family:inherit;outline:none;margin-bottom:12px;background:#F2F2F7;color:#1C1C1E}
+.login-input:focus{border-color:#1A4F96;background:#fff}
+.login-btn{width:100%;padding:16px;background:#0F2744;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+.login-btn:active{background:#1A4F96}
+.login-error{color:#C0392B;font-size:13px;margin-top:10px;display:none;font-weight:500}
+
+/* HEADER */
+.header{background:#0F2744;color:#fff;padding:16px;padding-top:max(16px,env(safe-area-inset-top))}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start}
+.brand{font-size:11px;color:#90BAD8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.header h1{font-size:22px;font-weight:700;margin-bottom:2px}
+.header p{font-size:13px;color:#90BAD8}
+.logout-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:12px;font-weight:600;padding:6px 12px;border-radius:20px;cursor:pointer;font-family:inherit;white-space:nowrap;margin-top:4px}
+.logout-btn:active{background:rgba(255,255,255,0.25)}
+
+/* TABS */
+.tabs{display:flex;background:#fff;border-bottom:1px solid #E5E5EA;position:sticky;top:0;z-index:10}
+.tab{flex:1;padding:13px 4px;font-size:13px;text-align:center;cursor:pointer;background:none;border:none;color:#8E8E93;font-family:inherit;border-bottom:2px solid transparent;font-weight:500;min-height:44px}
+.tab.active{color:#0F2744;border-bottom-color:#0F2744;font-weight:700}
+
+/* CONTENT */
+.content{padding:16px;padding-bottom:max(24px,env(safe-area-inset-bottom))}
+.section-title{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 8px}
+
+/* DAY PILLS */
+.day-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.dp{padding:10px 14px;border-radius:20px;border:1.5px solid #C0C0C0;font-size:13px;cursor:pointer;background:#fff;color:#3C3C43;font-family:inherit;font-weight:500;min-height:44px;display:flex;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.dp.active-day{background:#0F2744;border-color:#0F2744;color:#fff;font-weight:700;box-shadow:0 2px 6px rgba(15,39,68,0.35)}
+.dp.pmo-on{background:#E0EEFF;border-color:#1A4F96;color:#0A2E6E;font-weight:700}
+.divider{height:1px;background:#E5E5EA;margin:14px 0}
+
+/* DASHBOARD CARDS */
+.sum-card{background:#fff;border:1px solid #E5E5EA;border-radius:14px;padding:14px;margin-bottom:10px}
+.sum-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px}
+.sum-team{font-size:14px;font-weight:700;flex:1}
+.badge{font-size:12px;font-weight:700;padding:5px 11px;border-radius:20px;white-space:nowrap}
+.bg-green{background:#DFFAF0;color:#085041}.bg-amber{background:#FEF3E2;color:#5C2E00}
+.bg-red{background:#FCEBEB;color:#501313}.bg-info{background:#E0EEFF;color:#0A2E6E}
+.bg-none{background:#F2F2F7;color:#8E8E93}
+.sum-row{font-size:13px;color:#8E8E93;margin-top:4px;line-height:1.6}
+.sum-val{color:#1C1C1E;font-weight:600}
+.sum-issue{font-size:13px;color:#C0392B;margin-top:6px;background:#FCEBEB;padding:8px 10px;border-radius:8px;line-height:1.5}
+.sum-amber-box{font-size:13px;color:#5C2E00;margin-top:6px;background:#FEF3E2;padding:8px 10px;border-radius:8px;line-height:1.5}
+.sum-note{font-size:12px;color:#8E8E93;margin-top:4px;font-style:italic}
+.sum-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:6px}
+.sum-time{font-size:11px;color:#C7C7CC}
+.unlock-btn{font-size:13px;padding:10px 16px;border-radius:20px;border:1px solid #E5E5EA;cursor:pointer;background:#fff;color:#1A4F96;font-family:inherit;font-weight:600;min-height:44px;display:flex;align-items:center}
+.unlock-btn:active{background:#F2F2F7}
+.day-complete-banner{background:#DFFAF0;border:1px solid #1D9E75;border-radius:10px;padding:12px 14px;font-size:13px;color:#085041;font-weight:600;margin-bottom:12px;display:none;text-align:center}
+.day-complete-banner.show{display:block}
+
+/* STAT BOXES */
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.stat-box{background:#F2F2F7;border-radius:12px;padding:14px;text-align:center}
+.stat-num{font-size:26px;font-weight:700;color:#0F2744}
+.stat-lbl{font-size:11px;color:#8E8E93;margin-top:3px}
+
+/* PMO CONTROLS */
+.pmo-box{background:#F2F2F7;border-radius:14px;padding:14px;margin-bottom:12px}
+.pmo-box h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.pmo-box p{font-size:13px;color:#8E8E93;line-height:1.5;margin-bottom:10px}
+
+/* REPORTS */
+.info-box{background:#E0EEFF;border:1px solid #1A4F96;border-radius:12px;padding:14px;font-size:13px;color:#0A2E6E;margin-bottom:14px;line-height:1.6}
+.info-box strong{display:block;margin-bottom:6px;font-weight:700}
+.report-box{background:#F2F2F7;border-radius:14px;padding:14px;margin-bottom:12px}
+.report-box pre{font-size:12px;line-height:1.7;white-space:pre-wrap;font-family:monospace;color:#1C1C1E}
+.copy-btn{width:100%;padding:16px;background:#1A4F96;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;color:#fff;font-family:inherit;margin-top:10px}
+.copy-btn:active{background:#0F2744}
+
+/* REFRESH */
+.refresh-btn{font-size:12px;padding:6px 12px;border-radius:20px;border:1px solid #E5E5EA;cursor:pointer;background:#fff;color:#8E8E93;font-family:inherit;min-height:36px}
+
+/* STATES */
+.empty{text-align:center;padding:40px 20px;color:#8E8E93;font-size:14px}
+.loading{text-align:center;padding:32px;color:#8E8E93;font-size:14px}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(0,0,0,0.12);border-top-color:#8E8E93;border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:8px}
+.spinner-w{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:24px;padding-bottom:max(24px,env(safe-area-inset-bottom));width:100%;max-width:480px}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.modal p{font-size:15px;color:#3C3C43;margin-bottom:20px;line-height:1.5}
+.modal-btns{display:flex;gap:10px}
+.modal-cancel{flex:1;padding:14px;background:#F2F2F7;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;color:#1C1C1E;font-family:inherit}
+.modal-confirm{flex:1;padding:14px;background:#C0392B;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;color:#fff;font-family:inherit}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="login-screen">
+  <div class="login-box">
+    <div class="login-icon">🔒</div>
+    <div class="login-title">PMO Dashboard</div>
+    <div class="login-sub">Ashara 1448H Toronto<br>PMO access only</div>
+    <input type="password" id="pwd-input" class="login-input" placeholder="Enter PMO password"
+           onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Login</button>
+    <div class="login-error" id="login-error">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="modal-title"></h3>
+    <p id="modal-body"></p>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-confirm" id="modal-confirm-btn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" class="app" style="display:none">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="brand">Ashara 1448H Toronto · PMO</div>
+        <h1>PMO Dashboard</h1>
+        <p id="header-sub">Loading...</p>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('dashboard',this)">Dashboard</button>
+    <button class="tab" onclick="switchTab('controls',this)">Day Controls</button>
+    <button class="tab" onclick="switchTab('reports',this)">Reports</button>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD TAB -->
+    <div id="tab-dashboard">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0">
+        <div class="section-title" style="margin-top:0">View day</div>
+        <button class="refresh-btn" onclick="refreshDash()">↻ Refresh</button>
+      </div>
+      <div class="day-row" id="day-row-dash"></div>
+      <div class="divider"></div>
+      <div class="day-complete-banner" id="day-complete-banner">✅ All teams have reported for this day</div>
+      <div id="dash-content"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+    </div>
+
+    <!-- CONTROLS TAB -->
+    <div id="tab-controls" style="display:none">
+      <div class="pmo-box">
+        <h3>Day activation</h3>
+        <p>Tap any day to activate or deactivate. Only activated days appear for team reporting. Activate the next day each evening before 9 PM.</p>
+        <div class="day-row" id="day-row-pmo"></div>
+      </div>
+      <div class="pmo-box">
+        <h3>Unlock a submission</h3>
+        <p>Go to the Dashboard tab, find the team card and tap <strong>Unlock</strong>. The team can then resubmit. All versions are kept in the Google Sheet for audit.</p>
+      </div>
+      <div class="pmo-box">
+        <h3>Email alerts</h3>
+        <p>Automatic alert emails are sent to all PMO leads when a team submits an Amber or Red status. A full daily summary is sent when all 8 teams have reported.</p>
+      </div>
+    </div>
+
+    <!-- REPORTS TAB -->
+    <div id="tab-reports" style="display:none">
+      <div class="info-box">
+        <strong>📋 Reports available</strong>
+        <div style="line-height:1.8">
+          <div><strong>1. Nightly WhatsApp summary</strong> — Tap a day to generate a ready-to-copy message covering all teams. Share directly to the leads group.</div>
+          <div style="margin-top:4px"><strong>2. Issues-only view</strong> — Only Amber/Red teams highlighted so PMO can act quickly.</div>
+          <div style="margin-top:4px"><strong>3. Submission log</strong> — Shows who submitted and at what time per team.</div>
+        </div>
+      </div>
+      <div class="section-title">Generate report for day</div>
+      <p style="font-size:13px;color:#8E8E93;margin-bottom:10px">Tap a day below to generate the WhatsApp summary report.</p>
+      <div class="day-row" id="day-row-report"></div>
+      <div class="divider"></div>
+      <div id="report-content"><div class="empty">👆 Tap a day above to generate the report</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoVG7VrfIz5tU3Pqdj7mGPKILnt3aJKJgFopXgrfo8AVHmZnCsMOfZd8YxNpZoSAVa/exec';
+const STORAGE_KEY = 'ashara_pmo_pwd';
+const DAYS=[
+  {l:'Moharram 2',d:'Jun 16'},{l:'Moharram 3',d:'Jun 17'},{l:'Moharram 4',d:'Jun 18'},
+  {l:'Moharram 5',d:'Jun 19'},{l:'Moharram 6',d:'Jun 20'},{l:'Moharram 7',d:'Jun 21'},
+  {l:'Moharram 8',d:'Jun 22'},{l:'Moharram 9',d:'Jun 23'},{l:'Ashura · Moharram 10',d:'Jun 24'},
+];
+const TEAMS=['its','niyaz','avit','hr','finance','nazafat','pr','parking'];
+const TEAM_NAMES={its:'ITS / Scanning',niyaz:'Niyaz + Mawaid',avit:'A/V + IT + Relay',
+  hr:'HR',finance:'Finance',nazafat:'Nazafat',pr:'PR',parking:'Parking + Flow (BGI)'};
+const TEAM_EMOJI={its:'👁️',niyaz:'🍽️',avit:'📡',hr:'👥',finance:'💰',nazafat:'✨',pr:'📣',parking:'🅿️'};
+
+let activeDays=[],selDash=0,selReport=-1,curTab='dashboard',PMO_PWD='';
+
+// ── API ────────────────────────────────────────────────────────
+async function api(payload){
+  payload.pwd = PMO_PWD;
+  const r = await fetch(SCRIPT_URL,{
+    method:'POST',
+    body:JSON.stringify(payload),
+    headers:{'Content-Type':'text/plain'},
+    mode:'cors'
+  });
+  return r.json();
+}
+
+// ── TIME FORMATTING ───────────────────────────────────────────
+function formatTime(val){
+  if(!val||val===''||val===null) return '—';
+  let t=String(val).trim();
+  if(t.startsWith("'")) t=t.substring(1);
+  if(/^\d{1,2}:\d{2}$/.test(t)){
+    const p=t.split(':');let h=parseInt(p[0]);
+    const m=p[1].padStart(2,'0');const ap=h>=12?'PM':'AM';
+    h=h%12||12;return h+':'+m+' '+ap;
+  }
+  if(t.includes('T')) t=t.split('T')[1];
+  const sp=t.split(' ');if(sp.length>1&&sp[0].includes('-')) t=sp[1];
+  t=t.substring(0,5);
+  const p=t.split(':');
+  if(p.length<2||isNaN(parseInt(p[0]))) return String(val);
+  let h=parseInt(p[0]);const m=p[1].substring(0,2).padStart(2,'0');
+  const ap=h>=12?'PM':'AM';h=h%12||12;
+  return h+':'+m+' '+ap;
+}
+
+function formatDateTime(val){
+  if(!val||val==='') return '—';
+  try {
+    const d=new Date(val);
+    if(!isNaN(d.getTime())){
+      const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      let h=d.getHours();const m=String(d.getMinutes()).padStart(2,'0');
+      const ap=h>=12?'PM':'AM';h=h%12||12;
+      return months[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear()+' '+h+':'+m+' '+ap;
+    }
+  } catch(e){}
+  return String(val).replace(/^'/,'');
+}
+
+// ── MODAL ──────────────────────────────────────────────────────
+function showModal(title,body,confirmLabel,action){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-body').textContent=body;
+  document.getElementById('modal-confirm-btn').textContent=confirmLabel;
+  document.getElementById('modal-confirm-btn').onclick=()=>{closeModal();action();};
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show');}
+
+// ── LOGIN ──────────────────────────────────────────────────────
+async function doLogin(){
+  const pwd=document.getElementById('pwd-input').value.trim();
+  if(!pwd) return;
+  const btn=document.getElementById('login-btn');
+  btn.innerHTML='<span class="spinner-w"></span>Verifying...';
+  btn.disabled=true;
+  document.getElementById('login-error').style.display='none';
+  try {
+    // Verify password server-side — password never stored in source code
+    const res=await fetch(SCRIPT_URL,{
+      method:'POST',
+      body:JSON.stringify({action:'verifyPmo',pwd}),
+      headers:{'Content-Type':'text/plain'},
+      mode:'cors'
+    });
+    const data=await res.json();
+    if(data.ok){
+      PMO_PWD=pwd;
+      localStorage.setItem(STORAGE_KEY, pwd);
+      showApp();
+    } else {
+      btn.innerHTML='Login';btn.disabled=false;
+      document.getElementById('login-error').style.display='block';
+      document.getElementById('pwd-input').value='';
+    }
+  } catch(e){
+    btn.innerHTML='Login';btn.disabled=false;
+    document.getElementById('login-error').textContent='Connection error. Please check your internet.';
+    document.getElementById('login-error').style.display='block';
+  }
+}
+
+function doLogout(){
+  showModal('Logout','Are you sure you want to logout from the PMO dashboard?','Yes, logout',()=>{
+    localStorage.removeItem(STORAGE_KEY);
+    PMO_PWD='';
+    document.getElementById('main-app').style.display='none';
+    document.getElementById('login-screen').style.display='flex';
+    document.getElementById('pwd-input').value='';
+    document.getElementById('login-btn').innerHTML='Login';
+    document.getElementById('login-btn').disabled=false;
+  });
+}
+
+function showApp(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  init();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+async function init(){
+  try {
+    const res=await api({action:'getActiveDays'});
+    activeDays=res.days||[];
+    if(activeDays.length) selDash=activeDays[activeDays.length-1];
+    document.getElementById('header-sub').textContent='PMO · '+activeDays.length+' days active';
+    renderDashDays();renderReportDays();renderPmo();
+    await renderDash();
+  } catch(e){
+    document.getElementById('header-sub').textContent='Connection error';
+  }
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function switchTab(t,btn){
+  curTab=t;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['dashboard','controls','reports'].forEach(id=>{
+    document.getElementById('tab-'+id).style.display=t===id?'block':'none';
+  });
+  if(t==='dashboard'){renderDashDays();renderDash();}
+  if(t==='controls') renderPmo();
+  if(t==='reports'){renderReportDays();renderReport();}
+}
+
+// ── DAY ROWS ───────────────────────────────────────────────────
+function renderDashDays(){
+  const el=document.getElementById('day-row-dash');el.innerHTML='';
+  if(!activeDays.length){el.innerHTML='<span style="font-size:13px;color:#8E8E93">No days activated yet</span>';return;}
+  activeDays.forEach(i=>{
+    const b=document.createElement('button');
+    b.className='dp'+(i===selDash?' active-day':'');
+    b.innerHTML='<strong>'+DAYS[i].l+'</strong>&nbsp;·&nbsp;'+DAYS[i].d;
+    b.onclick=async()=>{selDash=i;renderDashDays();await renderDash();};
+    el.appendChild(b);
+  });
+}
+
+function renderReportDays(){
+  const el=document.getElementById('day-row-report');el.innerHTML='';
+  if(!activeDays.length){el.innerHTML='<span style="font-size:13px;color:#8E8E93">No days activated yet</span>';return;}
+  activeDays.forEach(i=>{
+    const b=document.createElement('button');
+    b.className='dp'+(i===selReport?' active-day':'');
+    b.innerHTML='<strong>'+DAYS[i].l+'</strong>&nbsp;·&nbsp;'+DAYS[i].d;
+    b.onclick=async()=>{selReport=i;renderReportDays();await renderReport();};
+    el.appendChild(b);
+  });
+}
+
+function renderPmo(){
+  const el=document.getElementById('day-row-pmo');el.innerHTML='';
+  DAYS.forEach((d,i)=>{
+    const on=activeDays.includes(i);
+    const b=document.createElement('button');
+    b.className='dp'+(on?' pmo-on':'');
+    b.innerHTML=(on?'✓ ':'')+d.l+'&nbsp;·&nbsp;'+d.d;
+    b.onclick=async()=>{
+      const res=await api({action:on?'deactivateDay':'activateDay',day:i});
+      activeDays=res.days||activeDays;
+      document.getElementById('header-sub').textContent='PMO · '+activeDays.length+' days active';
+      renderPmo();renderDashDays();renderReportDays();
+    };
+    el.appendChild(b);
+  });
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────────
+function ragBadge(v){
+  if(!v) return '<span class="badge bg-none">Pending</span>';
+  if(v==='green'||v==='yes') return '<span class="badge bg-green">'+(v==='yes'?'No issues':'Green')+'</span>';
+  if(v==='amber') return '<span class="badge bg-amber">Amber</span>';
+  return '<span class="badge bg-red">'+(v==='no'?'Issues':'Red')+'</span>';
+}
+
+async function refreshDash(){
+  document.getElementById('dash-content').innerHTML='<div class="loading"><span class="spinner"></span>Refreshing...</div>';
+  await renderDash();
+}
+
+async function renderDash(){
+  const el=document.getElementById('dash-content');
+  el.innerHTML='<div class="loading"><span class="spinner"></span>Loading...</div>';
+  try {
+    const res=await api({action:'getDayStatus',day:selDash});
+    const d=res.data||{};
+    const cnt=Object.keys(d).length;
+    document.getElementById('day-complete-banner').classList.toggle('show',cnt===TEAMS.length);
+
+    // Stats
+    const issues=TEAMS.filter(t=>d[t]&&(d[t].rag==='red'||d[t].rag==='amber'||d[t].avTx==='no')).length;
+    let h='<div class="stat-row">';
+    h+='<div class="stat-box"><div class="stat-num">'+cnt+'/'+TEAMS.length+'</div><div class="stat-lbl">Teams reported</div></div>';
+    h+='<div class="stat-box"><div class="stat-num" style="color:'+(issues>0?'#C0392B':'#1D9E75')+'">'+issues+'</div><div class="stat-lbl">Issues flagged</div></div>';
+    h+='</div>';
+
+    if(cnt===0){h+='<div class="empty">No reports yet for '+DAYS[selDash].l+'</div>';el.innerHTML=h;return;}
+
+    TEAMS.forEach(t=>{
+      const s=d[t];
+      h+='<div class="sum-card"><div class="sum-hdr"><span class="sum-team">'+TEAM_EMOJI[t]+' '+TEAM_NAMES[t]+'</span>';
+      if(!s){h+='<span class="badge bg-none">Not submitted</span></div></div>';return;}
+
+      if(t==='its'){
+        h+='<span class="badge bg-info">'+s.itsAtt+' attended</span></div>';
+        h+='<div class="sum-row">Registered: <span class="sum-val">'+s.itsReg+'</span> &nbsp;·&nbsp; Late: <span class="sum-val">'+s.itsLate+'</span> &nbsp;·&nbsp; Not attended: <span class="sum-val">'+s.itsNa+'</span></div>';
+        h+='<div class="sum-row" style="font-style:italic;margin-top:4px">📎 Full ITS report via WhatsApp</div>';
+        if(s.itsNotes) h+='<div class="sum-row" style="margin-top:4px">'+s.itsNotes+'</div>';
+      } else if(t==='niyaz'){
+        h+='<span class="badge bg-info">Submitted</span></div>';
+        h+='<div class="sum-row">Aft thaals: <span class="sum-val">'+s.nAt+'</span> &nbsp;·&nbsp; Rahat: <span class="sum-val">'+s.nAr+'</span></div>';
+        h+='<div class="sum-row">Raat thaals: <span class="sum-val">'+s.nRt+'</span> &nbsp;·&nbsp; Rahat: <span class="sum-val">'+s.nRr+'</span></div>';
+        if(s.niyazNotes) h+='<div class="sum-row" style="margin-top:4px">'+s.niyazNotes+'</div>';
+      } else if(t==='avit'){
+        h+=ragBadge(s.avTx)+'</div>';
+        h+='<div class="sum-row">Start: <span class="sum-val">'+formatTime(s.avS)+'</span> &nbsp;·&nbsp; End: <span class="sum-val">'+formatTime(s.avE)+'</span></div>';
+        if(s.avTx==='no'&&s.avIssues) h+='<div class="sum-issue">'+s.avIssues+'</div>';
+        if(s.avNotes) h+='<div class="sum-row" style="margin-top:4px">'+s.avNotes+'</div>';
+      } else if(t==='finance'){
+        h+=ragBadge(s.rag)+'</div>';
+        if(s.rag==='red'&&s.ragDetails) h+='<div class="sum-issue">'+s.ragDetails+'</div>';
+        else if(s.rag==='amber'&&s.ragDetails) h+='<div class="sum-amber-box">'+s.ragDetails+'</div>';
+        if(s.ragNotes) h+='<div class="sum-row" style="margin-top:4px">'+s.ragNotes+'</div>';
+      } else {
+        h+=ragBadge(s.rag)+'</div>';
+        if(s.rag==='red'&&s.ragDetails) h+='<div class="sum-issue">'+s.ragDetails+'</div>';
+        else if(s.rag==='amber'&&s.ragDetails) h+='<div class="sum-amber-box">'+s.ragDetails+'</div>';
+        if(s.ragNotes) h+='<div class="sum-row" style="margin-top:4px">'+s.ragNotes+'</div>';
+      }
+
+      // Footer — time, version badge, unlock button
+      h+='<div class="sum-footer">';
+      h+='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
+      h+='<span class="sum-time">'+(s.reporter?s.reporter+' · ':'')+formatDateTime(s.timestamp||s.time)+'</span>';
+      const vNum=parseInt((s.version||'v1').replace('v',''));
+      if(vNum>1) h+='<span style="font-size:11px;font-weight:700;background:#FEF3E2;color:#5C2E00;padding:2px 8px;border-radius:20px">'+s.version+' · resubmission</span>';
+      h+='</div>';
+      h+='<button class="unlock-btn" onclick="unlockTeam('+selDash+',\''+t+'\')">Unlock</button>';
+      h+='</div></div>';
+    });
+
+    el.innerHTML=h;
+  } catch(e){
+    el.innerHTML='<div class="empty">Error loading dashboard. Please refresh.</div>';
+  }
+}
+
+async function unlockTeam(day,teamId){
+  showModal(
+    'Unlock submission',
+    'This will allow '+TEAM_NAMES[teamId]+' to resubmit for '+DAYS[day].l+'. The current submission is kept as an audit record.',
+    'Yes, unlock',
+    async()=>{
+      await api({action:'unlockTeam',day,team:teamId,unlockedBy:'PMO'});
+      await renderDash();
+    }
+  );
+}
+
+// ── REPORTS ───────────────────────────────────────────────────
+async function renderReport(){
+  const el=document.getElementById('report-content');
+  if(selReport===-1){el.innerHTML='<div class="empty">👆 Tap a day above to generate the report</div>';return;}
+  el.innerHTML='<div class="loading"><span class="spinner"></span>Generating...</div>';
+  try {
+    const res=await api({action:'getReport',day:selReport});
+    if(!res.ok||!res.message){el.innerHTML='<div class="empty">No reports submitted yet for '+DAYS[selReport].l+'</div>';return;}
+    const submitted=res.submitted||0;
+    el.innerHTML=`
+      <div style="font-size:13px;color:#8E8E93;margin-bottom:10px">${submitted} of ${TEAMS.length} teams reported · ${DAYS[selReport].l} · ${DAYS[selReport].d}</div>
+      <div class="report-box"><pre id="report-text">${res.message.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre></div>
+      <button class="copy-btn" onclick="copyReport()">📋 Copy WhatsApp message</button>`;
+  } catch(e){
+    el.innerHTML='<div class="empty">Error generating report. Please try again.</div>';
+  }
+}
+
+function copyReport(){
+  const txt=document.getElementById('report-text')?.textContent||'';
+  const btn=document.querySelector('.copy-btn');
+  navigator.clipboard.writeText(txt).then(()=>{
+    btn.textContent='✅ Copied to clipboard!';
+    setTimeout(()=>btn.textContent='📋 Copy WhatsApp message',2500);
+  }).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=txt;
+    document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.textContent='📋 Copy WhatsApp message',2500);
+  });
+}
+
+// ── AUTO LOGIN ────────────────────────────────────────────────
+// Check if password is saved in localStorage from previous session
+const savedPwd = localStorage.getItem(STORAGE_KEY);
+if(savedPwd){
+  PMO_PWD = savedPwd;
+  // Silently verify saved password is still valid
+  fetch(SCRIPT_URL,{
+    method:'POST',
+    body:JSON.stringify({action:'verifyPmo',pwd:savedPwd}),
+    headers:{'Content-Type':'text/plain'},
+    mode:'cors'
+  }).then(r=>r.json()).then(data=>{
+    if(data.ok){
+      showApp();
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+      PMO_PWD='';
+    }
+  }).catch(()=>{
+    // On connection error, still show app with saved password
+    showApp();
+  });
+} else {
+  document.getElementById('login-screen').style.display='flex';
+}
+</script>
+</body>
+</html>
