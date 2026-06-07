@@ -2,179 +2,811 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Ashara 1448H Toronto — Daily Reporting</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F5F5;color:#141210;min-height:100vh}
-.app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;padding:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F2F2F7;color:#1C1C1E;min-height:100vh;font-size:16px}
+.app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
+.header{background:#0F2744;color:#fff;padding:16px;padding-top:20px}
+.brand{font-size:11px;color:#90BAD8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.header h1{font-size:20px;font-weight:700;margin-bottom:2px}
+.header p{font-size:13px;color:#90BAD8}
+.tabs{display:flex;background:#fff;border-bottom:1px solid #E5E5EA;position:sticky;top:0;z-index:10}
+.tab{flex:1;padding:12px 4px;font-size:12px;text-align:center;cursor:pointer;background:none;border:none;color:#8E8E93;font-family:inherit;border-bottom:2px solid transparent;font-weight:500}
+.tab.active{color:#0F2744;border-bottom-color:#0F2744;font-weight:700}
+.content{padding:16px}
+.section-title{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 8px}
+.day-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.dp{padding:7px 12px;border-radius:20px;border:1px solid #E5E5EA;font-size:13px;cursor:pointer;background:#F2F2F7;color:#3C3C43;font-family:inherit;font-weight:500}
+.dp.active-day{background:#0F2744;border-color:#0F2744;color:#fff;font-weight:700}
+.dp.pmo-on{background:#E0EEFF;border-color:#1A4F96;color:#0A2E6E;font-weight:700}
+.dp.locked{opacity:0.35;pointer-events:none}
+.divider{height:1px;background:#E5E5EA;margin:16px 0}
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.team-btn{background:#fff;border:1px solid #E5E5EA;border-radius:14px;padding:14px 12px;cursor:pointer;text-align:left;font-family:inherit;transition:border-color 0.15s}
+.team-btn:active{background:#F2F2F7}
+.team-emoji{font-size:24px;margin-bottom:6px}
+.team-name{font-size:13px;font-weight:700;color:#1C1C1E;line-height:1.3}
+.team-lead{font-size:11px;color:#8E8E93;margin-top:3px;line-height:1.4}
+.team-status{font-size:12px;margin-top:5px;font-weight:600}
+.status-ok{color:#1D9E75}
+.status-pending{color:#C7C7CC}
 .screen{display:none}.screen.active{display:block}
-.brand{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
-h1{font-size:20px;font-weight:600;margin-bottom:4px}
-.sub{font-size:13px;color:#666;margin-bottom:18px}
-.tabs{display:flex;border:1px solid #DDD;border-radius:8px;overflow:hidden;margin-bottom:18px}
-.tab{flex:1;padding:10px 4px;font-size:12px;text-align:center;cursor:pointer;background:#F5F5F5;border:none;color:#666;font-family:inherit}
-.tab.active{background:#fff;color:#0F2744;font-weight:600}
-.day-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-.dp{padding:6px 11px;border-radius:20px;border:1px solid #DDD;font-size:12px;cursor:pointer;background:#F5F5F5;color:#666;font-family:inherit}
-.dp.active-day{background:#E0EEFF;border-color:#1A4F96;color:#0A2E6E;font-weight:600}
-.dp.pmo-on{background:#E0EEFF;border-color:#1A4F96;color:#0A2E6E;font-weight:600}
-.divider{height:1px;background:#EEE;margin:14px 0}
-.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.team-btn{background:#fff;border:1px solid #E0E0E0;border-radius:12px;padding:14px 10px;cursor:pointer;text-align:left;font-family:inherit}
-.team-btn:hover{border-color:#AAA}
-.ti{font-size:22px;margin-bottom:6px}
-.tn{font-size:12px;font-weight:600;color:#141210}
-.tl{font-size:11px;color:#888;margin-top:2px;line-height:1.4}
-.ts{font-size:11px;margin-top:4px}
-.ok{color:#085041}
-.nav{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid #EEE}
-.back{background:none;border:1px solid #DDD;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;color:#666;font-family:inherit}
-.back:hover{background:#F5F5F5}
-h2{font-size:16px;font-weight:600}
-.fgrp{margin-bottom:14px}
-.lbl{font-size:13px;color:#666;display:block;margin-bottom:5px}
-input[type=number],input[type=text],textarea{width:100%;font-size:14px;border-radius:8px;padding:9px 11px;background:#fff;color:#141210;border:1px solid #CCC;font-family:inherit;outline:none}
-input:focus,textarea:focus{border-color:#1A4F96}
-textarea{resize:vertical;min-height:64px}
-.rag-row{display:flex;gap:6px}
-.rb{flex:1;padding:10px 4px;border-radius:8px;border:1px solid #DDD;font-size:12px;font-weight:600;cursor:pointer;text-align:center;background:#F5F5F5;color:#666;font-family:inherit}
+.form-header{background:#F2F2F7;padding:16px;border-bottom:1px solid #E5E5EA}
+.form-header h2{font-size:18px;font-weight:700;margin-bottom:2px}
+.form-header p{font-size:13px;color:#8E8E93}
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:#1A4F96;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;padding:0;margin-bottom:12px}
+.form-body{padding:16px}
+.fgrp{margin-bottom:18px}
+.lbl{font-size:13px;font-weight:600;color:#3C3C43;display:block;margin-bottom:6px}
+.req-star{color:#FF3B30;margin-left:2px}
+.cond-note{font-size:11px;color:#8E8E93;margin-left:4px;font-weight:400}
+input[type=number],input[type=text],input[type=time],textarea{width:100%;font-size:16px;border-radius:10px;padding:12px 14px;background:#F2F2F7;color:#1C1C1E;border:1.5px solid transparent;font-family:inherit;outline:none;-webkit-appearance:none;appearance:none}
+input:focus,textarea:focus{border-color:#1A4F96;background:#fff}
+input.error-field,textarea.error-field{border-color:#FF3B30;background:#FFF5F5}
+textarea{resize:vertical;min-height:80px}
+.rag-row{display:flex;gap:8px}
+.rb{flex:1;padding:12px 4px;border-radius:10px;border:1.5px solid #E5E5EA;font-size:13px;font-weight:700;cursor:pointer;text-align:center;background:#F2F2F7;color:#8E8E93;font-family:inherit;transition:all 0.15s}
+.rb:active{transform:scale(0.97)}
 .rb.sel-green{background:#DFFAF0;border-color:#1D9E75;color:#085041}
-.rb.sel-amber{background:#FAEEDA;border-color:#BA7517;color:#412402}
-.rb.sel-red{background:#FCEBEB;border-color:#A32D2D;color:#501313}
+.rb.sel-amber{background:#FEF3E2;border-color:#D4820A;color:#5C2E00}
+.rb.sel-red{background:#FCEBEB;border-color:#C0392B;color:#501313}
 .rb.sel-yes{background:#DFFAF0;border-color:#1D9E75;color:#085041}
-.rb.sel-no{background:#FCEBEB;border-color:#A32D2D;color:#501313}
-.sbtn{width:100%;padding:13px;background:#0F2744;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;color:#fff;font-family:inherit}
-.sbtn:hover{background:#1A4F96}
-.ok-box{background:#DFFAF0;border:1px solid #1D9E75;border-radius:12px;padding:24px;text-align:center;margin-top:12px}
-.sc-lbl{font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px;padding-bottom:6px;border-bottom:1px solid #EEE}
-.attach-note{background:#FEF9EC;border:1px solid #D4820A;border-radius:8px;padding:12px;font-size:13px;color:#633806;margin-bottom:14px;line-height:1.5}
-.sum-card{background:#fff;border:1px solid #E0E0E0;border-radius:12px;padding:12px;margin-bottom:8px}
-.sum-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.stn{font-size:13px;font-weight:600}
-.badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
-.bg-green{background:#DFFAF0;color:#085041}.bg-amber{background:#FAEEDA;color:#412402}.bg-red{background:#FCEBEB;color:#501313}
-.bg-info{background:#E0EEFF;color:#0A2E6E}.bg-none{background:#F0F0F0;color:#666}
-.sr{font-size:12px;color:#888;margin-top:3px;line-height:1.6}
-.sv{color:#141210;font-weight:600}
-.pmo-box{background:#F5F5F5;border-radius:12px;padding:14px;margin-bottom:14px}
-.pmo-note{font-size:12px;color:#888;margin-top:8px;line-height:1.5}
+.rb.sel-no{background:#FCEBEB;border-color:#C0392B;color:#501313}
+.rag-required{border:1.5px solid #FF3B30;border-radius:10px;padding:4px}
+.err-msg{font-size:12px;color:#FF3B30;margin-top:5px;font-weight:500;display:none}
+.err-msg.show{display:block}
+.warn-msg{background:#FEF3E2;border:1px solid #D4820A;border-radius:8px;padding:10px 12px;font-size:13px;color:#5C2E00;margin-top:6px;display:none}
+.warn-msg.show{display:block}
+.info-box{background:#E0EEFF;border:1px solid #1A4F96;border-radius:10px;padding:12px 14px;font-size:13px;color:#0A2E6E;margin-bottom:18px;line-height:1.5}
+.info-box strong{display:block;margin-bottom:4px;font-weight:700}
+.calc-field{background:#F2F2F7;border-radius:10px;padding:12px 14px;font-size:16px;color:#8E8E93;font-weight:600;border:1.5px solid #E5E5EA}
+.submit-btn{width:100%;padding:16px;background:#0F2744;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;color:#fff;font-family:inherit;margin-top:8px;letter-spacing:0.02em}
+.submit-btn:active{background:#1A4F96;transform:scale(0.98)}
+.submit-btn:disabled{background:#C7C7CC;cursor:not-allowed}
+.success-screen{padding:32px 20px;text-align:center}
+.success-icon{font-size:64px;margin-bottom:16px}
+.success-title{font-size:22px;font-weight:700;color:#1D9E75;margin-bottom:8px}
+.success-sub{font-size:15px;color:#8E8E93;margin-bottom:24px;line-height:1.5}
+.secondary-btn{width:100%;padding:14px;background:#F2F2F7;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;color:#0F2744;font-family:inherit}
+.sum-card{background:#fff;border:1px solid #E5E5EA;border-radius:14px;padding:14px;margin-bottom:10px;overflow:hidden}
+.sum-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px}
+.sum-team{font-size:14px;font-weight:700;flex:1}
+.badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.bg-green{background:#DFFAF0;color:#085041}
+.bg-amber{background:#FEF3E2;color:#5C2E00}
+.bg-red{background:#FCEBEB;color:#501313}
+.bg-info{background:#E0EEFF;color:#0A2E6E}
+.bg-none{background:#F2F2F7;color:#8E8E93}
+.bg-complete{background:#DFFAF0;color:#085041}
+.sum-row{font-size:13px;color:#8E8E93;margin-top:4px;line-height:1.6}
+.sum-val{color:#1C1C1E;font-weight:600}
+.sum-note{font-size:12px;color:#8E8E93;margin-top:4px;font-style:italic}
+.sum-issue{font-size:13px;color:#C0392B;margin-top:4px;background:#FCEBEB;padding:8px 10px;border-radius:8px}
+.sum-time{font-size:11px;color:#C7C7CC;margin-top:8px;text-align:right}
+.unlock-btn{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid #E5E5EA;cursor:pointer;background:#fff;color:#1A4F96;font-family:inherit;font-weight:600;margin-top:6px}
+.pmo-box{background:#F2F2F7;border-radius:14px;padding:14px;margin-bottom:14px}
+.pmo-box h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.pmo-box p{font-size:13px;color:#8E8E93;line-height:1.5}
+.day-complete-banner{background:#DFFAF0;border:1px solid #1D9E75;border-radius:10px;padding:10px 14px;font-size:13px;color:#085041;font-weight:600;margin-bottom:12px;display:none}
+.day-complete-banner.show{display:block}
+.report-box{background:#F2F2F7;border-radius:14px;padding:14px;margin-bottom:14px}
+.report-box pre{font-size:12px;line-height:1.6;white-space:pre-wrap;font-family:monospace;color:#1C1C1E}
+.copy-btn{width:100%;padding:12px;background:#1A4F96;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;color:#fff;font-family:inherit;margin-top:10px}
+.copy-btn:active{background:#0F2744}
+.empty{text-align:center;padding:40px 20px;color:#8E8E93;font-size:14px}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:480px}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.modal p{font-size:15px;color:#3C3C43;margin-bottom:20px;line-height:1.5}
+.modal-btns{display:flex;gap:10px}
+.modal-cancel{flex:1;padding:14px;background:#F2F2F7;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;color:#1C1C1E;font-family:inherit}
+.modal-confirm{flex:1;padding:14px;background:#0F2744;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;color:#fff;font-family:inherit}
+.progress-bar{height:4px;background:#E5E5EA;border-radius:2px;margin-bottom:16px}
+.progress-fill{height:4px;background:#1D9E75;border-radius:2px;transition:width 0.3s}
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="modal-title">Confirm submission</h3>
+    <p id="modal-body"></p>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">Go back</button>
+      <button class="modal-confirm" id="modal-confirm-btn">Confirm & submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOME SCREEN -->
 <div id="home" class="screen active">
-  <div style="margin-bottom:16px">
+  <div class="header">
     <div class="brand">Ashara 1448H Toronto · PMO</div>
     <h1>Daily reporting</h1>
-    <p class="sub">Submit by 9:00 PM each night</p>
+    <p>Submit by 9:00 PM each night</p>
   </div>
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('submit',this)">Submit report</button>
-    <button class="tab" onclick="switchTab('dashboard',this)">PMO dashboard</button>
-    <button class="tab" onclick="switchTab('pmo',this)">PMO controls</button>
+
+  <div class="tabs" id="main-tabs">
+    <button class="tab active" onclick="switchTab('submit',this)">Submit</button>
+    <button class="tab" onclick="switchTab('dashboard',this)">Dashboard</button>
+    <button class="tab" onclick="switchTab('pmo',this)">PMO</button>
+    <button class="tab" onclick="switchTab('reports',this)">Reports</button>
   </div>
-  <div id="tab-submit">
-    <p class="lbl" style="margin-bottom:8px">Active day</p>
-    <div class="day-row" id="day-row-submit"></div>
-    <div class="divider"></div>
-    <p class="sub" style="margin-bottom:12px">Select your team</p>
-    <div class="team-grid" id="team-grid"></div>
-  </div>
-  <div id="tab-dashboard" style="display:none">
-    <p class="lbl" style="margin-bottom:8px">View day</p>
-    <div class="day-row" id="day-row-dash"></div>
-    <div class="divider"></div>
-    <div id="dash-content"></div>
-  </div>
-  <div id="tab-pmo" style="display:none">
-    <div class="pmo-box">
-      <p style="font-size:13px;font-weight:600;margin-bottom:4px">PMO day activation</p>
-      <p class="pmo-note" style="margin-bottom:10px">Tap any day to activate or deactivate. Only active days appear for team reporting.</p>
-      <div class="day-row" id="day-row-pmo"></div>
-      <p class="pmo-note">Activate the next day each evening before 9 PM reports are due.</p>
+
+  <div class="content">
+    <!-- SUBMIT TAB -->
+    <div id="tab-submit">
+      <div class="section-title">Active day</div>
+      <div class="day-row" id="day-row-submit"></div>
+      <div class="divider"></div>
+      <div class="section-title">Select your team</div>
+      <div class="team-grid" id="team-grid"></div>
+    </div>
+
+    <!-- DASHBOARD TAB -->
+    <div id="tab-dashboard" style="display:none">
+      <div class="section-title">View day</div>
+      <div class="day-row" id="day-row-dash"></div>
+      <div class="divider"></div>
+      <div class="day-complete-banner" id="day-complete-banner">✅ All teams have reported for this day</div>
+      <div id="dash-content"></div>
+    </div>
+
+    <!-- PMO CONTROLS TAB -->
+    <div id="tab-pmo" style="display:none">
+      <div class="pmo-box">
+        <h3>Day activation</h3>
+        <p style="margin-bottom:10px">Tap any day to activate or deactivate. Only activated days are available for team reporting. Activate the next day each evening before 9 PM.</p>
+        <div class="day-row" id="day-row-pmo"></div>
+      </div>
+      <div class="pmo-box" style="margin-top:0">
+        <h3>Unlock a team submission</h3>
+        <p>To reopen a submitted entry, go to the Dashboard tab, find the team and tap Unlock.</p>
+      </div>
+    </div>
+
+    <!-- REPORTS TAB -->
+    <div id="tab-reports" style="display:none">
+      <div class="section-title">Generate report for day</div>
+      <div class="day-row" id="day-row-report"></div>
+      <div class="divider"></div>
+      <div id="report-content"></div>
     </div>
   </div>
 </div>
+
+<!-- FORM SCREEN -->
 <div id="form-screen" class="screen">
-  <div class="nav">
-    <button class="back" onclick="goHome()">&#8592; Back</button>
-    <div>
-      <h2 id="form-title"></h2>
-      <div style="font-size:12px;color:#888;margin-top:2px" id="form-sub"></div>
-    </div>
+  <div class="form-header">
+    <button class="back-btn" onclick="goHome()">&#8592; Back</button>
+    <h2 id="form-title"></h2>
+    <p id="form-sub"></p>
   </div>
-  <div id="form-body"></div>
-  <button class="sbtn" id="submit-btn" onclick="doSubmit()">&#10148; Submit report</button>
-  <div id="form-ok" style="display:none">
-    <div class="ok-box">
-      <div style="font-size:32px;color:#085041;margin-bottom:8px">&#10004;</div>
-      <div style="font-weight:600;font-size:15px;color:#085041">Report submitted</div>
-      <div style="font-size:13px;color:#666;margin-top:4px">PMO dashboard updated</div>
-    </div>
-    <button class="sbtn" style="margin-top:16px;background:#F5F5F5;color:#141210;border:1px solid #DDD" onclick="goHome()">Back to teams</button>
+  <div class="form-body">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div id="form-fields"></div>
+    <button class="submit-btn" id="submit-btn" onclick="attemptSubmit()">Submit report</button>
+  </div>
+  <div id="form-ok" style="display:none" class="success-screen">
+    <div class="success-icon">✅</div>
+    <div class="success-title">Report submitted</div>
+    <div class="success-sub">PMO dashboard updated.<br>Thank you for your khidmat.</div>
+    <button class="secondary-btn" onclick="goHome()">Back to teams</button>
   </div>
 </div>
+
 <script>
 const DAYS=[{l:'Day 1',d:'Jun 16'},{l:'Day 2',d:'Jun 17'},{l:'Day 3',d:'Jun 18'},{l:'Day 4',d:'Jun 19'},{l:'Day 5',d:'Jun 20'},{l:'Day 6',d:'Jun 21'},{l:'Day 7',d:'Jun 22'},{l:'Day 8',d:'Jun 23'},{l:'Day 9',d:'Jun 24'}];
 const TEAMS=[
-  {id:'its',n:'ITS / Scanning',l:'Abdeali bhai Mody',e:'&#128065;'},
-  {id:'niyaz',n:'Niyaz + Mawaid',l:'Shk Mustafa bhai Jamali &middot; Saleh bhai Arsiwala',e:'&#127373;'},
-  {id:'avit',n:'A/V + IT + Relay',l:'Husaini bhai Shakkarwala',e:'&#128225;'},
-  {id:'hr',n:'HR',l:'Idris bhai Bholebawa',e:'&#128101;'},
-  {id:'finance',n:'Finance',l:'Shk Murtaza bhai Nalwala &middot; M Hatim bhai Kapacee',e:'&#128176;'},
-  {id:'nazafat',n:'Nazafat',l:'Shk Aziz bhai &middot; M Aun Ali bhai Khokawala',e:'&#10024;'},
-  {id:'pr',n:'PR',l:'Nafisa ben Kapacee',e:'&#128226;'},
-  {id:'parking',n:'Parking + Flow (BGI)',l:'M Abeel Fazal bhai &middot; Munira ben Shakir',e:'&#127359;'},
+  {id:'its',n:'ITS / Scanning',l:'Abdeali bhai Mody',e:'👁️'},
+  {id:'niyaz',n:'Niyaz + Mawaid',l:'Shk Mustafa bhai Jamali · Saleh bhai Arsiwala',e:'🍽️'},
+  {id:'avit',n:'A/V + IT + Relay',l:'Husaini bhai Shakkarwala',e:'📡'},
+  {id:'hr',n:'HR',l:'Idris bhai Bholebawa',e:'👥'},
+  {id:'finance',n:'Finance',l:'Shk Murtaza bhai Nalwala · M Hatim bhai Kapacee',e:'💰'},
+  {id:'nazafat',n:'Nazafat',l:'Shk Aziz bhai · M Aun Ali bhai Khokawala',e:'✨'},
+  {id:'pr',n:'PR',l:'Nafisa ben Kapacee',e:'📣'},
+  {id:'parking',n:'Parking + Flow (BGI)',l:'M Abeel Fazal bhai · Munira ben Shakir',e:'🅿️'},
 ];
-let activeDays=[0],selSub=0,selDash=0,subs={},curTeam=null,curTab='submit';
-function switchTab(t,btn){curTab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-submit').style.display=t==='submit'?'block':'none';document.getElementById('tab-dashboard').style.display=t==='dashboard'?'block':'none';document.getElementById('tab-pmo').style.display=t==='pmo'?'block':'none';if(t==='dashboard')renderDash();if(t==='pmo')renderPmo();}
-function renderAllDays(){renderSubDays();renderDashDays();}
-function renderSubDays(){const el=document.getElementById('day-row-submit');el.innerHTML='';if(!activeDays.length){el.innerHTML='<span style="font-size:12px;color:#888">No days activated yet</span>';return;}activeDays.forEach(i=>{const b=document.createElement('button');b.className='dp'+(i===selSub?' active-day':'');b.innerHTML='<strong>'+DAYS[i].l+'</strong> &middot; '+DAYS[i].d;b.onclick=()=>{selSub=i;renderAllDays();buildGrid();};el.appendChild(b);});}
-function renderDashDays(){const el=document.getElementById('day-row-dash');el.innerHTML='';activeDays.forEach(i=>{const b=document.createElement('button');b.className='dp'+(i===selDash?' active-day':'');b.innerHTML='<strong>'+DAYS[i].l+'</strong> &middot; '+DAYS[i].d;b.onclick=()=>{selDash=i;renderDashDays();renderDash();};el.appendChild(b);});}
-function renderPmo(){const el=document.getElementById('day-row-pmo');el.innerHTML='';DAYS.forEach((d,i)=>{const on=activeDays.includes(i);const b=document.createElement('button');b.className='dp'+(on?' pmo-on':'');b.innerHTML=(on?'&#10003; ':'')+d.l+' &middot; '+d.d;b.onclick=()=>{if(on)activeDays=activeDays.filter(x=>x!==i);else{activeDays.push(i);activeDays.sort((a,c)=>a-c);}if(!activeDays.includes(selSub))selSub=activeDays[activeDays.length-1]??0;renderPmo();renderAllDays();buildGrid();};el.appendChild(b);});}
-function buildGrid(){const g=document.getElementById('team-grid');g.innerHTML='';TEAMS.forEach(t=>{const s=subs[selSub]?.[t.id];const b=document.createElement('button');b.className='team-btn';b.innerHTML='<div class="ti">'+t.e+'</div><div class="tn">'+t.n+'</div><div class="tl">'+t.l+'</div><div class="ts">'+(s?'<span class="ok">&#10003; Submitted</span>':'<span style="color:#AAA">Pending</span>')+'</div>';b.onclick=()=>openForm(t);g.appendChild(b);});}
-function openForm(t){curTeam=t;document.getElementById('home').classList.remove('active');document.getElementById('form-screen').classList.add('active');document.getElementById('form-title').textContent=t.n;document.getElementById('form-sub').textContent=t.l.replace(/&middot;/g,'·')+' · '+DAYS[selSub].l+' · '+DAYS[selSub].d;document.getElementById('form-ok').style.display='none';document.getElementById('form-body').style.display='block';document.getElementById('submit-btn').style.display='block';renderForm(t.id);}
-function goHome(){document.getElementById('form-screen').classList.remove('active');document.getElementById('home').classList.add('active');buildGrid();if(curTab==='dashboard')renderDash();}
-const nf=(id,l)=>'<div class="fgrp"><label class="lbl">'+l+'</label><input type="number" id="'+id+'" placeholder="0" min="0"></div>';
-const tf=(id,l,p)=>'<div class="fgrp"><label class="lbl">'+l+'</label><input type="text" id="'+id+'" placeholder="'+(p||'')+'"></div>';
-const ta=(id,l)=>'<div class="fgrp"><label class="lbl">'+l+'</label><textarea id="'+id+'" placeholder="Add details..."></textarea></div>';
-const rf=(id,l)=>'<div class="fgrp"><label class="lbl">'+l+'</label><div class="rag-row" data-rag="'+id+'"><button class="rb" onclick="pr(this,\'green\')">&#10003; Green</button><button class="rb" onclick="pr(this,\'amber\')">&#9651; Amber</button><button class="rb" onclick="pr(this,\'red\')">&#10007; Red</button></div></div>';
-const yf=(id,l)=>'<div class="fgrp"><label class="lbl">'+l+'</label><div class="rag-row" data-rag="'+id+'"><button class="rb" style="flex:1" onclick="pr(this,\'yes\')">&#10003; Yes &#8212; no issues</button><button class="rb" style="flex:1" onclick="pr(this,\'no\')">&#10007; No &#8212; issues</button></div></div>';
-function pr(btn,val){const row=btn.parentElement;row.querySelectorAll('.rb').forEach(b=>{b.className='rb';});btn.classList.add('sel-'+val);row.dataset.selected=val;}
-function gr(id){return document.querySelector('[data-rag="'+id+'"]')?.dataset?.selected||'';}
-function renderForm(id){const el=document.getElementById('form-body');let h=tf('reporter','Your name','Enter your name');
-if(id==='its'){h+='<div class="sc-lbl">Summary statistics</div>';h+=nf('its-reg','Total registered')+nf('its-att','Total attended')+nf('its-late','Late arrivals')+nf('its-na','Not attended');h+='<div class="sc-lbl">Detailed report</div>';h+='<div class="attach-note"><strong>&#128206; Attachment required</strong><br>Please send the full ITS daily report (ITS# &middot; Name &middot; Contact#) via WhatsApp to PMO after submitting this form.</div>';h+=ta('its-notes','Additional comments or issues');}
-else if(id==='niyaz'){h+='<div class="sc-lbl">Afternoon Niyaz &#8212; Lunch</div>';h+=nf('n-at','Total thaals served')+nf('n-ar','Rahat (elderly) thaals &#8212; separate count');h+='<div class="sc-lbl">Raat Niyaz &#8212; Dinner</div>';h+=nf('n-rt','Total thaals served')+nf('n-rr','Rahat (elderly) thaals &#8212; separate count');h+=ta('niyaz-notes','Additional comments or issues');}
-else if(id==='avit'){h+=yf('av-tx','Transmission completed start to finish with no interruptions?');h+=tf('av-s','Transmission start time','e.g. 14:30')+tf('av-e','Transmission end time','e.g. 17:15');h+=ta('av-notes','Issues, interruptions or additional comments');}
-else if(id==='hr'){h+=rf('hr-r','Overall KG availability status');h+=ta('hr-s','KG shortages or concerns (team, number, area)')+ta('hr-n','Additional comments');}
-else if(id==='finance'){h+=rf('fin-r','Overall Finance operations status');h+=ta('fin-a','Pending approvals or procurement requests')+ta('fin-n','Additional comments or concerns');}
-else if(id==='nazafat'){h+=rf('naz-r','Overall cleanliness and hygiene status');h+=ta('naz-i','Issues or concerns')+ta('naz-n','Additional comments');}
-else if(id==='pr'){h+=rf('pr-r','Overall PR status');h+=ta('pr-i','Any external incidents, media contact or enquiries?')+ta('pr-n','Additional comments');}
-else if(id==='parking'){h+=rf('pk-r','Overall parking and flow status');h+=ta('pk-i','Burhani Guards issues or concerns')+ta('pk-n','Additional comments');}
-el.innerHTML=h;}
-function doSubmit(){if(!subs[selSub])subs[selSub]={};const id=curTeam.id;const r=document.getElementById('reporter')?.value||'';const d={team:curTeam.n,reporter:r,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
-if(id==='its'){d.reg=document.getElementById('its-reg').value||'--';d.att=document.getElementById('its-att').value||'--';d.late=document.getElementById('its-late').value||'--';d.na=document.getElementById('its-na').value||'--';d.notes=document.getElementById('its-notes').value||'';}
-else if(id==='niyaz'){d.at=document.getElementById('n-at').value||'--';d.ar=document.getElementById('n-ar').value||'--';d.rt=document.getElementById('n-rt').value||'--';d.rr=document.getElementById('n-rr').value||'--';d.notes=document.getElementById('niyaz-notes').value||'';}
-else if(id==='avit'){d.tx=gr('av-tx');d.s=document.getElementById('av-s').value||'--';d.e=document.getElementById('av-e').value||'--';d.notes=document.getElementById('av-notes').value||'';}
-else if(id==='hr'){d.rag=gr('hr-r');d.s=document.getElementById('hr-s').value||'';d.n=document.getElementById('hr-n').value||'';}
-else if(id==='finance'){d.rag=gr('fin-r');d.a=document.getElementById('fin-a').value||'';d.n=document.getElementById('fin-n').value||'';}
-else if(id==='nazafat'){d.rag=gr('naz-r');d.i=document.getElementById('naz-i').value||'';d.n=document.getElementById('naz-n').value||'';}
-else if(id==='pr'){d.rag=gr('pr-r');d.i=document.getElementById('pr-i').value||'';d.n=document.getElementById('pr-n').value||'';}
-else if(id==='parking'){d.rag=gr('pk-r');d.i=document.getElementById('pk-i').value||'';d.n=document.getElementById('pk-n').value||'';}
-subs[selSub][id]=d;document.getElementById('form-body').style.display='none';document.getElementById('submit-btn').style.display='none';document.getElementById('form-ok').style.display='block';}
-function rb(v){if(!v)return '<span class="badge bg-none">Pending</span>';if(v==='green'||v==='yes')return '<span class="badge bg-green">'+(v==='yes'?'No issues':'Green')+'</span>';if(v==='amber')return '<span class="badge bg-amber">Amber</span>';return '<span class="badge bg-red">'+(v==='no'?'Issues':'Red')+'</span>';}
-function renderDash(){const day=subs[selDash];const el=document.getElementById('dash-content');const cnt=day?Object.keys(day).length:0;let h='<div style="font-size:12px;color:#888;margin-bottom:10px">'+cnt+' of '+TEAMS.length+' teams reported &middot; '+DAYS[selDash].l+' &middot; '+DAYS[selDash].d+'</div>';
-TEAMS.forEach(t=>{const d=day?.[t.id];h+='<div class="sum-card"><div class="sum-hdr"><span class="stn">'+t.e+' '+t.n+'</span>';
-if(!d){h+='<span class="badge bg-none">Not submitted</span></div><div class="sr" style="opacity:0.5">'+t.l+'</div></div>';return;}
-if(t.id==='its'){h+='<span class="badge bg-info">'+(d.att||0)+' attended</span></div>';h+='<div class="sr">Registered: <span class="sv">'+d.reg+'</span> &nbsp; Late: <span class="sv">'+d.late+'</span> &nbsp; Not attended: <span class="sv">'+d.na+'</span></div>';h+='<div class="sr" style="font-style:italic;margin-top:3px">&#128206; Full ITS report via WhatsApp</div>';if(d.notes)h+='<div class="sr" style="margin-top:3px">'+d.notes+'</div>';}
-else if(t.id==='niyaz'){h+='<span class="badge bg-info">Submitted</span></div>';h+='<div class="sr">Aft thaals: <span class="sv">'+d.at+'</span> &nbsp; Rahat: <span class="sv">'+d.ar+'</span></div>';h+='<div class="sr">Raat thaals: <span class="sv">'+d.rt+'</span> &nbsp; Rahat: <span class="sv">'+d.rr+'</span></div>';if(d.notes)h+='<div class="sr" style="margin-top:3px">'+d.notes+'</div>';}
-else if(t.id==='avit'){h+=rb(d.tx)+'</div>';h+='<div class="sr">Start: <span class="sv">'+d.s+'</span> &nbsp; End: <span class="sv">'+d.e+'</span></div>';if(d.notes)h+='<div class="sr" style="margin-top:3px;color:#A32D2D">'+d.notes+'</div>';}
-else if(t.id==='finance'){h+=rb(d.rag)+'</div>';if(d.a)h+='<div class="sr" style="margin-top:3px">Pending: '+d.a+'</div>';if(d.n)h+='<div class="sr" style="margin-top:2px">'+d.n+'</div>';}
-else{h+=rb(d.rag)+'</div>';const note=d.s||d.i||'';if(note)h+='<div class="sr" style="margin-top:3px">'+note+'</div>';if(d.n)h+='<div class="sr" style="margin-top:2px">'+d.n+'</div>';}
-h+='<div style="font-size:11px;color:#AAA;margin-top:6px;text-align:right">'+(d.reporter?d.reporter+' &middot; ':'')+d.time+'</div>';h+='</div>';});el.innerHTML=h;}
+
+let activeDays=[0],selSub=0,selDash=0,selReport=0,subs={},curTeam=null,curTab='submit';
+let pendingModalAction=null;
+
+// ── MODAL ──────────────────────────────────────────────────────────────────
+function showModal(title,body,confirmLabel,action){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-body').textContent=body;
+  document.getElementById('modal-confirm-btn').textContent=confirmLabel;
+  document.getElementById('modal-confirm-btn').onclick=()=>{closeModal();action();};
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show');}
+
+// ── TABS ──────────────────────────────────────────────────────────────────
+function switchTab(t,btn){
+  curTab=t;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['submit','dashboard','pmo','reports'].forEach(id=>{
+    document.getElementById('tab-'+id).style.display=t===id?'block':'none';
+  });
+  if(t==='dashboard'){renderDashDays();renderDash();}
+  if(t==='pmo') renderPmo();
+  if(t==='reports'){renderReportDays();renderReport();}
+}
+
+// ── DAY ROWS ──────────────────────────────────────────────────────────────
+function renderAllDays(){renderSubDays();renderDashDays();renderReportDays();}
+
+function renderSubDays(){
+  const el=document.getElementById('day-row-submit');el.innerHTML='';
+  if(!activeDays.length){el.innerHTML='<span style="font-size:13px;color:#8E8E93">No days activated yet</span>';return;}
+  activeDays.forEach(i=>{
+    const b=document.createElement('button');
+    b.className='dp'+(i===selSub?' active-day':'');
+    b.innerHTML='<strong>'+DAYS[i].l+'</strong> · '+DAYS[i].d;
+    b.onclick=()=>{selSub=i;renderAllDays();buildGrid();};
+    el.appendChild(b);
+  });
+}
+
+function renderDashDays(){
+  const el=document.getElementById('day-row-dash');el.innerHTML='';
+  activeDays.forEach(i=>{
+    const b=document.createElement('button');
+    b.className='dp'+(i===selDash?' active-day':'');
+    b.innerHTML='<strong>'+DAYS[i].l+'</strong> · '+DAYS[i].d;
+    b.onclick=()=>{selDash=i;renderDashDays();renderDash();};
+    el.appendChild(b);
+  });
+}
+
+function renderReportDays(){
+  const el=document.getElementById('day-row-report');el.innerHTML='';
+  activeDays.forEach(i=>{
+    const b=document.createElement('button');
+    b.className='dp'+(i===selReport?' active-day':'');
+    b.innerHTML='<strong>'+DAYS[i].l+'</strong> · '+DAYS[i].d;
+    b.onclick=()=>{selReport=i;renderReportDays();renderReport();};
+    el.appendChild(b);
+  });
+}
+
+function renderPmo(){
+  const el=document.getElementById('day-row-pmo');el.innerHTML='';
+  DAYS.forEach((d,i)=>{
+    const on=activeDays.includes(i);
+    const b=document.createElement('button');
+    b.className='dp'+(on?' pmo-on':'');
+    b.innerHTML=(on?'✓ ':'')+d.l+' · '+d.d;
+    b.onclick=()=>{
+      if(on) activeDays=activeDays.filter(x=>x!==i);
+      else{activeDays.push(i);activeDays.sort((a,c)=>a-c);}
+      if(!activeDays.includes(selSub)) selSub=activeDays[activeDays.length-1]??0;
+      renderPmo();renderAllDays();buildGrid();
+    };
+    el.appendChild(b);
+  });
+}
+
+// ── TEAM GRID ──────────────────────────────────────────────────────────────
+function buildGrid(){
+  const g=document.getElementById('team-grid');g.innerHTML='';
+  const dayDone=isDayComplete(selSub);
+  TEAMS.forEach(t=>{
+    const s=subs[selSub]?.[t.id];
+    const btn=document.createElement('button');
+    btn.className='team-btn';
+    btn.innerHTML=`<div class="team-emoji">${t.e}</div><div class="team-name">${t.n}</div><div class="team-lead">${t.l}</div><div class="team-status">${s?'<span class="status-ok">✓ Submitted</span>':'<span class="status-pending">Pending</span>'}</div>`;
+    btn.onclick=()=>openForm(t);
+    g.appendChild(btn);
+  });
+  // progress
+  const done=subs[selSub]?Object.keys(subs[selSub]).length:0;
+  if(!document.getElementById('grid-progress')) {
+    const pb=document.createElement('div');pb.id='grid-progress';pb.style.cssText='margin-top:14px;font-size:12px;color:#8E8E93;text-align:center';
+    document.getElementById('team-grid').after(pb);
+  }
+  document.getElementById('grid-progress').textContent=done+' of '+TEAMS.length+' teams submitted';
+}
+
+function isDayComplete(day){return subs[day]&&Object.keys(subs[day]).length===TEAMS.length;}
+
+// ── OPEN FORM ──────────────────────────────────────────────────────────────
+function openForm(t){
+  curTeam=t;
+  document.getElementById('home').classList.remove('active');
+  document.getElementById('form-screen').classList.add('active');
+  document.getElementById('form-title').textContent=t.n;
+  document.getElementById('form-sub').textContent=t.l+' · '+DAYS[selSub].l+' · '+DAYS[selSub].d;
+  document.getElementById('form-ok').style.display='none';
+  document.getElementById('form-fields').style.display='block';
+  document.getElementById('submit-btn').style.display='block';
+  document.getElementById('progress-fill').style.width='0%';
+  renderForm(t.id);
+}
+
+function goHome(){
+  document.getElementById('form-screen').classList.remove('active');
+  document.getElementById('home').classList.add('active');
+  buildGrid();
+  if(curTab==='dashboard') renderDash();
+  if(curTab==='reports') renderReport();
+}
+
+// ── FORM HELPERS ──────────────────────────────────────────────────────────
+function nf(id,lbl,req,hint){
+  return`<div class="fgrp">
+    <label class="lbl">${lbl}${req?'<span class="req-star">*</span>':''}${hint?'<span class="cond-note">'+hint+'</span>':''}</label>
+    <input type="number" id="${id}" min="0" max="9999" placeholder="0" oninput="clearErr('${id}');updateProgress()">
+    <div class="err-msg" id="err-${id}"></div>
+  </div>`;}
+
+function tf(id,lbl,req,ph){
+  return`<div class="fgrp">
+    <label class="lbl">${lbl}${req?'<span class="req-star">*</span>':''}</label>
+    <input type="text" id="${id}" placeholder="${ph||''}" oninput="clearErr('${id}');updateProgress()">
+    <div class="err-msg" id="err-${id}"></div>
+  </div>`;}
+
+function timef(id,lbl,req){
+  return`<div class="fgrp">
+    <label class="lbl">${lbl}${req?'<span class="req-star">*</span>':''}</label>
+    <input type="time" id="${id}" oninput="clearErr('${id}');updateProgress()">
+    <div class="err-msg" id="err-${id}"></div>
+  </div>`;}
+
+function taf(id,lbl,req,hint){
+  return`<div class="fgrp">
+    <label class="lbl">${lbl}${req?'<span class="req-star">*</span>':''}${hint?'<span class="cond-note">'+hint+'</span>':''}</label>
+    <textarea id="${id}" placeholder="Add details..." oninput="clearErr('${id}');updateProgress()"></textarea>
+    <div class="err-msg" id="err-${id}"></div>
+  </div>`;}
+
+function rf(id,lbl,req){
+  return`<div class="fgrp">
+    <label class="lbl">${lbl}${req?'<span class="req-star">*</span>':''}</label>
+    <div class="rag-row" data-rag="${id}" id="rag-wrap-${id}">
+      <button class="rb" onclick="pickRag(this,'green')">✓ Green</button>
+      <button class="rb" onclick="pickRag(this,'amber')">▲ Amber</button>
+      <button class="rb" onclick="pickRag(this,'red')">✕ Red</button>
+    </div>
+    <div class="err-msg" id="err-${id}"></div>
+  </div>`;}
+
+function ynf(id,lbl,req){
+  return`<div class="fgrp">
+    <label class="lbl">${lbl}${req?'<span class="req-star">*</span>':''}</label>
+    <div class="rag-row" data-rag="${id}" id="rag-wrap-${id}">
+      <button class="rb" style="flex:1" onclick="pickRag(this,'yes')">✓ Yes — no issues</button>
+      <button class="rb" style="flex:1" onclick="pickRag(this,'no')">✕ No — issues</button>
+    </div>
+    <div class="err-msg" id="err-${id}"></div>
+  </div>`;}
+
+function pickRag(btn,val){
+  const row=btn.parentElement;
+  row.querySelectorAll('.rb').forEach(b=>b.className='rb');
+  btn.classList.add('sel-'+val);
+  row.dataset.selected=val;
+  clearErr(row.dataset.rag);
+  // show/hide conditional fields
+  const id=row.dataset.rag;
+  if(id==='av-tx'){
+    const issues=document.getElementById('av-issues-wrap');
+    if(issues) issues.style.display=val==='no'?'block':'none';
+  }
+  if(['hr-r','fin-r','naz-r','pr-r','pk-r'].includes(id)){
+    const condId=id.replace('-r','-cond');
+    const cond=document.getElementById(condId);
+    if(cond) cond.style.display=(val==='amber'||val==='red')?'block':'none';
+  }
+  updateProgress();
+}
+function getRag(id){return document.querySelector('[data-rag="'+id+'"]')?.dataset?.selected||'';}
+function clearErr(id){
+  const e=document.getElementById('err-'+id);if(e){e.textContent='';e.classList.remove('show');}
+  const i=document.getElementById(id);if(i){i.classList.remove('error-field');}
+  const w=document.getElementById('rag-wrap-'+id);if(w){w.classList.remove('rag-required');}
+}
+function showErr(id,msg){
+  const e=document.getElementById('err-'+id);
+  if(e){e.textContent=msg;e.classList.add('show');}
+  const i=document.getElementById(id);if(i){i.classList.add('error-field');i.focus();}
+  const w=document.getElementById('rag-wrap-'+id);if(w){w.classList.add('rag-required');}
+}
+function updateProgress(){
+  const id=curTeam?.id;if(!id) return;
+  let filled=0,total=0;
+  if(id==='its'){total=5;['reporter','its-reg','its-att','its-late','its-na'].forEach(f=>{if((document.getElementById(f)?.value||'').trim().length>0)filled++;});}
+  else if(id==='niyaz'){total=5;['reporter','n-at','n-ar','n-rt','n-rr'].forEach(f=>{if((document.getElementById(f)?.value||'').trim().length>0)filled++;});}
+  else if(id==='avit'){total=4;if((document.getElementById('reporter')?.value||'').trim())filled++;if(getRag('av-tx'))filled++;if(document.getElementById('av-s')?.value)filled++;if(document.getElementById('av-e')?.value)filled++;}
+  else{total=2;if((document.getElementById('reporter')?.value||'').trim())filled++;const ragId=id==='hr'?'hr-r':id==='finance'?'fin-r':id==='nazafat'?'naz-r':id==='pr'?'pr-r':'pk-r';if(getRag(ragId))filled++;}
+  document.getElementById('progress-fill').style.width=Math.round((filled/total)*100)+'%';
+}
+
+// ── RENDER FORMS ──────────────────────────────────────────────────────────
+function renderForm(id){
+  const el=document.getElementById('form-fields');
+  let h=tf('reporter','Your name',true,'Enter your name or the name of the person submitting');
+  if(id==='its'){
+    h+='<div class="section-title" style="margin-top:0">Summary statistics</div>';
+    h+=nf('its-reg','Total registered',true);
+    h+=nf('its-att','Total attended',true);
+    h+=nf('its-late','Late arrivals',true);
+    h+=nf('its-na','Not attended',true);
+    h+='<div class="section-title">Detailed report</div>';
+    h+='<div class="info-box"><strong>📎 Attachment required</strong>Please send the full ITS daily report (ITS# · Name · Contact#) to PMO via WhatsApp after submitting this form.</div>';
+    h+=taf('its-notes','Additional comments',false);
+  } else if(id==='niyaz'){
+    h+='<div class="section-title" style="margin-top:0">Afternoon Niyaz — Lunch</div>';
+    h+=nf('n-at','Total thaals served',true);
+    h+=nf('n-ar','Rahat (elderly) thaals',true,'must be ≤ afternoon total');
+    h+='<div class="warn-msg" id="warn-n-ar">Rahat thaals cannot exceed afternoon total</div>';
+    h+='<div class="section-title">Raat Niyaz — Dinner</div>';
+    h+=nf('n-rt','Total thaals served',true,'enter 0 if no dinner');
+    h+=nf('n-rr','Rahat (elderly) thaals',true,'must be ≤ raat total');
+    h+='<div class="warn-msg" id="warn-n-rr">Rahat thaals cannot exceed raat total</div>';
+    h+=taf('niyaz-notes','Additional comments',false);
+  } else if(id==='avit'){
+    h+=ynf('av-tx','Transmission completed with no interruptions?',true);
+    h+='<div id="av-issues-wrap" style="display:none">'+taf('av-issues','Describe the issue',true)+'</div>';
+    h+=timef('av-s','Transmission start time',true);
+    h+=timef('av-e','Transmission end time',true);
+    h+='<div class="err-msg" id="err-av-time"></div>';
+    h+=taf('av-notes','Additional comments',false);
+  } else if(id==='hr'){
+    h+=rf('hr-r','Overall KG availability status',true);
+    h+='<div id="hr-cond" style="display:none">'+taf('hr-s','KG shortages or concerns',true,'required if Amber or Red')+'</div>';
+    h+=taf('hr-n','Additional comments',false);
+  } else if(id==='finance'){
+    h+=rf('fin-r','Overall Finance operations status',true);
+    h+='<div id="fin-cond" style="display:none">'+taf('fin-a','Pending approvals or requests',true,'required if Amber or Red')+'</div>';
+    h+=taf('fin-n','Additional comments',false);
+  } else if(id==='nazafat'){
+    h+=rf('naz-r','Overall cleanliness and hygiene status',true);
+    h+='<div id="naz-cond" style="display:none">'+taf('naz-i','Issues or concerns',true,'required if Amber or Red')+'</div>';
+    h+=taf('naz-n','Additional comments',false);
+  } else if(id==='pr'){
+    h+=rf('pr-r','Overall PR status',true);
+    h+='<div id="pr-cond" style="display:none">'+taf('pr-i','External incidents or enquiries',true,'required if Amber or Red')+'</div>';
+    h+=taf('pr-n','Additional comments',false);
+  } else if(id==='parking'){
+    h+=rf('pk-r','Overall parking and flow status',true);
+    h+='<div id="pk-cond" style="display:none">'+taf('pk-i','Burhani Guards issues or concerns',true,'required if Amber or Red')+'</div>';
+    h+=taf('pk-n','Additional comments',false);
+  }
+  el.innerHTML=h;
+}
+
+// ── VALIDATION ──────────────────────────────────────────────────────────────
+function validate(){
+  const id=curTeam.id;
+  let ok=true;
+  const warnings=[];
+
+  function req(fid,msg){
+    const v=(document.getElementById(fid)?.value||'').trim();
+    if(!v||v===''){showErr(fid,msg);ok=false;return false;}return true;
+  }
+  function reqNum(fid,msg,min,max){
+    const v=document.getElementById(fid)?.value;
+    if(v===''||v===null||v===undefined){showErr(fid,msg);ok=false;return false;}
+    const n=parseInt(v);
+    if(isNaN(n)||n<(min||0)){showErr(fid,msg||'Enter a valid number');ok=false;return false;}
+    if(max!==undefined&&n>max){showErr(fid,'Value too high');ok=false;return false;}
+    return true;
+  }
+  function reqRag(rid,msg){
+    if(!getRag(rid)){showErr(rid,msg||'Please select a status');ok=false;return false;}return true;
+  }
+  function reqCondText(fid,msg){
+    const v=(document.getElementById(fid)?.value||'').trim();
+    if(!v||v.length<10){showErr(fid,msg);ok=false;return false;}return true;
+  }
+
+  // Name — all teams
+  const name=(document.getElementById('reporter')?.value||'').trim();
+  if(name.length<2){showErr('reporter','Please enter your name (min 2 characters)');ok=false;}
+
+  if(id==='its'){
+    reqNum('its-reg','Required — enter 0 if none',0);
+    reqNum('its-att','Required — enter 0 if none',0);
+    reqNum('its-late','Required — enter 0 if none',0);
+    reqNum('its-na','Required — enter 0 if none',0);
+
+  } else if(id==='niyaz'){
+    const at=parseInt(document.getElementById('n-at')?.value||'-1');
+    const ar=parseInt(document.getElementById('n-ar')?.value||'-1');
+    const rt=parseInt(document.getElementById('n-rt')?.value||'-1');
+    const rr=parseInt(document.getElementById('n-rr')?.value||'-1');
+
+    if(at<1){showErr('n-at','Afternoon thaals must be at least 1');ok=false;}
+    if(ar<0){showErr('n-ar','Required — enter 0 if no Rahat thaals');ok=false;}
+    else if(ar>at&&at>=0){showErr('n-ar','Rahat thaals cannot exceed afternoon total ('+at+')');ok=false;document.getElementById('warn-n-ar').classList.add('show');}
+    if(rt<0){showErr('n-rt','Required — enter 0 if no dinner');ok=false;}
+    else if(rt===0) warnings.push('Raat Niyaz total is 0. Please confirm no dinner was served tonight.');
+    if(rr<0){showErr('n-rr','Required — enter 0 if no Rahat thaals');ok=false;}
+    else if(rr>rt&&rt>=0){showErr('n-rr','Rahat thaals cannot exceed raat total ('+rt+')');ok=false;document.getElementById('warn-n-rr').classList.add('show');}
+
+  } else if(id==='avit'){
+    const tx=getRag('av-tx');
+    if(!tx){showErr('av-tx','Please select Yes or No');ok=false;}
+    if(tx==='no') reqCondText('av-issues','Please describe the issue (min 10 characters)');
+    const s=document.getElementById('av-s')?.value;
+    const e=document.getElementById('av-e')?.value;
+    if(!s){showErr('av-s','Please enter start time');ok=false;}
+    if(!e){showErr('av-e','Please enter end time');ok=false;}
+    if(s&&e&&e<=s){showErr('av-time','End time must be after start time');ok=false;}
+
+  } else {
+    const ragMap={hr:'hr-r',finance:'fin-r',nazafat:'naz-r',pr:'pr-r',parking:'pk-r'};
+    const condMap={hr:'hr-s',finance:'fin-a',nazafat:'naz-i',pr:'pr-i',parking:'pk-i'};
+    const rid=ragMap[id];
+    const rag=getRag(rid);
+    if(!rag){showErr(rid,'Please select a status');ok=false;}
+    if(rag==='amber'||rag==='red'){
+      reqCondText(condMap[id],'Please describe the issue or concern (min 10 characters)');
+    }
+  }
+
+  if(!ok) return {valid:false};
+  if(warnings.length) return {valid:true,warnings};
+  return {valid:true,warnings:[]};
+}
+
+// ── SUBMIT ──────────────────────────────────────────────────────────────────
+function attemptSubmit(){
+  // clear all errors first
+  document.querySelectorAll('.err-msg').forEach(e=>{e.textContent='';e.classList.remove('show');});
+  document.querySelectorAll('.error-field').forEach(e=>e.classList.remove('error-field'));
+  document.querySelectorAll('.rag-required').forEach(e=>e.classList.remove('rag-required'));
+  document.querySelectorAll('.warn-msg').forEach(e=>e.classList.remove('show'));
+
+  const result=validate();
+  if(!result.valid){
+    // scroll to first error
+    const firstErr=document.querySelector('.error-field,.rag-required');
+    if(firstErr) firstErr.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  if(result.warnings&&result.warnings.length>0){
+    showModal('Please confirm',result.warnings.join('\n\n'),'Confirm & submit',doSubmit);
+  } else {
+    doSubmit();
+  }
+}
+
+function doSubmit(){
+  if(!subs[selSub]) subs[selSub]={};
+  const id=curTeam.id;
+  const r=(document.getElementById('reporter')?.value||'').trim();
+  const d={team:curTeam.n,reporter:r,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
+
+  if(id==='its'){
+    d.reg=document.getElementById('its-reg').value;
+    d.att=document.getElementById('its-att').value;
+    d.late=document.getElementById('its-late').value;
+    d.na=document.getElementById('its-na').value;
+    d.notes=document.getElementById('its-notes')?.value||'';
+  } else if(id==='niyaz'){
+    d.at=document.getElementById('n-at').value;
+    d.ar=document.getElementById('n-ar').value;
+    d.rt=document.getElementById('n-rt').value;
+    d.rr=document.getElementById('n-rr').value;
+    d.notes=document.getElementById('niyaz-notes')?.value||'';
+  } else if(id==='avit'){
+    d.tx=getRag('av-tx');
+    d.issues=document.getElementById('av-issues')?.value||'';
+    d.s=document.getElementById('av-s').value;
+    d.e=document.getElementById('av-e').value;
+    d.notes=document.getElementById('av-notes')?.value||'';
+  } else if(id==='hr'){
+    d.rag=getRag('hr-r');
+    d.s=document.getElementById('hr-s')?.value||'';
+    d.n=document.getElementById('hr-n')?.value||'';
+  } else if(id==='finance'){
+    d.rag=getRag('fin-r');
+    d.a=document.getElementById('fin-a')?.value||'';
+    d.n=document.getElementById('fin-n')?.value||'';
+  } else if(id==='nazafat'){
+    d.rag=getRag('naz-r');
+    d.i=document.getElementById('naz-i')?.value||'';
+    d.n=document.getElementById('naz-n')?.value||'';
+  } else if(id==='pr'){
+    d.rag=getRag('pr-r');
+    d.i=document.getElementById('pr-i')?.value||'';
+    d.n=document.getElementById('pr-n')?.value||'';
+  } else if(id==='parking'){
+    d.rag=getRag('pk-r');
+    d.i=document.getElementById('pk-i')?.value||'';
+    d.n=document.getElementById('pk-n')?.value||'';
+  }
+
+  subs[selSub][id]=d;
+  document.getElementById('form-fields').style.display='none';
+  document.getElementById('submit-btn').style.display='none';
+  document.getElementById('form-ok').style.display='block';
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────────────────────
+function ragBadge(v){
+  if(!v) return '<span class="badge bg-none">Pending</span>';
+  if(v==='green'||v==='yes') return '<span class="badge bg-green">'+(v==='yes'?'No issues':'Green')+'</span>';
+  if(v==='amber') return '<span class="badge bg-amber">Amber</span>';
+  return '<span class="badge bg-red">'+(v==='no'?'Issues':'Red')+'</span>';
+}
+
+function renderDash(){
+  const day=subs[selDash];
+  const el=document.getElementById('dash-content');
+  const cnt=day?Object.keys(day).length:0;
+  const banner=document.getElementById('day-complete-banner');
+  banner.classList.toggle('show',cnt===TEAMS.length);
+
+  let h='<div style="font-size:13px;color:#8E8E93;margin-bottom:12px">'+cnt+' of '+TEAMS.length+' teams reported</div>';
+
+  TEAMS.forEach(t=>{
+    const d=day?.[t.id];
+    h+='<div class="sum-card"><div class="sum-hdr"><span class="sum-team">'+t.e+' '+t.n+'</span>';
+
+    if(!d){
+      h+='<span class="badge bg-none">Not submitted</span></div>';
+      h+='<div class="sum-row" style="opacity:0.5">'+t.l+'</div></div>';
+      return;
+    }
+
+    if(t.id==='its'){
+      h+='<span class="badge bg-info">'+d.att+' attended</span></div>';
+      h+='<div class="sum-row">Registered: <span class="sum-val">'+d.reg+'</span> &nbsp;·&nbsp; Late: <span class="sum-val">'+d.late+'</span> &nbsp;·&nbsp; Not attended: <span class="sum-val">'+d.na+'</span></div>';
+      h+='<div class="sum-note">📎 Full ITS report to be shared via WhatsApp</div>';
+      if(d.notes) h+='<div class="sum-row" style="margin-top:4px">'+d.notes+'</div>';
+    } else if(t.id==='niyaz'){
+      h+='<span class="badge bg-info">Submitted</span></div>';
+      h+='<div class="sum-row">Aft thaals: <span class="sum-val">'+d.at+'</span> &nbsp;·&nbsp; Rahat: <span class="sum-val">'+d.ar+'</span></div>';
+      h+='<div class="sum-row">Raat thaals: <span class="sum-val">'+d.rt+'</span> &nbsp;·&nbsp; Rahat: <span class="sum-val">'+d.rr+'</span></div>';
+      if(d.notes) h+='<div class="sum-row" style="margin-top:4px">'+d.notes+'</div>';
+    } else if(t.id==='avit'){
+      h+=ragBadge(d.tx)+'</div>';
+      h+='<div class="sum-row">Start: <span class="sum-val">'+d.s+'</span> &nbsp;·&nbsp; End: <span class="sum-val">'+d.e+'</span></div>';
+      if(d.tx==='no'&&d.issues) h+='<div class="sum-issue">'+d.issues+'</div>';
+      if(d.notes) h+='<div class="sum-row" style="margin-top:4px">'+d.notes+'</div>';
+    } else if(t.id==='finance'){
+      h+=ragBadge(d.rag)+'</div>';
+      if(d.a) h+='<div class="sum-issue" style="color:#5C2E00;background:#FEF3E2">'+d.a+'</div>';
+      if(d.n) h+='<div class="sum-row">'+d.n+'</div>';
+    } else {
+      h+=ragBadge(d.rag)+'</div>';
+      const note=d.s||d.i||'';
+      if(note&&(d.rag==='amber'||d.rag==='red')) h+='<div class="sum-issue">'+note+'</div>';
+      else if(note) h+='<div class="sum-row">'+note+'</div>';
+      if(d.n) h+='<div class="sum-row">'+d.n+'</div>';
+    }
+
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">';
+    h+='<div class="sum-time">'+(d.reporter?d.reporter+' · ':'')+d.time+'</div>';
+    h+='<button class="unlock-btn" onclick="unlockTeam(\''+selDash+'\',\''+t.id+'\')">Unlock</button>';
+    h+='</div></div>';
+  });
+
+  el.innerHTML=h;
+}
+
+function unlockTeam(day,teamId){
+  showModal(
+    'Unlock submission',
+    'This will allow the team to resubmit their report for this day. The current submission will be kept as a record until they resubmit. Are you sure?',
+    'Yes, unlock',
+    ()=>{
+      if(subs[day]&&subs[day][teamId]) delete subs[day][teamId];
+      renderDash();buildGrid();
+    }
+  );
+}
+
+// ── REPORTS ──────────────────────────────────────────────────────────────
+function renderReport(){
+  const day=subs[selReport];
+  const el=document.getElementById('report-content');
+  const dayInfo=DAYS[selReport];
+  const cnt=day?Object.keys(day).length:0;
+
+  if(!day||cnt===0){
+    el.innerHTML='<div class="empty">No reports submitted yet for '+dayInfo.l+' · '+dayInfo.d+'</div>';
+    return;
+  }
+
+  // Build WhatsApp message
+  const its=day['its'];
+  const niyaz=day['niyaz'];
+  const avit=day['avit'];
+  const hr=day['hr'];
+  const fin=day['finance'];
+  const naz=day['nazafat'];
+  const pr=day['pr'];
+  const pk=day['parking'];
+
+  const ragEmoji=(v)=>v==='green'||v==='yes'?'🟢':v==='amber'?'🟡':v==='red'||v==='no'?'🔴':'⚪';
+
+  let msg='📋 *Ashara 1448H Toronto — '+dayInfo.l+' Report*\n';
+  msg+='📅 '+dayInfo.d+', 2026 · Generated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'\n';
+  msg+='─────────────────────\n\n';
+
+  if(its){
+    msg+='*📊 ATTENDANCE (ITS)*\n';
+    msg+='✅ Registered: '+its.reg+'\n';
+    msg+='✅ Attended: '+its.att+'\n';
+    msg+='⏰ Late: '+its.late+'\n';
+    msg+='❌ Not attended: '+its.na+'\n';
+    msg+='📎 Full detail report shared separately\n\n';
+  }
+
+  if(niyaz){
+    msg+='*🍽️ NIYAZ + MAWAID*\n';
+    msg+='Afternoon thaals: '+niyaz.at+' (Rahat: '+niyaz.ar+')\n';
+    msg+='Raat thaals: '+niyaz.rt+' (Rahat: '+niyaz.rr+')\n\n';
+  }
+
+  if(avit){
+    msg+='*📡 A/V + IT + RELAY*\n';
+    msg+=(avit.tx==='yes'?'✅ No interruptions':'❌ Issues reported')+' · '+avit.s+' – '+avit.e+'\n';
+    if(avit.tx==='no'&&avit.issues) msg+='Issue: '+avit.issues+'\n';
+    msg+='\n';
+  }
+
+  msg+='*📊 TEAM STATUS*\n';
+  if(hr) msg+=ragEmoji(hr.rag)+' HR — '+(hr.rag||'—').charAt(0).toUpperCase()+(hr.rag||'').slice(1)+'\n';
+  if(fin) msg+=ragEmoji(fin.rag)+' Finance — '+(fin.rag||'—').charAt(0).toUpperCase()+(fin.rag||'').slice(1)+'\n';
+  if(naz) msg+=ragEmoji(naz.rag)+' Nazafat — '+(naz.rag||'—').charAt(0).toUpperCase()+(naz.rag||'').slice(1)+'\n';
+  if(pr) msg+=ragEmoji(pr.rag)+' PR — '+(pr.rag||'—').charAt(0).toUpperCase()+(pr.rag||'').slice(1)+'\n';
+  if(pk) msg+=ragEmoji(pk.rag)+' Parking + Flow — '+(pk.rag||'—').charAt(0).toUpperCase()+(pk.rag||'').slice(1)+'\n';
+  msg+='\n';
+
+  // Issues
+  const issues=[];
+  if(hr&&(hr.rag==='amber'||hr.rag==='red')&&hr.s) issues.push('HR: '+hr.s);
+  if(fin&&(fin.rag==='amber'||fin.rag==='red')&&fin.a) issues.push('Finance: '+fin.a);
+  if(naz&&(naz.rag==='amber'||naz.rag==='red')&&naz.i) issues.push('Nazafat: '+naz.i);
+  if(pr&&(pr.rag==='amber'||pr.rag==='red')&&pr.i) issues.push('PR: '+pr.i);
+  if(pk&&(pk.rag==='amber'||pk.rag==='red')&&pk.i) issues.push('Parking+Flow: '+pk.i);
+  if(avit&&avit.tx==='no'&&avit.issues) issues.push('A/V: '+avit.issues);
+
+  if(issues.length){
+    msg+='*⚠️ ISSUES FLAGGED*\n';
+    issues.forEach(i=>msg+='• '+i+'\n');
+    msg+='\n';
+  }
+
+  msg+='📊 '+cnt+' of '+TEAMS.length+' teams reported\n';
+  msg+='─────────────────────\n';
+  msg+='— PMO Command Center · Ashara 1448H Toronto';
+
+  el.innerHTML='<div class="report-box"><pre id="report-text">'+msg.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</pre></div>';
+  el.innerHTML+='<button class="copy-btn" onclick="copyReport()">📋 Copy WhatsApp message</button>';
+}
+
+function copyReport(){
+  const txt=document.getElementById('report-text')?.textContent||'';
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn=document.querySelector('.copy-btn');
+    btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.textContent='📋 Copy WhatsApp message',2000);
+  }).catch(()=>{
+    // fallback
+    const ta=document.createElement('textarea');
+    ta.value=txt;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    const btn=document.querySelector('.copy-btn');
+    btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.textContent='📋 Copy WhatsApp message',2000);
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
 renderPmo();renderAllDays();buildGrid();
 </script>
-</div>
 </body>
 </html>
