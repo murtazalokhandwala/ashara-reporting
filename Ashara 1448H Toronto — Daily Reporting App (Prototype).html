@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ashara 1448H Toronto — Daily Reporting</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F5F5;color:#141210;min-height:100vh}
+.app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;padding:16px}
+.screen{display:none}.screen.active{display:block}
+.brand{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+h1{font-size:20px;font-weight:600;margin-bottom:4px}
+.sub{font-size:13px;color:#666;margin-bottom:18px}
+.tabs{display:flex;border:1px solid #DDD;border-radius:8px;overflow:hidden;margin-bottom:18px}
+.tab{flex:1;padding:10px 4px;font-size:12px;text-align:center;cursor:pointer;background:#F5F5F5;border:none;color:#666;font-family:inherit}
+.tab.active{background:#fff;color:#0F2744;font-weight:600}
+.day-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.dp{padding:6px 11px;border-radius:20px;border:1px solid #DDD;font-size:12px;cursor:pointer;background:#F5F5F5;color:#666;font-family:inherit}
+.dp.active-day{background:#E0EEFF;border-color:#1A4F96;color:#0A2E6E;font-weight:600}
+.dp.pmo-on{background:#E0EEFF;border-color:#1A4F96;color:#0A2E6E;font-weight:600}
+.divider{height:1px;background:#EEE;margin:14px 0}
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.team-btn{background:#fff;border:1px solid #E0E0E0;border-radius:12px;padding:14px 10px;cursor:pointer;text-align:left;font-family:inherit}
+.team-btn:hover{border-color:#AAA}
+.ti{font-size:22px;margin-bottom:6px}
+.tn{font-size:12px;font-weight:600;color:#141210}
+.tl{font-size:11px;color:#888;margin-top:2px;line-height:1.4}
+.ts{font-size:11px;margin-top:4px}
+.ok{color:#085041}
+.nav{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid #EEE}
+.back{background:none;border:1px solid #DDD;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;color:#666;font-family:inherit}
+.back:hover{background:#F5F5F5}
+h2{font-size:16px;font-weight:600}
+.fgrp{margin-bottom:14px}
+.lbl{font-size:13px;color:#666;display:block;margin-bottom:5px}
+input[type=number],input[type=text],textarea{width:100%;font-size:14px;border-radius:8px;padding:9px 11px;background:#fff;color:#141210;border:1px solid #CCC;font-family:inherit;outline:none}
+input:focus,textarea:focus{border-color:#1A4F96}
+textarea{resize:vertical;min-height:64px}
+.rag-row{display:flex;gap:6px}
+.rb{flex:1;padding:10px 4px;border-radius:8px;border:1px solid #DDD;font-size:12px;font-weight:600;cursor:pointer;text-align:center;background:#F5F5F5;color:#666;font-family:inherit}
+.rb.sel-green{background:#DFFAF0;border-color:#1D9E75;color:#085041}
+.rb.sel-amber{background:#FAEEDA;border-color:#BA7517;color:#412402}
+.rb.sel-red{background:#FCEBEB;border-color:#A32D2D;color:#501313}
+.rb.sel-yes{background:#DFFAF0;border-color:#1D9E75;color:#085041}
+.rb.sel-no{background:#FCEBEB;border-color:#A32D2D;color:#501313}
+.sbtn{width:100%;padding:13px;background:#0F2744;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;color:#fff;font-family:inherit}
+.sbtn:hover{background:#1A4F96}
+.ok-box{background:#DFFAF0;border:1px solid #1D9E75;border-radius:12px;padding:24px;text-align:center;margin-top:12px}
+.sc-lbl{font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px;padding-bottom:6px;border-bottom:1px solid #EEE}
+.attach-note{background:#FEF9EC;border:1px solid #D4820A;border-radius:8px;padding:12px;font-size:13px;color:#633806;margin-bottom:14px;line-height:1.5}
+.sum-card{background:#fff;border:1px solid #E0E0E0;border-radius:12px;padding:12px;margin-bottom:8px}
+.sum-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.stn{font-size:13px;font-weight:600}
+.badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.bg-green{background:#DFFAF0;color:#085041}.bg-amber{background:#FAEEDA;color:#412402}.bg-red{background:#FCEBEB;color:#501313}
+.bg-info{background:#E0EEFF;color:#0A2E6E}.bg-none{background:#F0F0F0;color:#666}
+.sr{font-size:12px;color:#888;margin-top:3px;line-height:1.6}
+.sv{color:#141210;font-weight:600}
+.pmo-box{background:#F5F5F5;border-radius:12px;padding:14px;margin-bottom:14px}
+.pmo-note{font-size:12px;color:#888;margin-top:8px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="app">
+<div id="home" class="screen active">
+  <div style="margin-bottom:16px">
+    <div class="brand">Ashara 1448H Toronto · PMO</div>
+    <h1>Daily reporting</h1>
+    <p class="sub">Submit by 9:00 PM each night</p>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('submit',this)">Submit report</button>
+    <button class="tab" onclick="switchTab('dashboard',this)">PMO dashboard</button>
+    <button class="tab" onclick="switchTab('pmo',this)">PMO controls</button>
+  </div>
+  <div id="tab-submit">
+    <p class="lbl" style="margin-bottom:8px">Active day</p>
+    <div class="day-row" id="day-row-submit"></div>
+    <div class="divider"></div>
+    <p class="sub" style="margin-bottom:12px">Select your team</p>
+    <div class="team-grid" id="team-grid"></div>
+  </div>
+  <div id="tab-dashboard" style="display:none">
+    <p class="lbl" style="margin-bottom:8px">View day</p>
+    <div class="day-row" id="day-row-dash"></div>
+    <div class="divider"></div>
+    <div id="dash-content"></div>
+  </div>
+  <div id="tab-pmo" style="display:none">
+    <div class="pmo-box">
+      <p style="font-size:13px;font-weight:600;margin-bottom:4px">PMO day activation</p>
+      <p class="pmo-note" style="margin-bottom:10px">Tap any day to activate or deactivate. Only active days appear for team reporting.</p>
+      <div class="day-row" id="day-row-pmo"></div>
+      <p class="pmo-note">Activate the next day each evening before 9 PM reports are due.</p>
+    </div>
+  </div>
+</div>
+<div id="form-screen" class="screen">
+  <div class="nav">
+    <button class="back" onclick="goHome()">&#8592; Back</button>
+    <div>
+      <h2 id="form-title"></h2>
+      <div style="font-size:12px;color:#888;margin-top:2px" id="form-sub"></div>
+    </div>
+  </div>
+  <div id="form-body"></div>
+  <button class="sbtn" id="submit-btn" onclick="doSubmit()">&#10148; Submit report</button>
+  <div id="form-ok" style="display:none">
+    <div class="ok-box">
+      <div style="font-size:32px;color:#085041;margin-bottom:8px">&#10004;</div>
+      <div style="font-weight:600;font-size:15px;color:#085041">Report submitted</div>
+      <div style="font-size:13px;color:#666;margin-top:4px">PMO dashboard updated</div>
+    </div>
+    <button class="sbtn" style="margin-top:16px;background:#F5F5F5;color:#141210;border:1px solid #DDD" onclick="goHome()">Back to teams</button>
+  </div>
+</div>
+<script>
+const DAYS=[{l:'Day 1',d:'Jun 16'},{l:'Day 2',d:'Jun 17'},{l:'Day 3',d:'Jun 18'},{l:'Day 4',d:'Jun 19'},{l:'Day 5',d:'Jun 20'},{l:'Day 6',d:'Jun 21'},{l:'Day 7',d:'Jun 22'},{l:'Day 8',d:'Jun 23'},{l:'Day 9',d:'Jun 24'}];
+const TEAMS=[
+  {id:'its',n:'ITS / Scanning',l:'Abdeali bhai Mody',e:'&#128065;'},
+  {id:'niyaz',n:'Niyaz + Mawaid',l:'Shk Mustafa bhai Jamali &middot; Saleh bhai Arsiwala',e:'&#127373;'},
+  {id:'avit',n:'A/V + IT + Relay',l:'Husaini bhai Shakkarwala',e:'&#128225;'},
+  {id:'hr',n:'HR',l:'Idris bhai Bholebawa',e:'&#128101;'},
+  {id:'finance',n:'Finance',l:'Shk Murtaza bhai Nalwala &middot; M Hatim bhai Kapacee',e:'&#128176;'},
+  {id:'nazafat',n:'Nazafat',l:'Shk Aziz bhai &middot; M Aun Ali bhai Khokawala',e:'&#10024;'},
+  {id:'pr',n:'PR',l:'Nafisa ben Kapacee',e:'&#128226;'},
+  {id:'parking',n:'Parking + Flow (BGI)',l:'M Abeel Fazal bhai &middot; Munira ben Shakir',e:'&#127359;'},
+];
+let activeDays=[0],selSub=0,selDash=0,subs={},curTeam=null,curTab='submit';
+function switchTab(t,btn){curTab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-submit').style.display=t==='submit'?'block':'none';document.getElementById('tab-dashboard').style.display=t==='dashboard'?'block':'none';document.getElementById('tab-pmo').style.display=t==='pmo'?'block':'none';if(t==='dashboard')renderDash();if(t==='pmo')renderPmo();}
+function renderAllDays(){renderSubDays();renderDashDays();}
+function renderSubDays(){const el=document.getElementById('day-row-submit');el.innerHTML='';if(!activeDays.length){el.innerHTML='<span style="font-size:12px;color:#888">No days activated yet</span>';return;}activeDays.forEach(i=>{const b=document.createElement('button');b.className='dp'+(i===selSub?' active-day':'');b.innerHTML='<strong>'+DAYS[i].l+'</strong> &middot; '+DAYS[i].d;b.onclick=()=>{selSub=i;renderAllDays();buildGrid();};el.appendChild(b);});}
+function renderDashDays(){const el=document.getElementById('day-row-dash');el.innerHTML='';activeDays.forEach(i=>{const b=document.createElement('button');b.className='dp'+(i===selDash?' active-day':'');b.innerHTML='<strong>'+DAYS[i].l+'</strong> &middot; '+DAYS[i].d;b.onclick=()=>{selDash=i;renderDashDays();renderDash();};el.appendChild(b);});}
+function renderPmo(){const el=document.getElementById('day-row-pmo');el.innerHTML='';DAYS.forEach((d,i)=>{const on=activeDays.includes(i);const b=document.createElement('button');b.className='dp'+(on?' pmo-on':'');b.innerHTML=(on?'&#10003; ':'')+d.l+' &middot; '+d.d;b.onclick=()=>{if(on)activeDays=activeDays.filter(x=>x!==i);else{activeDays.push(i);activeDays.sort((a,c)=>a-c);}if(!activeDays.includes(selSub))selSub=activeDays[activeDays.length-1]??0;renderPmo();renderAllDays();buildGrid();};el.appendChild(b);});}
+function buildGrid(){const g=document.getElementById('team-grid');g.innerHTML='';TEAMS.forEach(t=>{const s=subs[selSub]?.[t.id];const b=document.createElement('button');b.className='team-btn';b.innerHTML='<div class="ti">'+t.e+'</div><div class="tn">'+t.n+'</div><div class="tl">'+t.l+'</div><div class="ts">'+(s?'<span class="ok">&#10003; Submitted</span>':'<span style="color:#AAA">Pending</span>')+'</div>';b.onclick=()=>openForm(t);g.appendChild(b);});}
+function openForm(t){curTeam=t;document.getElementById('home').classList.remove('active');document.getElementById('form-screen').classList.add('active');document.getElementById('form-title').textContent=t.n;document.getElementById('form-sub').textContent=t.l.replace(/&middot;/g,'·')+' · '+DAYS[selSub].l+' · '+DAYS[selSub].d;document.getElementById('form-ok').style.display='none';document.getElementById('form-body').style.display='block';document.getElementById('submit-btn').style.display='block';renderForm(t.id);}
+function goHome(){document.getElementById('form-screen').classList.remove('active');document.getElementById('home').classList.add('active');buildGrid();if(curTab==='dashboard')renderDash();}
+const nf=(id,l)=>'<div class="fgrp"><label class="lbl">'+l+'</label><input type="number" id="'+id+'" placeholder="0" min="0"></div>';
+const tf=(id,l,p)=>'<div class="fgrp"><label class="lbl">'+l+'</label><input type="text" id="'+id+'" placeholder="'+(p||'')+'"></div>';
+const ta=(id,l)=>'<div class="fgrp"><label class="lbl">'+l+'</label><textarea id="'+id+'" placeholder="Add details..."></textarea></div>';
+const rf=(id,l)=>'<div class="fgrp"><label class="lbl">'+l+'</label><div class="rag-row" data-rag="'+id+'"><button class="rb" onclick="pr(this,\'green\')">&#10003; Green</button><button class="rb" onclick="pr(this,\'amber\')">&#9651; Amber</button><button class="rb" onclick="pr(this,\'red\')">&#10007; Red</button></div></div>';
+const yf=(id,l)=>'<div class="fgrp"><label class="lbl">'+l+'</label><div class="rag-row" data-rag="'+id+'"><button class="rb" style="flex:1" onclick="pr(this,\'yes\')">&#10003; Yes &#8212; no issues</button><button class="rb" style="flex:1" onclick="pr(this,\'no\')">&#10007; No &#8212; issues</button></div></div>';
+function pr(btn,val){const row=btn.parentElement;row.querySelectorAll('.rb').forEach(b=>{b.className='rb';});btn.classList.add('sel-'+val);row.dataset.selected=val;}
+function gr(id){return document.querySelector('[data-rag="'+id+'"]')?.dataset?.selected||'';}
+function renderForm(id){const el=document.getElementById('form-body');let h=tf('reporter','Your name','Enter your name');
+if(id==='its'){h+='<div class="sc-lbl">Summary statistics</div>';h+=nf('its-reg','Total registered')+nf('its-att','Total attended')+nf('its-late','Late arrivals')+nf('its-na','Not attended');h+='<div class="sc-lbl">Detailed report</div>';h+='<div class="attach-note"><strong>&#128206; Attachment required</strong><br>Please send the full ITS daily report (ITS# &middot; Name &middot; Contact#) via WhatsApp to PMO after submitting this form.</div>';h+=ta('its-notes','Additional comments or issues');}
+else if(id==='niyaz'){h+='<div class="sc-lbl">Afternoon Niyaz &#8212; Lunch</div>';h+=nf('n-at','Total thaals served')+nf('n-ar','Rahat (elderly) thaals &#8212; separate count');h+='<div class="sc-lbl">Raat Niyaz &#8212; Dinner</div>';h+=nf('n-rt','Total thaals served')+nf('n-rr','Rahat (elderly) thaals &#8212; separate count');h+=ta('niyaz-notes','Additional comments or issues');}
+else if(id==='avit'){h+=yf('av-tx','Transmission completed start to finish with no interruptions?');h+=tf('av-s','Transmission start time','e.g. 14:30')+tf('av-e','Transmission end time','e.g. 17:15');h+=ta('av-notes','Issues, interruptions or additional comments');}
+else if(id==='hr'){h+=rf('hr-r','Overall KG availability status');h+=ta('hr-s','KG shortages or concerns (team, number, area)')+ta('hr-n','Additional comments');}
+else if(id==='finance'){h+=rf('fin-r','Overall Finance operations status');h+=ta('fin-a','Pending approvals or procurement requests')+ta('fin-n','Additional comments or concerns');}
+else if(id==='nazafat'){h+=rf('naz-r','Overall cleanliness and hygiene status');h+=ta('naz-i','Issues or concerns')+ta('naz-n','Additional comments');}
+else if(id==='pr'){h+=rf('pr-r','Overall PR status');h+=ta('pr-i','Any external incidents, media contact or enquiries?')+ta('pr-n','Additional comments');}
+else if(id==='parking'){h+=rf('pk-r','Overall parking and flow status');h+=ta('pk-i','Burhani Guards issues or concerns')+ta('pk-n','Additional comments');}
+el.innerHTML=h;}
+function doSubmit(){if(!subs[selSub])subs[selSub]={};const id=curTeam.id;const r=document.getElementById('reporter')?.value||'';const d={team:curTeam.n,reporter:r,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
+if(id==='its'){d.reg=document.getElementById('its-reg').value||'--';d.att=document.getElementById('its-att').value||'--';d.late=document.getElementById('its-late').value||'--';d.na=document.getElementById('its-na').value||'--';d.notes=document.getElementById('its-notes').value||'';}
+else if(id==='niyaz'){d.at=document.getElementById('n-at').value||'--';d.ar=document.getElementById('n-ar').value||'--';d.rt=document.getElementById('n-rt').value||'--';d.rr=document.getElementById('n-rr').value||'--';d.notes=document.getElementById('niyaz-notes').value||'';}
+else if(id==='avit'){d.tx=gr('av-tx');d.s=document.getElementById('av-s').value||'--';d.e=document.getElementById('av-e').value||'--';d.notes=document.getElementById('av-notes').value||'';}
+else if(id==='hr'){d.rag=gr('hr-r');d.s=document.getElementById('hr-s').value||'';d.n=document.getElementById('hr-n').value||'';}
+else if(id==='finance'){d.rag=gr('fin-r');d.a=document.getElementById('fin-a').value||'';d.n=document.getElementById('fin-n').value||'';}
+else if(id==='nazafat'){d.rag=gr('naz-r');d.i=document.getElementById('naz-i').value||'';d.n=document.getElementById('naz-n').value||'';}
+else if(id==='pr'){d.rag=gr('pr-r');d.i=document.getElementById('pr-i').value||'';d.n=document.getElementById('pr-n').value||'';}
+else if(id==='parking'){d.rag=gr('pk-r');d.i=document.getElementById('pk-i').value||'';d.n=document.getElementById('pk-n').value||'';}
+subs[selSub][id]=d;document.getElementById('form-body').style.display='none';document.getElementById('submit-btn').style.display='none';document.getElementById('form-ok').style.display='block';}
+function rb(v){if(!v)return '<span class="badge bg-none">Pending</span>';if(v==='green'||v==='yes')return '<span class="badge bg-green">'+(v==='yes'?'No issues':'Green')+'</span>';if(v==='amber')return '<span class="badge bg-amber">Amber</span>';return '<span class="badge bg-red">'+(v==='no'?'Issues':'Red')+'</span>';}
+function renderDash(){const day=subs[selDash];const el=document.getElementById('dash-content');const cnt=day?Object.keys(day).length:0;let h='<div style="font-size:12px;color:#888;margin-bottom:10px">'+cnt+' of '+TEAMS.length+' teams reported &middot; '+DAYS[selDash].l+' &middot; '+DAYS[selDash].d+'</div>';
+TEAMS.forEach(t=>{const d=day?.[t.id];h+='<div class="sum-card"><div class="sum-hdr"><span class="stn">'+t.e+' '+t.n+'</span>';
+if(!d){h+='<span class="badge bg-none">Not submitted</span></div><div class="sr" style="opacity:0.5">'+t.l+'</div></div>';return;}
+if(t.id==='its'){h+='<span class="badge bg-info">'+(d.att||0)+' attended</span></div>';h+='<div class="sr">Registered: <span class="sv">'+d.reg+'</span> &nbsp; Late: <span class="sv">'+d.late+'</span> &nbsp; Not attended: <span class="sv">'+d.na+'</span></div>';h+='<div class="sr" style="font-style:italic;margin-top:3px">&#128206; Full ITS report via WhatsApp</div>';if(d.notes)h+='<div class="sr" style="margin-top:3px">'+d.notes+'</div>';}
+else if(t.id==='niyaz'){h+='<span class="badge bg-info">Submitted</span></div>';h+='<div class="sr">Aft thaals: <span class="sv">'+d.at+'</span> &nbsp; Rahat: <span class="sv">'+d.ar+'</span></div>';h+='<div class="sr">Raat thaals: <span class="sv">'+d.rt+'</span> &nbsp; Rahat: <span class="sv">'+d.rr+'</span></div>';if(d.notes)h+='<div class="sr" style="margin-top:3px">'+d.notes+'</div>';}
+else if(t.id==='avit'){h+=rb(d.tx)+'</div>';h+='<div class="sr">Start: <span class="sv">'+d.s+'</span> &nbsp; End: <span class="sv">'+d.e+'</span></div>';if(d.notes)h+='<div class="sr" style="margin-top:3px;color:#A32D2D">'+d.notes+'</div>';}
+else if(t.id==='finance'){h+=rb(d.rag)+'</div>';if(d.a)h+='<div class="sr" style="margin-top:3px">Pending: '+d.a+'</div>';if(d.n)h+='<div class="sr" style="margin-top:2px">'+d.n+'</div>';}
+else{h+=rb(d.rag)+'</div>';const note=d.s||d.i||'';if(note)h+='<div class="sr" style="margin-top:3px">'+note+'</div>';if(d.n)h+='<div class="sr" style="margin-top:2px">'+d.n+'</div>';}
+h+='<div style="font-size:11px;color:#AAA;margin-top:6px;text-align:right">'+(d.reporter?d.reporter+' &middot; ':'')+d.time+'</div>';h+='</div>';});el.innerHTML=h;}
+renderPmo();renderAllDays();buildGrid();
+</script>
+</div>
+</body>
+</html>
