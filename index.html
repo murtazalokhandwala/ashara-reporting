@@ -144,6 +144,12 @@ input[type=number]{-moz-appearance:textfield}
       <div class="success-sub">PMO dashboard updated.<br>Thank you for your khidmat.</div>
       <button class="secondary-btn" onclick="goHome()">Back to teams</button>
     </div>
+    <div id="form-draft" style="display:none" class="success-screen">
+      <div class="success-icon">⏳</div>
+      <div class="success-title" style="color:#D4820A">Draft saved</div>
+      <div class="success-sub">Your data has been saved.<br>Come back to complete and submit before 9:00 PM.</div>
+      <button class="secondary-btn" onclick="goHome()">Back to teams</button>
+    </div>
     <div id="form-locked" style="display:none">
       <div style="background:#DFFAF0;border:1px solid #1D9E75;border-radius:14px;padding:20px;text-align:center;margin-bottom:16px">
         <div style="font-size:40px;margin-bottom:8px">🔒</div>
@@ -313,6 +319,7 @@ function openForm(t){
   document.getElementById('form-fields').style.display='none';
   document.getElementById('btn-area').innerHTML='';
   document.getElementById('form-ok').style.display='none';
+  document.getElementById('form-draft').style.display='none';
   document.getElementById('form-locked').style.display='none';
 
   // Check submission status from local cache
@@ -326,7 +333,7 @@ function openForm(t){
     document.getElementById('form-fields').style.display='block';
     renderButtons(t.id);
     // Pre-fill saved values after a tick
-    setTimeout(()=>{ prefillNiyaz(s.fields||{}); }, 50);
+    setTimeout(()=>{ prefillNiyaz(s.fields||{}, s.reporter||''); }, 50);
     return;
   }
   if(isSubmitted){
@@ -369,22 +376,28 @@ async function goHome(){
   buildGrid();
 }
 
-function prefillNiyaz(f){
-  const fields = ['n-at','n-ar','n-at-m','n-ar-m','n-at-l','n-ar-l',
-                  'n-rt','n-rr','n-rt-m','n-rr-m','n-rt-l','n-rr-l'];
+function prefillNiyaz(f, reporter){
+  // Pre-fill all niyaz fields from saved draft
   const map = {
-    'n-at':f.nAt,'n-ar':f.nAr,'n-at-m':f.nAtM,'n-ar-m':f.nArM,
-    'n-at-l':f.nAtL,'n-ar-l':f.nArL,'n-rt':f.nRt,'n-rr':f.nRr,
-    'n-rt-m':f.nRtM,'n-rr-m':f.nRrM,'n-rt-l':f.nRtL,'n-rr-l':f.nRrL
+    'n-at':f.nAt, 'n-ar':f.nAr,
+    'n-at-m':f.nAtM, 'n-ar-m':f.nArM,
+    'n-at-l':f.nAtL, 'n-ar-l':f.nArL,
+    'n-rt':f.nRt,  'n-rr':f.nRr,
+    'n-rt-m':f.nRtM, 'n-rr-m':f.nRrM,
+    'n-rt-l':f.nRtL, 'n-rr-l':f.nRrL
   };
-  fields.forEach(id=>{
+  Object.keys(map).forEach(id=>{
     const el=document.getElementById(id);
-    if(el && map[id]) el.value=map[id];
+    if(el && (map[id]||map[id]==='0')) el.value=map[id];
   });
   const notes=document.getElementById('niyaz-notes');
   if(notes && f.niyazNotes) notes.value=f.niyazNotes;
+  // reporter comes from s.reporter (top level) not s.fields
   const rep=document.getElementById('reporter');
-  if(rep && f.reporter) rep.value=f.reporter;
+  if(rep){
+    const name = reporter || f.reporter || '';
+    if(name) rep.value=name;
+  }
 }
 
 function resetFormState(){
@@ -670,10 +683,10 @@ async function doSave(){
                  nRt:d.nRt,nRr:d.nRr,nRtM:d.nRtM,nRrM:d.nRrM,nRtL:d.nRtL,nRrL:d.nRrL,
                  niyazNotes:d.niyazNotes}
       };
-      btn.innerHTML = '✓ Saved';
-      btn.disabled = false;
-      // Show brief confirmation then re-enable
-      setTimeout(()=>{ btn.innerHTML='Save draft'; }, 2000);
+      // Show draft confirmation screen
+      document.getElementById('form-fields').style.display='none';
+      document.getElementById('btn-area').innerHTML='';
+      document.getElementById('form-draft').style.display='block';
     } else {
       btn.innerHTML = 'Save draft';
       btn.disabled = false;
