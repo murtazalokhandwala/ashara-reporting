@@ -619,17 +619,17 @@ function validate(){
     reqNum('its-reg','Required — enter 0 if none',0);reqNum('its-att','Required — enter 0 if none',0);
     reqNum('its-late','Required — enter 0 if none',0);reqNum('its-na','Required — enter 0 if none',0);
   } else if(id==='niyaz'){
-    const at=parseInt(document.getElementById('n-at')?.value??'-1');
-    const ar=parseInt(document.getElementById('n-ar')?.value??'-1');
-    const rt=parseInt(document.getElementById('n-rt')?.value??'-1');
-    const rr=parseInt(document.getElementById('n-rr')?.value??'-1');
+    // Helper: parse field value — returns -1 if empty or invalid
+    function nVal(fid){ const v=(document.getElementById(fid)?.value||'').trim(); return v===''?-1:parseInt(v); }
+    const at=nVal('n-at'); const ar=nVal('n-ar');
+    const rt=nVal('n-rt'); const rr=nVal('n-rr');
     if(at<1){showErr('n-at','Afternoon thaals must be at least 1');ok=false;}
     if(ar<0){showErr('n-ar','Required — enter 0 if no Rahat thaals');ok=false;}
-    else if(at>=0&&ar>at){showErr('n-ar','Cannot exceed afternoon total ('+at+')');ok=false;document.getElementById('warn-n-ar')?.classList.add('show');}
+    else if(at>0&&ar>at){showErr('n-ar','Cannot exceed afternoon total ('+at+')');ok=false;document.getElementById('warn-n-ar')?.classList.add('show');}
     if(rt<0){showErr('n-rt','Required — enter 0 if no dinner');ok=false;}
     else if(rt===0) warnings.push('Raat Niyaz total is 0. Please confirm no dinner was served tonight.');
     if(rr<0){showErr('n-rr','Required — enter 0 if no Rahat thaals');ok=false;}
-    else if(rt>=0&&rr>rt){showErr('n-rr','Cannot exceed raat total ('+rt+')');ok=false;document.getElementById('warn-n-rr')?.classList.add('show');}
+    else if(rt>0&&rr>rt){showErr('n-rr','Cannot exceed raat total ('+rt+')');ok=false;document.getElementById('warn-n-rr')?.classList.add('show');}
   } else if(id==='avit'){
     const tx=getRag('av-tx');if(!tx){showErr('av-tx','Please select Yes or No');ok=false;}
     if(tx==='no'){const w=document.getElementById('av-issues-wrap');if(w&&w.style.display!=='none') reqCondText('av-issues','Please describe the issue (min 10 characters)');}
