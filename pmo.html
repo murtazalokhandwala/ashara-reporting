@@ -59,6 +59,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .bg-green{background:#DFFAF0;color:#085041}.bg-amber{background:#FEF3E2;color:#5C2E00}
 .bg-red{background:#FCEBEB;color:#501313}.bg-info{background:#E0EEFF;color:#0A2E6E}
 .bg-none{background:#F2F2F7;color:#8E8E93}
+.bg-draft{background:#FEF3E2;color:#5C2E00}
 .sum-row{font-size:13px;color:#8E8E93;margin-top:4px;line-height:1.6}
 .sum-val{color:#1C1C1E;font-weight:600}
 .sum-issue{font-size:13px;color:#C0392B;margin-top:6px;background:#FCEBEB;padding:8px 10px;border-radius:8px;line-height:1.5}
@@ -419,14 +420,19 @@ async function renderDash(){
     const res=await api({action:'getDayStatus',day:selDash});
     const d=res.data||{};
     const cnt=Object.keys(d).length;
-    document.getElementById('day-complete-banner').classList.toggle('show',cnt===TEAMS.length);
+    // Count actual submitted (not draft)
+  const draftTeams = Object.keys(d).filter(t=>d[t].draft);
+  const submittedReal = Object.keys(d).filter(t=>!d[t].draft).length;
+  document.getElementById('day-complete-banner').classList.toggle('show', submittedReal===TEAMS.length);
 
     // Stats
-    const issues=TEAMS.filter(t=>d[t]&&(d[t].rag==='red'||d[t].rag==='amber'||d[t].avTx==='no')).length;
+    const issues=TEAMS.filter(t=>d[t]&&!d[t].draft&&(d[t].rag==='red'||d[t].rag==='amber'||d[t].avTx==='no')).length;
+    const drafts=TEAMS.filter(t=>d[t]&&d[t].draft).length;
     let h='<div class="stat-row">';
-    h+='<div class="stat-box"><div class="stat-num">'+cnt+'/'+TEAMS.length+'</div><div class="stat-lbl">Teams reported</div></div>';
+    h+='<div class="stat-box"><div class="stat-num">'+submittedReal+'/'+TEAMS.length+'</div><div class="stat-lbl">Teams submitted</div></div>';
     h+='<div class="stat-box"><div class="stat-num" style="color:'+(issues>0?'#C0392B':'#1D9E75')+'">'+issues+'</div><div class="stat-lbl">Issues flagged</div></div>';
     h+='</div>';
+    if(drafts>0) h+='<div style="background:#FEF3E2;border:1px solid #D4820A;border-radius:8px;padding:8px 12px;font-size:13px;color:#5C2E00;margin-bottom:10px;font-weight:600">⏳ '+drafts+' team'+(drafts>1?'s':'')+' have saved a draft — awaiting final submission</div>';
 
     if(cnt===0){h+='<div class="empty">No reports yet for '+DAYS[selDash].l+'</div>';el.innerHTML=h;return;}
 
@@ -441,9 +447,12 @@ async function renderDash(){
         h+='<div class="sum-row" style="font-style:italic;margin-top:4px">📎 Full ITS report via WhatsApp</div>';
         if(s.itsNotes) h+='<div class="sum-row" style="margin-top:4px">'+s.itsNotes+'</div>';
       } else if(t==='niyaz'){
-        h+='<span class="badge bg-info">Submitted</span></div>';
+        const niyazBadge = s.draft ? '<span class="badge bg-draft">⏳ Draft saved</span>' : '<span class="badge bg-info">Submitted</span>';
+        h+=niyazBadge+'</div>';
         h+='<div class="sum-row">Aft thaals: <span class="sum-val">'+s.nAt+'</span> &nbsp;·&nbsp; Rahat: <span class="sum-val">'+s.nAr+'</span></div>';
+        if(s.nAtM||s.nAtL) h+='<div class="sum-row" style="font-size:12px;color:#8E8E93">↳ Men: '+(s.nAtM||'—')+' (Rahat: '+(s.nArM||'—')+')  ·  Ladies: '+(s.nAtL||'—')+' (Rahat: '+(s.nArL||'—')+')</div>';
         h+='<div class="sum-row">Raat thaals: <span class="sum-val">'+s.nRt+'</span> &nbsp;·&nbsp; Rahat: <span class="sum-val">'+s.nRr+'</span></div>';
+        if(s.nRtM||s.nRtL) h+='<div class="sum-row" style="font-size:12px;color:#8E8E93">↳ Men: '+(s.nRtM||'—')+' (Rahat: '+(s.nRrM||'—')+')  ·  Ladies: '+(s.nRtL||'—')+' (Rahat: '+(s.nRrL||'—')+')</div>';
         if(s.niyazNotes) h+='<div class="sum-row" style="margin-top:4px">'+s.niyazNotes+'</div>';
       } else if(t==='avit'){
         h+=ragBadge(s.avTx)+'</div>';
@@ -466,8 +475,12 @@ async function renderDash(){
       h+='<div class="sum-footer">';
       h+='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
       h+='<span class="sum-time">'+(s.reporter?s.reporter+' · ':'')+formatDateTime(s.timestamp||s.time)+'</span>';
-      const vNum=parseInt((s.version||'v1').replace('v',''));
-      if(vNum>1) h+='<span style="font-size:11px;font-weight:700;background:#FEF3E2;color:#5C2E00;padding:2px 8px;border-radius:20px">'+s.version+' · resubmission</span>';
+      if(s.draft){
+        h+='<span style="font-size:11px;font-weight:700;background:#FEF3E2;color:#5C2E00;padding:2px 8px;border-radius:20px">⏳ Draft — not yet submitted</span>';
+      } else {
+        const vNum=parseInt((s.version||'v1').replace('v',''));
+        if(vNum>1) h+='<span style="font-size:11px;font-weight:700;background:#FEF3E2;color:#5C2E00;padding:2px 8px;border-radius:20px">'+s.version+' · resubmission</span>';
+      }
       h+='</div>';
       h+='<button class="unlock-btn" onclick="unlockTeam('+selDash+',\''+t+'\')">Unlock</button>';
       h+='</div></div>';
