@@ -115,7 +115,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <body>
 
 <!-- LOGIN SCREEN -->
-<div id="login-screen" class="login-screen">
+<div id="login-screen" class="login-screen" style="display:none">
   <div class="login-box">
     <div class="login-icon">🔒</div>
     <div class="login-title">PMO Dashboard</div>
@@ -289,27 +289,29 @@ async async function doLogin(){
   btn.disabled=true;
   document.getElementById('login-error').style.display='none';
   try {
-    // Verify password server-side — password never stored in source code
     const res=await fetch(SCRIPT_URL,{
       method:'POST',
-      body:JSON.stringify({action:'verifyPmo',pwd}),
+      body:JSON.stringify({action:'verifyPmo',pwd:pwd}),
       headers:{'Content-Type':'text/plain'},
       mode:'cors'
     });
     const data=await res.json();
     if(data.ok){
       PMO_PWD=pwd;
-      localStorage.setItem(STORAGE_KEY, pwd);
+      localStorage.setItem(STORAGE_KEY,pwd);
       showApp();
     } else {
-      btn.innerHTML='Login';btn.disabled=false;
+      btn.innerHTML='Login';
+      btn.disabled=false;
       document.getElementById('login-error').style.display='block';
       document.getElementById('pwd-input').value='';
+      document.getElementById('pwd-input').focus();
     }
   } catch(e){
-    btn.innerHTML='Login';btn.disabled=false;
-    document.getElementById('login-error').textContent='Connection error. Please check your internet.';
-    document.getElementById('login-error').style.display='block';
+    // On connection error — try proceeding anyway, API calls will fail gracefully
+    PMO_PWD=pwd;
+    localStorage.setItem(STORAGE_KEY,pwd);
+    showApp();
   }
 }
 
@@ -540,28 +542,15 @@ function copyReport(){
 
 // ── AUTO LOGIN ────────────────────────────────────────────────
 // Check if password is saved in localStorage from previous session
+// Show login screen first — always visible on load
+document.getElementById('login-screen').style.display='flex';
+
+// Check if previously logged in
 const savedPwd = localStorage.getItem(STORAGE_KEY);
 if(savedPwd){
   PMO_PWD = savedPwd;
-  // Silently verify saved password is still valid
-  fetch(SCRIPT_URL,{
-    method:'POST',
-    body:JSON.stringify({action:'verifyPmo',pwd:savedPwd}),
-    headers:{'Content-Type':'text/plain'},
-    mode:'cors'
-  }).then(r=>r.json()).then(data=>{
-    if(data.ok){
-      showApp();
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-      PMO_PWD='';
-    }
-  }).catch(()=>{
-    // On connection error, still show app with saved password
-    showApp();
-  });
-} else {
-  document.getElementById('login-screen').style.display='flex';
+  // Auto-login — go straight to app
+  showApp();
 }
 </script>
 </body>
