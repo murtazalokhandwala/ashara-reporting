@@ -423,16 +423,17 @@ async function renderDash(){
     // Count actual submitted (not draft)
   const draftTeams = Object.keys(d).filter(t=>d[t].draft);
   const submittedReal = Object.keys(d).filter(t=>!d[t].draft).length;
-  document.getElementById('day-complete-banner').classList.toggle('show', submittedReal===TEAMS.length);
+  document.getElementById('day-complete-banner').classList.toggle('show', Object.keys(d).filter(k=>!d[k].draft).length===TEAMS.length);
 
     // Stats
+    const draftTeams=TEAMS.filter(t=>d[t]&&d[t].draft).length;
+    const submittedCount=TEAMS.filter(t=>d[t]&&!d[t].draft).length;
     const issues=TEAMS.filter(t=>d[t]&&!d[t].draft&&(d[t].rag==='red'||d[t].rag==='amber'||d[t].avTx==='no')).length;
-    const drafts=TEAMS.filter(t=>d[t]&&d[t].draft).length;
     let h='<div class="stat-row">';
-    h+='<div class="stat-box"><div class="stat-num">'+submittedReal+'/'+TEAMS.length+'</div><div class="stat-lbl">Teams submitted</div></div>';
+    h+='<div class="stat-box"><div class="stat-num">'+submittedCount+'/'+TEAMS.length+'</div><div class="stat-lbl">Teams submitted</div></div>';
     h+='<div class="stat-box"><div class="stat-num" style="color:'+(issues>0?'#C0392B':'#1D9E75')+'">'+issues+'</div><div class="stat-lbl">Issues flagged</div></div>';
     h+='</div>';
-    if(drafts>0) h+='<div style="background:#FEF3E2;border:1px solid #D4820A;border-radius:8px;padding:8px 12px;font-size:13px;color:#5C2E00;margin-bottom:10px;font-weight:600">⏳ '+drafts+' team'+(drafts>1?'s':'')+' have saved a draft — awaiting final submission</div>';
+    if(draftTeams>0) h+='<div style="background:#FEF3E2;border:1px solid #D4820A;border-radius:8px;padding:8px 12px;font-size:13px;color:#5C2E00;margin-bottom:10px;font-weight:600">⏳ '+draftTeams+' team'+(draftTeams>1?'s':'')+' have saved a draft — awaiting final submission</div>';
 
     if(cnt===0){h+='<div class="empty">No reports yet for '+DAYS[selDash].l+'</div>';el.innerHTML=h;return;}
 
@@ -482,7 +483,7 @@ async function renderDash(){
         if(vNum>1) h+='<span style="font-size:11px;font-weight:700;background:#FEF3E2;color:#5C2E00;padding:2px 8px;border-radius:20px">'+s.version+' · resubmission</span>';
       }
       h+='</div>';
-      h+='<button class="unlock-btn" onclick="unlockTeam('+selDash+',\''+t+'\')">Unlock</button>';
+      if(!s.draft) h+='<button class="unlock-btn" onclick="unlockTeam('+selDash+',\''+t+'\')">' + 'Unlock</button>';
       h+='</div></div>';
     });
 
@@ -512,7 +513,7 @@ async function renderReport(){
   try {
     const res=await api({action:'getReport',day:selReport});
     if(!res.ok||!res.message){el.innerHTML='<div class="empty">No reports submitted yet for '+DAYS[selReport].l+'</div>';return;}
-    const submitted=res.submitted||0;
+    const submitted=res.submitted||0; // actual submitted, excludes drafts
     el.innerHTML=`
       <div style="font-size:13px;color:#8E8E93;margin-bottom:10px">${submitted} of ${TEAMS.length} teams reported · ${DAYS[selReport].l} · ${DAYS[selReport].d}</div>
       <div class="report-box"><pre id="report-text">${res.message.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre></div>
