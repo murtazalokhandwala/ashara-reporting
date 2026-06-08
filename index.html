@@ -226,6 +226,7 @@ async function init(){
     document.getElementById('loading-days').style.display='none';
     document.getElementById('day-section').style.display='block';
     renderSubDays();
+    submittedStatus={}; // Always start clean
     await loadSubmissionStatus();
     buildGrid();
   } catch(e) {
@@ -238,8 +239,14 @@ async function init(){
 async function loadSubmissionStatus(){
   try {
     const r=await api({action:'checkAllSubmitted',day:selSub});
-    // checkAllSubmitted returns {ok:true, teams:{teamId:{submitted,reporter,time,fields}}}
-    submittedStatus = (r.ok && r.teams) ? r.teams : {};
+    if(r.ok && r.teams){
+      // Tag each entry with the day it belongs to prevent cross-day bleeding
+      const teams=r.teams;
+      Object.keys(teams).forEach(k=>{ teams[k].day=selSub; });
+      submittedStatus=teams;
+    } else {
+      submittedStatus={};
+    }
   } catch(e){
     submittedStatus={};
   }
@@ -258,8 +265,9 @@ function renderSubDays(){
     b.innerHTML='<strong>'+DAYS[i].l+'</strong> · '+DAYS[i].d;
     b.onclick=async()=>{
       selSub=i;
+      // Clear stale cache immediately before switching day
+      submittedStatus={};
       renderSubDays();
-      // Show loading state while fetching new day status
       showGridLoading();
       await loadSubmissionStatus();
       buildGrid();
@@ -322,10 +330,11 @@ function openForm(t){
   document.getElementById('form-draft').style.display='none';
   document.getElementById('form-locked').style.display='none';
 
-  // Check submission status from local cache
+  // Check submission status — verify day matches to prevent cross-day bleeding
   const s=submittedStatus[t.id];
-  const isSubmitted = s && s.submitted===true;
-  const isDraft = s && s.draft===true && !isSubmitted;
+  const dayMatch = !s || s.day===undefined || s.day===selSub;
+  const isSubmitted = s && s.submitted===true && dayMatch;
+  const isDraft = s && s.draft===true && !isSubmitted && dayMatch;
 
   if(isDraft){
     // Draft — reopen form with saved values
@@ -364,14 +373,14 @@ async function goHome(){
   // Reset form state
   resetFormState();
 
-  // Show home immediately with current cached state (fast)
+  // Switch to home screen
   document.getElementById('form-screen').classList.remove('active');
   document.getElementById('home').classList.add('active');
 
-  // Build grid immediately from cache so user sees correct state right away
-  buildGrid();
+  // Show loading state while refreshing — prevents stale data being tapped
+  showGridLoading();
 
-  // Then refresh from Sheet in background and update grid silently
+  // Fresh fetch from Sheet — always accurate
   await loadSubmissionStatus();
   buildGrid();
 }
@@ -677,6 +686,7 @@ async function doSave(){
       submittedStatus[id] = {
         submitted: false,
         draft: true,
+        day: selSub,
         reporter: d.reporter,
         time: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
         fields: {nAt:d.nAt,nAr:d.nAr,nAtM:d.nAtM,nArM:d.nArM,nAtL:d.nAtL,nArL:d.nArL,
@@ -763,6 +773,7 @@ async function doSubmit(){
       // matching what checkAllSubmitted returns from the Sheet
       submittedStatus[id]={
         submitted:true,
+        day:selSub,
         reporter:d.reporter,
         time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
         fields:{
