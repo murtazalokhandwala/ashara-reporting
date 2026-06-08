@@ -65,6 +65,10 @@ input[type=number]{-moz-appearance:textfield}
 .submit-btn{width:100%;padding:18px;background:#0F2744;border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;color:#fff;font-family:inherit;margin-top:12px;letter-spacing:0.01em}
 .submit-btn:active{background:#1A4F96;transform:scale(0.98)}
 .submit-btn:disabled{background:#C7C7CC;cursor:not-allowed}
+.save-btn{flex:1;padding:16px;background:#F2F2F7;border:1.5px solid #1A4F96;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;color:#1A4F96;font-family:inherit;margin-top:8px}
+.save-btn:active{background:#E0EEFF}
+.btn-row{display:flex;gap:10px;margin-top:8px}
+.status-draft{color:#D4820A}
 .success-screen{padding:32px 20px;text-align:center}
 .success-icon{font-size:64px;margin-bottom:16px}
 .success-title{font-size:22px;font-weight:700;color:#1D9E75;margin-bottom:8px}
@@ -133,7 +137,7 @@ input[type=number]{-moz-appearance:textfield}
   <div class="form-body">
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
     <div id="form-fields"></div>
-    <button class="submit-btn" id="submit-btn" onclick="attemptSubmit()">Submit report</button>
+    <div id="btn-area" style="margin-top:0"></div>
     <div id="form-ok" style="display:none" class="success-screen">
       <div class="success-icon">✅</div>
       <div class="success-title">Report submitted</div>
@@ -269,7 +273,8 @@ function buildGrid(){
   g.innerHTML='';
   TEAMS.forEach(t=>{
     const s=submittedStatus[t.id];
-    const submitted=s && s.submitted===true;
+    const submitted = s && s.submitted===true;
+    const draft = s && s.draft===true && !submitted;
     const btn=document.createElement('button');
     btn.className='team-btn';
     btn.innerHTML=
@@ -278,6 +283,8 @@ function buildGrid(){
       '<div class="team-lead">'+t.l+'</div>'+
       '<div class="team-status">'+(submitted
         ?'<span class="status-ok">✓ Submitted</span>'
+        : draft
+        ?'<span class="status-draft">⏳ Draft saved</span>'
         :'<span class="status-pending">Pending</span>')+
       '</div>';
     btn.onclick=()=>openForm(t);
@@ -311,7 +318,17 @@ function openForm(t){
   // Check submission status from local cache
   const s=submittedStatus[t.id];
   const isSubmitted = s && s.submitted===true;
+  const isDraft = s && s.draft===true && !isSubmitted;
 
+  if(isDraft){
+    // Draft — reopen form with saved values
+    renderForm(t.id);
+    document.getElementById('form-fields').style.display='block';
+    renderButtons(t.id);
+    // Pre-fill saved values after a tick
+    setTimeout(()=>{ prefillNiyaz(s.fields||{}); }, 50);
+    return;
+  }
   if(isSubmitted){
     // Show read-only locked view
     document.getElementById('locked-day').textContent=DAYS[selSub].l+' · '+DAYS[selSub].d;
@@ -323,7 +340,16 @@ function openForm(t){
     // Show fresh empty form
     renderForm(t.id);
     document.getElementById('form-fields').style.display='block';
-    document.getElementById('submit-btn').style.display='block';
+    renderButtons(t.id);
+  }
+}
+
+function renderButtons(teamId){
+  const area = document.getElementById('btn-area');
+  if(teamId === 'niyaz'){
+    area.innerHTML = '<div class="btn-row"><button class="save-btn" id="save-btn" onclick="doSave()">Save draft</button><button class="submit-btn" id="submit-btn" style="flex:2" onclick="attemptSubmit()">Submit report</button></div>';
+  } else {
+    area.innerHTML = '<button class="submit-btn" id="submit-btn" onclick="attemptSubmit()">Submit report</button>';
   }
 }
 
@@ -341,6 +367,24 @@ async function goHome(){
   // Then refresh from Sheet in background and update grid silently
   await loadSubmissionStatus();
   buildGrid();
+}
+
+function prefillNiyaz(f){
+  const fields = ['n-at','n-ar','n-at-m','n-ar-m','n-at-l','n-ar-l',
+                  'n-rt','n-rr','n-rt-m','n-rr-m','n-rt-l','n-rr-l'];
+  const map = {
+    'n-at':f.nAt,'n-ar':f.nAr,'n-at-m':f.nAtM,'n-ar-m':f.nArM,
+    'n-at-l':f.nAtL,'n-ar-l':f.nArL,'n-rt':f.nRt,'n-rr':f.nRr,
+    'n-rt-m':f.nRtM,'n-rr-m':f.nRrM,'n-rt-l':f.nRtL,'n-rr-l':f.nRrL
+  };
+  fields.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && map[id]) el.value=map[id];
+  });
+  const notes=document.getElementById('niyaz-notes');
+  if(notes && f.niyazNotes) notes.value=f.niyazNotes;
+  const rep=document.getElementById('reporter');
+  if(rep && f.reporter) rep.value=f.reporter;
 }
 
 function resetFormState(){
@@ -424,9 +468,19 @@ function renderForm(id){
     h+='<div class="section-title" style="margin-top:0">Afternoon Niyaz — Lunch</div>';
     h+=nf('n-at','Total thaals served',true)+nf('n-ar','Rahat (elderly) thaals',true,'must be ≤ afternoon total');
     h+='<div class="warn-msg" id="warn-n-ar">Rahat thaals cannot exceed afternoon total</div>';
+    h+='<div style="background:#F2F2F7;border-radius:10px;padding:10px 12px;margin-bottom:14px">';
+    h+='<div style="font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">Lunch breakdown (optional)</div>';
+    h+=nf('n-at-m','Men thaals',false)+nf('n-ar-m','Rahat — Men thaals',false);
+    h+=nf('n-at-l','Ladies thaals',false)+nf('n-ar-l','Rahat — Ladies thaals',false);
+    h+='</div>';
     h+='<div class="section-title">Raat Niyaz — Dinner</div>';
     h+=nf('n-rt','Total thaals served',true,'enter 0 if no dinner')+nf('n-rr','Rahat (elderly) thaals',true,'must be ≤ raat total');
     h+='<div class="warn-msg" id="warn-n-rr">Rahat thaals cannot exceed raat total</div>';
+    h+='<div style="background:#F2F2F7;border-radius:10px;padding:10px 12px;margin-bottom:14px">';
+    h+='<div style="font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">Dinner breakdown (optional)</div>';
+    h+=nf('n-rt-m','Men thaals',false)+nf('n-rr-m','Rahat — Men thaals',false);
+    h+=nf('n-rt-l','Ladies thaals',false)+nf('n-rr-l','Rahat — Ladies thaals',false);
+    h+='</div>';
     h+=taf('niyaz-notes','Additional comments',false);
   } else if(id==='avit'){
     h+=ynf('av-tx','Transmission completed with no interruptions?',true);
@@ -585,6 +639,55 @@ function validate(){
   return{valid:true,warnings:[]};
 }
 
+async function doSave(){
+  // Save without validation — store as draft
+  const id = curTeam.id;
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Saving...';
+  const d = {reporter:(document.getElementById('reporter')?.value||'').trim()};
+  d.nAt=document.getElementById('n-at')?.value||'';
+  d.nAr=document.getElementById('n-ar')?.value||'';
+  d.nAtM=document.getElementById('n-at-m')?.value||'';
+  d.nArM=document.getElementById('n-ar-m')?.value||'';
+  d.nAtL=document.getElementById('n-at-l')?.value||'';
+  d.nArL=document.getElementById('n-ar-l')?.value||'';
+  d.nRt=document.getElementById('n-rt')?.value||'';
+  d.nRr=document.getElementById('n-rr')?.value||'';
+  d.nRtM=document.getElementById('n-rt-m')?.value||'';
+  d.nRrM=document.getElementById('n-rr-m')?.value||'';
+  d.nRtL=document.getElementById('n-rt-l')?.value||'';
+  d.nRrL=document.getElementById('n-rr-l')?.value||'';
+  d.niyazNotes=(document.getElementById('niyaz-notes')?.value||'').trim();
+  try {
+    const res = await api({action:'saveDraft', day:selSub, team:id, fields:d});
+    if(res.ok){
+      // Update local cache as draft
+      submittedStatus[id] = {
+        submitted: false,
+        draft: true,
+        reporter: d.reporter,
+        time: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
+        fields: {nAt:d.nAt,nAr:d.nAr,nAtM:d.nAtM,nArM:d.nArM,nAtL:d.nAtL,nArL:d.nArL,
+                 nRt:d.nRt,nRr:d.nRr,nRtM:d.nRtM,nRrM:d.nRrM,nRtL:d.nRtL,nRrL:d.nRrL,
+                 niyazNotes:d.niyazNotes}
+      };
+      btn.innerHTML = '✓ Saved';
+      btn.disabled = false;
+      // Show brief confirmation then re-enable
+      setTimeout(()=>{ btn.innerHTML='Save draft'; }, 2000);
+    } else {
+      btn.innerHTML = 'Save draft';
+      btn.disabled = false;
+      alert('Save error: '+(res.error||'Unknown error'));
+    }
+  } catch(e){
+    btn.innerHTML = 'Save draft';
+    btn.disabled = false;
+    alert('Connection error. Please try again.');
+  }
+}
+
 function attemptSubmit(){
   document.querySelectorAll('.err-msg').forEach(e=>{e.textContent='';e.classList.remove('show');});
   document.querySelectorAll('.error-field').forEach(e=>e.classList.remove('error-field'));
@@ -614,8 +717,16 @@ async function doSubmit(){
   } else if(id==='niyaz'){
     d.nAt=document.getElementById('n-at')?.value||'';
     d.nAr=document.getElementById('n-ar')?.value||'';
+    d.nAtM=document.getElementById('n-at-m')?.value||'';
+    d.nArM=document.getElementById('n-ar-m')?.value||'';
+    d.nAtL=document.getElementById('n-at-l')?.value||'';
+    d.nArL=document.getElementById('n-ar-l')?.value||'';
     d.nRt=document.getElementById('n-rt')?.value||'';
     d.nRr=document.getElementById('n-rr')?.value||'';
+    d.nRtM=document.getElementById('n-rt-m')?.value||'';
+    d.nRrM=document.getElementById('n-rr-m')?.value||'';
+    d.nRtL=document.getElementById('n-rt-l')?.value||'';
+    d.nRrL=document.getElementById('n-rr-l')?.value||'';
     d.niyazNotes=(document.getElementById('niyaz-notes')?.value||'').trim();
   } else if(id==='avit'){
     d.avTx=getRag('av-tx')||'';
