@@ -281,7 +281,7 @@ function showModal(title,body,confirmLabel,action){
 function closeModal(){document.getElementById('modal').classList.remove('show');}
 
 // ── LOGIN ──────────────────────────────────────────────────────
-async function doLogin(){
+async async function doLogin(){
   const pwd=document.getElementById('pwd-input').value.trim();
   if(!pwd) return;
   const btn=document.getElementById('login-btn');
