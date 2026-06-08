@@ -281,7 +281,7 @@ function showModal(title,body,confirmLabel,action){
 function closeModal(){document.getElementById('modal').classList.remove('show');}
 
 // ── LOGIN ──────────────────────────────────────────────────────
-async async function doLogin(){
+async function doLogin(){
   const pwd=document.getElementById('pwd-input').value.trim();
   if(!pwd) return;
   const btn=document.getElementById('login-btn');
@@ -422,14 +422,10 @@ async function renderDash(){
     const res=await api({action:'getDayStatus',day:selDash});
     const d=res.data||{};
     const cnt=Object.keys(d).length;
-    // Count actual submitted (not draft)
-  const draftTeams = Object.keys(d).filter(t=>d[t].draft);
-  const submittedReal = Object.keys(d).filter(t=>!d[t].draft).length;
-  document.getElementById('day-complete-banner').classList.toggle('show', Object.keys(d).filter(k=>!d[k].draft).length===TEAMS.length);
-
-    // Stats
+    // Stats — excludes drafts
     const draftTeams=TEAMS.filter(t=>d[t]&&d[t].draft).length;
     const submittedCount=TEAMS.filter(t=>d[t]&&!d[t].draft).length;
+    document.getElementById('day-complete-banner').classList.toggle('show', submittedCount===TEAMS.length);
     const issues=TEAMS.filter(t=>d[t]&&!d[t].draft&&(d[t].rag==='red'||d[t].rag==='amber'||d[t].avTx==='no')).length;
     let h='<div class="stat-row">';
     h+='<div class="stat-box"><div class="stat-num">'+submittedCount+'/'+TEAMS.length+'</div><div class="stat-lbl">Teams submitted</div></div>';
