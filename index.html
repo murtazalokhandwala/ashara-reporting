@@ -186,7 +186,7 @@ const DAYS=[
   {l:'Moharram 8',d:'Jun 22'},{l:'Moharram 9',d:'Jun 23'},{l:'Ashura · Moharram 10',d:'Jun 24'},
 ];
 
-let activeDays=[],selSub=0,curTeam=null;
+let activeDays=[],selSub=0,curTeam=null,isSubmitting=false,isLoadingStatus=false;
 // submittedStatus: keyed by team id, value = {submitted:true, reporter, time, fields}
 let submittedStatus={};
 
@@ -237,18 +237,25 @@ async function init(){
 
 // ── LOAD SUBMISSION STATUS — single bulk call ─────────────────
 async function loadSubmissionStatus(){
+  if(isLoadingStatus) return; // Prevent concurrent calls
+  isLoadingStatus=true;
+  const dayAtStart=selSub; // Capture day at start of fetch
   try {
-    const r=await api({action:'checkAllSubmitted',day:selSub});
-    if(r.ok && r.teams){
-      // Tag each entry with the day it belongs to prevent cross-day bleeding
-      const teams=r.teams;
-      Object.keys(teams).forEach(k=>{ teams[k].day=selSub; });
-      submittedStatus=teams;
-    } else {
-      submittedStatus={};
+    const r=await api({action:'checkAllSubmitted',day:dayAtStart});
+    // Only apply result if day hasn't changed while fetching
+    if(dayAtStart===selSub){
+      if(r.ok && r.teams){
+        const teams=r.teams;
+        Object.keys(teams).forEach(k=>{ teams[k].day=dayAtStart; });
+        submittedStatus=teams;
+      } else {
+        submittedStatus={};
+      }
     }
   } catch(e){
-    submittedStatus={};
+    if(dayAtStart===selSub) submittedStatus={};
+  } finally {
+    isLoadingStatus=false;
   }
 }
 
@@ -265,12 +272,14 @@ function renderSubDays(){
     b.innerHTML='<strong>'+DAYS[i].l+'</strong> · '+DAYS[i].d;
     b.onclick=async()=>{
       selSub=i;
-      // Clear stale cache immediately before switching day
       submittedStatus={};
       renderSubDays();
+      const g=document.getElementById('team-grid');
+      if(g) g.style.pointerEvents='none';
       showGridLoading();
       await loadSubmissionStatus();
       buildGrid();
+      if(g) g.style.pointerEvents='auto';
     };
     el.appendChild(b);
   });
@@ -341,8 +350,8 @@ function openForm(t){
     renderForm(t.id);
     document.getElementById('form-fields').style.display='block';
     renderButtons(t.id);
-    // Pre-fill saved values after a tick
-    setTimeout(()=>{ prefillNiyaz(s.fields||{}, s.reporter||''); }, 50);
+    // Pre-fill immediately — renderForm is synchronous so fields exist now
+    prefillNiyaz(s.fields||{}, s.reporter||'');
     return;
   }
   if(isSubmitted){
@@ -370,19 +379,36 @@ function renderButtons(teamId){
 }
 
 async function goHome(){
-  // Reset form state
+  // Reset form state and clear team context
   resetFormState();
+  curTeam=null;
+  isSubmitting=false;
 
   // Switch to home screen
   document.getElementById('form-screen').classList.remove('active');
   document.getElementById('home').classList.add('active');
 
-  // Show loading state while refreshing — prevents stale data being tapped
+  // Disable team grid while loading — prevents tapping with stale data
+  const grid=document.getElementById('team-grid');
+  if(grid) grid.style.pointerEvents='none';
   showGridLoading();
 
-  // Fresh fetch from Sheet — always accurate
+  // Refresh active days in case PMO activated a new day
+  try {
+    const dRes=await api({action:'getActiveDays'});
+    if(dRes.days){
+      activeDays=dRes.days;
+      if(activeDays.length && !activeDays.includes(selSub))
+        selSub=activeDays[activeDays.length-1];
+      renderSubDays();
+    }
+  } catch(e){}
+  // Fresh fetch from Sheet
   await loadSubmissionStatus();
   buildGrid();
+
+  // Re-enable grid only after fresh data is loaded
+  if(grid) grid.style.pointerEvents='auto';
 }
 
 function prefillNiyaz(f, reporter){
@@ -599,7 +625,15 @@ function buildLockedSummary(id,f){
     if(f.itsNotes) h+=row('Notes',f.itsNotes);
   } else if(id==='niyaz'){
     h+=row('Afternoon thaals',f.nAt);h+=row('Afternoon Rahat',f.nAr);
+    if(f.nAtM||f.nAtL){
+      h+=row('  ↳ Men thaals',f.nAtM||'—');h+=row('  ↳ Men Rahat',f.nArM||'—');
+      h+=row('  ↳ Ladies thaals',f.nAtL||'—');h+=row('  ↳ Ladies Rahat',f.nArL||'—');
+    }
     h+=row('Raat thaals',f.nRt);h+=row('Raat Rahat',f.nRr);
+    if(f.nRtM||f.nRtL){
+      h+=row('  ↳ Men thaals',f.nRtM||'—');h+=row('  ↳ Men Rahat',f.nRrM||'—');
+      h+=row('  ↳ Ladies thaals',f.nRtL||'—');h+=row('  ↳ Ladies Rahat',f.nRrL||'—');
+    }
     if(f.niyazNotes) h+=row('Notes',f.niyazNotes);
   } else if(id==='avit'){
     h+=row('Transmission',f.avTx==='yes'?'✅ No interruptions':'❌ Issues reported');
@@ -722,8 +756,11 @@ function attemptSubmit(){
 
 // ── SUBMIT ────────────────────────────────────────────────────
 async function doSubmit(){
+  if(isSubmitting) return; // Guard against double submission
+  isSubmitting=true;
   const id=curTeam.id;
-  const btn=document.getElementById('submit-btn') || document.getElementById('btn-area');
+  // Always find the actual submit button inside btn-area
+  const btn=document.getElementById('submit-btn');
   if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Submitting...';}
 
   // Collect fields
@@ -781,24 +818,29 @@ async function doSubmit(){
           itsReg:d.itsReg, itsAtt:d.itsAtt, itsLate:d.itsLate, itsNa:d.itsNa, itsNotes:d.itsNotes,
           // Niyaz fields
           nAt:d.nAt, nAr:d.nAr, nRt:d.nRt, nRr:d.nRr, niyazNotes:d.niyazNotes,
+          nAtM:d.nAtM||'', nArM:d.nArM||'', nAtL:d.nAtL||'', nArL:d.nArL||'',
+          nRtM:d.nRtM||'', nRrM:d.nRrM||'', nRtL:d.nRtL||'', nRrL:d.nRrL||'',
           // AV fields
           avTx:d.avTx, avIssues:d.avIssues, avS:d.avS, avE:d.avE, avNotes:d.avNotes,
           // RAG fields
           rag:d.rag, ragDetails:d.ragDetails, ragNotes:d.ragNotes
         }
       };
+      isSubmitting=false;
       // Show success screen
       document.getElementById('form-fields').style.display='none';
       document.getElementById('btn-area').innerHTML='';
       document.getElementById('form-ok').style.display='block';
     } else {
-      btn.disabled=false;
-      btn.innerHTML='Submit report';
+      isSubmitting=false;
+      const sb1=document.getElementById('submit-btn');
+      if(sb1){sb1.disabled=false;sb1.innerHTML='Submit report';}
       alert('Submission error: '+(res.error||'Unknown error')+'. Please try again.');
     }
   } catch(e){
-    btn.disabled=false;
-    btn.innerHTML='Submit report';
+    isSubmitting=false;
+    const sb2=document.getElementById('submit-btn');
+    if(sb2){sb2.disabled=false;sb2.innerHTML='Submit report';}
     alert('Connection error: '+e.message+'. Please check your connection and try again.');
   }
 }
