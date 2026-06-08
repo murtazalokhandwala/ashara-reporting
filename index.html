@@ -311,7 +311,7 @@ function openForm(t){
 
   // Hide ALL panels — always start from clean state
   document.getElementById('form-fields').style.display='none';
-  document.getElementById('submit-btn').style.display='none';
+  document.getElementById('btn-area').innerHTML='';
   document.getElementById('form-ok').style.display='none';
   document.getElementById('form-locked').style.display='none';
 
@@ -404,10 +404,8 @@ function resetFormState(){
   });
   // Reset progress bar
   document.getElementById('progress-fill').style.width='0%';
-  // Reset submit button fully
-  const btn=document.getElementById('submit-btn');
-  if(btn){btn.disabled=false;btn.innerHTML='Submit report';}
-  // Clear form fields HTML completely
+  // Clear button area and form fields completely
+  document.getElementById('btn-area').innerHTML='';
   document.getElementById('form-fields').innerHTML='';
 }
 
@@ -702,9 +700,8 @@ function attemptSubmit(){
 // ── SUBMIT ────────────────────────────────────────────────────
 async function doSubmit(){
   const id=curTeam.id;
-  const btn=document.getElementById('submit-btn');
-  btn.disabled=true;
-  btn.innerHTML='<span class="spinner"></span>Submitting...';
+  const btn=document.getElementById('submit-btn') || document.getElementById('btn-area');
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Submitting...';}
 
   // Collect fields
   const d={reporter:(document.getElementById('reporter')?.value||'').trim()};
@@ -768,7 +765,7 @@ async function doSubmit(){
       };
       // Show success screen
       document.getElementById('form-fields').style.display='none';
-      document.getElementById('submit-btn').style.display='none';
+      document.getElementById('btn-area').innerHTML='';
       document.getElementById('form-ok').style.display='block';
     } else {
       btn.disabled=false;
