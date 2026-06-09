@@ -186,7 +186,7 @@ const DAYS=[
   {l:'Moharram 8',d:'Jun 22'},{l:'Moharram 9',d:'Jun 23'},{l:'Ashura · Moharram 10',d:'Jun 24'},
 ];
 
-let activeDays=[],selSub=0,curTeam=null,isSubmitting=false,isLoadingStatus=false;
+let activeDays=[],selSub=0,curTeam=null,isSubmitting=false;
 // submittedStatus: keyed by team id, value = {submitted:true, reporter, time, fields}
 let submittedStatus={};
 
@@ -237,25 +237,27 @@ async function init(){
 
 // ── LOAD SUBMISSION STATUS — single bulk call ─────────────────
 async function loadSubmissionStatus(){
-  if(isLoadingStatus) return; // Prevent concurrent calls
-  isLoadingStatus=true;
-  const dayAtStart=selSub; // Capture day at start of fetch
+  // Use a request counter — each call gets a unique ID
+  // If a newer call starts, the older one discards its result
+  loadSubmissionStatus._reqId = (loadSubmissionStatus._reqId || 0) + 1;
+  const myReqId = loadSubmissionStatus._reqId;
+  const dayAtStart = selSub;
   try {
-    const r=await api({action:'checkAllSubmitted',day:dayAtStart});
-    // Only apply result if day hasn't changed while fetching
-    if(dayAtStart===selSub){
+    const r = await api({action:'checkAllSubmitted', day:dayAtStart});
+    // Only apply if this is still the latest request AND day hasn't changed
+    if(myReqId === loadSubmissionStatus._reqId && dayAtStart === selSub){
       if(r.ok && r.teams){
-        const teams=r.teams;
-        Object.keys(teams).forEach(k=>{ teams[k].day=dayAtStart; });
-        submittedStatus=teams;
+        const teams = r.teams;
+        Object.keys(teams).forEach(k=>{ teams[k].day = dayAtStart; });
+        submittedStatus = teams;
       } else {
-        submittedStatus={};
+        submittedStatus = {};
       }
     }
   } catch(e){
-    if(dayAtStart===selSub) submittedStatus={};
-  } finally {
-    isLoadingStatus=false;
+    if(myReqId === loadSubmissionStatus._reqId && dayAtStart === selSub){
+      submittedStatus = {};
+    }
   }
 }
 
