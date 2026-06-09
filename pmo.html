@@ -222,7 +222,7 @@ const TEAM_NAMES={its:'ITS / Scanning',niyaz:'Niyaz + Mawaid',avit:'A/V + IT + R
   hr:'HR',finance:'Finance',nazafat:'Nazafat',pr:'PR',parking:'Parking + Flow (BGI)'};
 const TEAM_EMOJI={its:'👁️',niyaz:'🍽️',avit:'📡',hr:'👥',finance:'💰',nazafat:'✨',pr:'📣',parking:'🅿️'};
 
-let activeDays=[],selDash=0,selReport=-1,curTab='dashboard',PMO_PWD='';
+let activeDays=[],selDash=0,selReport=-1,curTab='dashboard',PMO_PWD='',dashLoadId=0,reportLoadId=0;
 
 // ── API ────────────────────────────────────────────────────────
 async function api(payload){
@@ -368,7 +368,17 @@ function renderDashDays(){
     const b=document.createElement('button');
     b.className='dp'+(i===selDash?' active-day':'');
     b.innerHTML='<strong>'+DAYS[i].l+'</strong>&nbsp;·&nbsp;'+DAYS[i].d;
-    b.onclick=async()=>{selDash=i;renderDashDays();await renderDash();};
+    b.onclick=async()=>{
+      selDash=i;
+      renderDashDays();
+      // Dim content immediately so user knows it's loading
+      const el=document.getElementById('dash-content');
+      el.style.opacity='0.4';
+      el.style.pointerEvents='none';
+      await renderDash();
+      el.style.opacity='1';
+      el.style.pointerEvents='auto';
+    };
     el.appendChild(b);
   });
 }
@@ -380,7 +390,16 @@ function renderReportDays(){
     const b=document.createElement('button');
     b.className='dp'+(i===selReport?' active-day':'');
     b.innerHTML='<strong>'+DAYS[i].l+'</strong>&nbsp;·&nbsp;'+DAYS[i].d;
-    b.onclick=async()=>{selReport=i;renderReportDays();await renderReport();};
+    b.onclick=async()=>{
+      selReport=i;
+      renderReportDays();
+      const rel=document.getElementById('report-content');
+      rel.style.opacity='0.4';
+      rel.style.pointerEvents='none';
+      await renderReport();
+      rel.style.opacity='1';
+      rel.style.pointerEvents='auto';
+    };
     el.appendChild(b);
   });
 }
@@ -412,14 +431,18 @@ function ragBadge(v){
 
 async function refreshDash(){
   document.getElementById('dash-content').innerHTML='<div class="loading"><span class="spinner"></span>Refreshing...</div>';
-  await renderDash();
+  await renderDash(); // renderDash has its own load ID guard
 }
 
 async function renderDash(){
+  const myDashId=++dashLoadId; // Unique ID — discard result if newer call started
+  const dayAtStart=selDash;
   const el=document.getElementById('dash-content');
   el.innerHTML='<div class="loading"><span class="spinner"></span>Loading...</div>';
   try {
-    const res=await api({action:'getDayStatus',day:selDash});
+    const res=await api({action:'getDayStatus',day:dayAtStart});
+    // Discard if a newer renderDash call has started or day changed
+    if(myDashId!==dashLoadId || dayAtStart!==selDash) return;
     const d=res.data||{};
     const cnt=Object.keys(d).length;
     // Stats — excludes drafts
@@ -487,7 +510,7 @@ async function renderDash(){
 
     el.innerHTML=h;
   } catch(e){
-    el.innerHTML='<div class="empty">Error loading dashboard. Please refresh.</div>';
+    if(myDashId===dashLoadId) el.innerHTML='<div class="empty">Error loading dashboard. Please refresh.</div>';
   }
 }
 
@@ -507,9 +530,12 @@ async function unlockTeam(day,teamId){
 async function renderReport(){
   const el=document.getElementById('report-content');
   if(selReport===-1){el.innerHTML='<div class="empty">👆 Tap a day above to generate the report</div>';return;}
+  const myRptId=++reportLoadId;
+  const rptDayAtStart=selReport;
   el.innerHTML='<div class="loading"><span class="spinner"></span>Generating...</div>';
   try {
-    const res=await api({action:'getReport',day:selReport});
+    const res=await api({action:'getReport',day:rptDayAtStart});
+    if(myRptId!==reportLoadId || rptDayAtStart!==selReport) return;
     if(!res.ok||!res.message){el.innerHTML='<div class="empty">No reports submitted yet for '+DAYS[selReport].l+'</div>';return;}
     const submitted=res.submitted||0; // actual submitted, excludes drafts
     el.innerHTML=`
@@ -517,7 +543,7 @@ async function renderReport(){
       <div class="report-box"><pre id="report-text">${res.message.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre></div>
       <button class="copy-btn" onclick="copyReport()">📋 Copy WhatsApp message</button>`;
   } catch(e){
-    el.innerHTML='<div class="empty">Error generating report. Please try again.</div>';
+    if(myRptId===reportLoadId) el.innerHTML='<div class="empty">Error generating report. Please try again.</div>';
   }
 }
 
