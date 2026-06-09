@@ -186,7 +186,7 @@ const DAYS=[
   {l:'Moharram 8',d:'Jun 22'},{l:'Moharram 9',d:'Jun 23'},{l:'Ashura · Moharram 10',d:'Jun 24'},
 ];
 
-let activeDays=[],selSub=0,curTeam=null,isSubmitting=false;
+let activeDays=[],selSub=0,curTeam=null,isSubmitting=false,gridLoadId=0;
 // submittedStatus: keyed by team id, value = {submitted:true, reporter, time, fields}
 let submittedStatus={};
 
@@ -227,8 +227,9 @@ async function init(){
     document.getElementById('day-section').style.display='block';
     renderSubDays();
     submittedStatus={}; // Always start clean
+    const myLoadId=++gridLoadId;
     await loadSubmissionStatus();
-    buildGrid();
+    if(myLoadId===gridLoadId){ buildGrid(); unlockGrid(); }
   } catch(e) {
     document.getElementById('loading-days').style.display='none';
     document.getElementById('conn-error').style.display='block';
@@ -275,22 +276,35 @@ function renderSubDays(){
     b.onclick=async()=>{
       selSub=i;
       submittedStatus={};
+      const myLoadId=++gridLoadId; // Unique ID for this load
       renderSubDays();
-      const g=document.getElementById('team-grid');
-      if(g) g.style.pointerEvents='none';
-      showGridLoading();
+      lockGrid();
       await loadSubmissionStatus();
-      buildGrid();
-      if(g) g.style.pointerEvents='auto';
+      // Only update grid if no newer load has started
+      if(myLoadId===gridLoadId){ buildGrid(); unlockGrid(); }
     };
     el.appendChild(b);
   });
 }
 
 // ── GRID ──────────────────────────────────────────────────────
-function showGridLoading(){
-  document.getElementById('team-grid').innerHTML='<div class="grid-loading"><span class="spinner-sm"></span> Loading...</div>';
+function lockGrid(){
+  const g=document.getElementById('team-grid');
+  // Replace content with loading spinner AND set pointer-events
+  g.innerHTML='<div class="grid-loading"><span class="spinner-sm"></span> Loading...</div>';
+  g.style.pointerEvents='none';
+  g.style.opacity='0.6';
   document.getElementById('grid-progress').textContent='';
+}
+
+function unlockGrid(){
+  const g=document.getElementById('team-grid');
+  g.style.pointerEvents='auto';
+  g.style.opacity='1';
+}
+
+function showGridLoading(){
+  lockGrid();
 }
 
 function buildGrid(){
@@ -390,10 +404,8 @@ async function goHome(){
   document.getElementById('form-screen').classList.remove('active');
   document.getElementById('home').classList.add('active');
 
-  // Disable team grid while loading — prevents tapping with stale data
-  const grid=document.getElementById('team-grid');
-  if(grid) grid.style.pointerEvents='none';
-  showGridLoading();
+  const myLoadId=++gridLoadId; // Unique ID for this load
+  lockGrid();
 
   // Refresh active days in case PMO activated a new day
   try {
@@ -407,10 +419,8 @@ async function goHome(){
   } catch(e){}
   // Fresh fetch from Sheet
   await loadSubmissionStatus();
-  buildGrid();
-
-  // Re-enable grid only after fresh data is loaded
-  if(grid) grid.style.pointerEvents='auto';
+  // Only update grid if no newer load has started
+  if(myLoadId===gridLoadId){ buildGrid(); unlockGrid(); }
 }
 
 function prefillNiyaz(f, reporter){
