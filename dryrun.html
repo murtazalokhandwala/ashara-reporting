@@ -232,6 +232,7 @@ async function api(payload, timeoutMs = 10000) {
     return await r.json();
   } catch (e) {
     clearTimeout(timer);
+    console.error('API fetch error:', e.name, e.message);
     throw e;
   }
 }
@@ -261,9 +262,10 @@ async function loadChecklist(silent = false) {
     renderHome();
   } catch (e) {
     if (myId !== loadReqId) return;
+    console.error('loadChecklist error:', e.name, e.message, e);
     if (!silent) {
       document.getElementById('team-list').innerHTML =
-        '<div class="empty">Could not load checklist.<br>Check your connection and tap ↻ to retry.</div>';
+        '<div class="empty">Could not load checklist.<br><small style="color:#C0392B">' + e.name + ': ' + e.message + '</small><br>Tap ↻ to retry.</div>';
     }
     updateSyncLabel('Failed');
   } finally {
