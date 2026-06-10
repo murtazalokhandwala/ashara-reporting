@@ -8,28 +8,28 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#F2F2F7;min-height:100vh;overscroll-behavior:none}
 
-/* ── HEADER ── */
 .hdr{background:#0F2744;padding:14px 14px 10px;padding-top:calc(14px + env(safe-area-inset-top));position:sticky;top:0;z-index:50}
 .hdr-sub{font-size:10px;color:#90BAD8;text-transform:uppercase;letter-spacing:.06em}
 .hdr-title{font-size:20px;font-weight:700;color:#fff;margin-top:2px}
-.hdr-date{font-size:11px;color:#AACCEE;margin-top:2px}
+.hdr-row{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.hdr-date{font-size:11px;color:#AACCEE}
+.hdr-sync{font-size:10px;color:#6B8FAA;cursor:pointer;padding:4px 0 4px 8px;min-height:28px;display:flex;align-items:center;gap:4px}
+.hdr-sync.spinning .sync-icon{animation:spin .8s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
 .pbar-wrap{height:5px;background:rgba(255,255,255,.15);border-radius:3px;margin-top:8px;overflow:hidden}
 .pbar-fill{height:100%;border-radius:3px;background:#1D9E75;transition:width .4s}
 .pbar-lbl{display:flex;justify-content:space-between;font-size:10px;color:#90BAD8;margin-top:3px}
 
-/* ── TABS ── */
-.tabs{display:flex;background:#fff;border-bottom:1px solid #E5E5EA;position:sticky;top:calc(94px + env(safe-area-inset-top));z-index:40}
+.tabs{display:flex;background:#fff;border-bottom:1px solid #E5E5EA;position:sticky;z-index:40}
 .tab{flex:1;padding:11px 4px;font-size:13px;font-weight:600;color:#8E8E93;text-align:center;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s}
 .tab.on{color:#0F2744;border-bottom-color:#0F2744}
 
-/* ── STATS ── */
 .stats{display:flex;gap:6px;padding:8px 12px;background:#fff;border-bottom:0.5px solid #E5E5EA;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .stats::-webkit-scrollbar{display:none}
 .stat{flex-shrink:0;background:#F2F2F7;border-radius:8px;padding:6px 12px;text-align:center;min-width:60px}
 .stat-n{font-size:16px;font-weight:700}
 .stat-l{font-size:9px;color:#8E8E93;margin-top:1px}
 
-/* ── TEAM CARDS ── */
 .team-list{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
 .team-card{background:#fff;border:0.5px solid #E5E5EA;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:opacity .1s;min-height:60px}
 .team-card:active{opacity:.7}
@@ -47,27 +47,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .ttag-prog{background:#E0EEFF;color:#0A2E6E}
 .ttag-pend{background:#F2F2F7;color:#8E8E93}
 
-/* ── CHECKLIST SCREEN ── */
+/* checklist screen */
 .cl-hdr{background:#0F2744;padding:12px 14px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
-.cl-back{font-size:13px;color:#AACCEE;cursor:pointer;padding:4px 0;min-width:40px;min-height:44px;display:flex;align-items:center}
+.cl-back{font-size:13px;color:#AACCEE;cursor:pointer;padding:4px 8px 4px 0;min-height:44px;display:flex;align-items:center}
 .cl-info{flex:1;min-width:0}
 .cl-title{font-size:15px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cl-sub{font-size:10px;color:#90BAD8;margin-top:2px}
-.filter-row{display:flex;gap:5px;padding:8px 12px;background:#fff;border-bottom:0.5px solid #E5E5EA;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:sticky;z-index:39}
+
+/* FIX #3: filter row sticky — top matches cl-hdr height */
+.filter-row{display:flex;gap:5px;padding:8px 12px;background:#fff;border-bottom:0.5px solid #E5E5EA;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:sticky;top:calc(58px + env(safe-area-inset-top));z-index:39}
 .filter-row::-webkit-scrollbar{display:none}
 .fbtn{flex-shrink:0;padding:5px 12px;border-radius:14px;font-size:11px;font-weight:600;background:#F2F2F7;border:none;color:#8E8E93;cursor:pointer;min-height:32px}
 .fbtn.on{background:#0F2744;color:#fff}
-.items-list{padding:8px 12px;display:flex;flex-direction:column;gap:5px;padding-bottom:env(safe-area-inset-bottom)}
+.items-list{padding:8px 12px;display:flex;flex-direction:column;gap:5px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
 
-/* ── CHECKLIST ITEM ── */
-.ci{display:flex;align-items:flex-start;gap:9px;background:#fff;border:0.5px solid #E5E5EA;border-radius:10px;padding:10px 10px;border-left:3.5px solid #E5E5EA;cursor:pointer;transition:opacity .1s;min-height:44px}
+.ci{display:flex;align-items:flex-start;gap:9px;background:#fff;border:0.5px solid #E5E5EA;border-radius:10px;padding:10px;border-left:3.5px solid #E5E5EA;cursor:pointer;transition:opacity .1s;min-height:44px}
 .ci:active{opacity:.75}
 .ci.verify{border-left-color:#1A4F96}
 .ci.testlive{border-left-color:#1D9E75}
 .ci.followup{border-left-color:#D4820A}
 .ci.done{background:#FAFAFA}
 .cb{width:22px;height:22px;border:1.5px solid #C7C7CC;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
-.ci.verify .cb{border-color:#1A4F96}
+.ci.verify   .cb{border-color:#1A4F96}
 .ci.testlive .cb{border-color:#1D9E75}
 .ci.followup .cb{border-color:#D4820A}
 .ci.done .cb{background:#8E8E93;border-color:#8E8E93}
@@ -83,14 +84,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .ci-note{font-size:11px;color:#8E8E93;margin-top:3px;font-style:italic}
 .ci-ts{font-size:10px;color:#1D9E75;margin-top:3px;font-weight:600}
 
-/* ── FULL LIST VIEW ── */
-.fl-wrap{padding:8px 12px;display:flex;flex-direction:column;gap:0;padding-bottom:env(safe-area-inset-bottom)}
+/* full list */
+.fl-wrap{padding:8px 12px;display:flex;flex-direction:column;gap:0;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
 .fl-sec{background:#fff;border:0.5px solid #E5E5EA;border-radius:10px;margin-bottom:6px;overflow:hidden}
-.fl-sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;cursor:pointer;background:#fff}
+.fl-sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;cursor:pointer}
 .fl-sec-hdr:active{background:#F2F2F7}
 .fl-sec-name{font-size:13px;font-weight:700;color:#1C1C1E}
 .fl-sec-prog{font-size:11px;font-weight:600;color:#8E8E93}
-.fl-sec-done .fl-sec-prog{color:#1D9E75}
+.fl-sec.fl-sec-done .fl-sec-prog{color:#1D9E75}
 .fl-items{display:flex;flex-direction:column}
 .fl-item{display:flex;align-items:center;gap:8px;padding:7px 12px;border-top:0.5px solid #F2F2F7}
 .fl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
@@ -103,52 +104,51 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .exp-btn{flex:1;padding:11px;background:#fff;border:0.5px solid #E5E5EA;border-radius:10px;font-size:12px;font-weight:600;color:#0F2744;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 .exp-btn:active{background:#F2F2F7}
 
-/* ── LOADING / EMPTY ── */
 .loading{text-align:center;padding:40px 20px;color:#8E8E93}
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid #E5E5EA;border-top-color:#1A4F96;border-radius:50%;animation:spin .7s linear infinite;margin-bottom:8px}
-@keyframes spin{to{transform:rotate(360deg)}}
 .empty{text-align:center;padding:30px 20px;color:#8E8E93;font-size:13px}
-
-/* ── SCREENS ── */
 .screen{display:none}
 .screen.show{display:block}
 </style>
 </head>
 <body>
 
-<!-- HOME SCREEN -->
 <div id="home-screen" class="screen show">
   <div class="hdr">
     <div class="hdr-sub">Ashara 1448H Toronto · PMO</div>
     <div class="hdr-title">Dry Run Checklist</div>
-    <div class="hdr-date">Friday June 13, 2026 · Evening Walkthrough</div>
+    <div class="hdr-row">
+      <div class="hdr-date">Friday June 13, 2026 · Evening</div>
+      <div class="hdr-sync" id="sync-btn" onclick="manualRefresh()">
+        <span class="sync-icon">↻</span>
+        <span id="sync-lbl">–</span>
+      </div>
+    </div>
     <div class="pbar-wrap"><div class="pbar-fill" id="home-pbar" style="width:0%"></div></div>
     <div class="pbar-lbl"><span id="home-plbl">Loading...</span><span id="home-ppct"></span></div>
   </div>
 
-  <div class="tabs">
+  <div class="tabs" style="top:calc(92px + env(safe-area-inset-top))">
     <div class="tab on" id="tab-teams" onclick="switchTab('teams')">By team</div>
-    <div class="tab" id="tab-full" onclick="switchTab('full')">Full list</div>
+    <div class="tab" id="tab-full"  onclick="switchTab('full')">Full list</div>
   </div>
 
-  <!-- TEAMS TAB -->
   <div id="view-teams">
-    <div class="stats" id="home-stats">
-      <div class="stat"><div class="stat-n" id="st-verify" style="color:#1A4F96">–</div><div class="stat-l">Verified</div></div>
-      <div class="stat"><div class="stat-n" id="st-test" style="color:#1D9E75">–</div><div class="stat-l">Tested</div></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n" id="st-verify"   style="color:#1A4F96">–</div><div class="stat-l">Verified</div></div>
+      <div class="stat"><div class="stat-n" id="st-test"     style="color:#1D9E75">–</div><div class="stat-l">Tested</div></div>
       <div class="stat"><div class="stat-n" id="st-followup" style="color:#D4820A">–</div><div class="stat-l">Follow-ups</div></div>
-      <div class="stat"><div class="stat-n" id="st-total" style="color:#0F2744">–</div><div class="stat-l">Total done</div></div>
+      <div class="stat"><div class="stat-n" id="st-total"    style="color:#0F2744">–</div><div class="stat-l">Total done</div></div>
     </div>
     <div class="team-list" id="team-list">
       <div class="loading"><div class="spinner"></div><br>Loading checklist...</div>
     </div>
   </div>
 
-  <!-- FULL LIST TAB -->
   <div id="view-full" style="display:none">
     <div class="export-row">
       <button class="exp-btn" onclick="exportSummary()">⬇ Export summary</button>
-      <button class="exp-btn" onclick="printView()">🖨 Print view</button>
+      <button class="exp-btn" onclick="window.print()">🖨 Print view</button>
     </div>
     <div class="fl-wrap" id="fl-list">
       <div class="loading"><div class="spinner"></div><br>Loading...</div>
@@ -156,236 +156,331 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
   </div>
 </div>
 
-<!-- CHECKLIST SCREEN -->
 <div id="cl-screen" class="screen">
   <div class="cl-hdr">
     <div class="cl-back" onclick="goHome()">← Back</div>
     <div class="cl-info">
       <div class="cl-title" id="cl-title"></div>
-      <div class="cl-sub" id="cl-sub"></div>
+      <div class="cl-sub"   id="cl-sub"></div>
     </div>
   </div>
   <div class="filter-row">
     <button class="fbtn on" onclick="setFilter('all',this)">All</button>
-    <button class="fbtn" onclick="setFilter('verify',this)">Verify</button>
-    <button class="fbtn" onclick="setFilter('testlive',this)">Test live</button>
-    <button class="fbtn" onclick="setFilter('followup',this)">Follow-up</button>
-    <button class="fbtn" onclick="setFilter('pending',this)">Pending</button>
-    <button class="fbtn" onclick="setFilter('done',this)">Done</button>
+    <button class="fbtn"    onclick="setFilter('verify',this)">Verify</button>
+    <button class="fbtn"    onclick="setFilter('testlive',this)">Test live</button>
+    <button class="fbtn"    onclick="setFilter('followup',this)">Follow-up</button>
+    <button class="fbtn"    onclick="setFilter('pending',this)">Pending</button>
+    <button class="fbtn"    onclick="setFilter('done',this)">Done</button>
   </div>
   <div class="items-list" id="items-list"></div>
 </div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEM6b47I6w3wDMv4IRRYQl59sAlwey4sYztoKnInKP9hn2ac94L3Hfwhqz2BYngrs-mg/exec';
+const SCRIPT_URL = 'YOUR_APPSCRIPT_URL_HERE';
+const REFRESH_INTERVAL_MS = 60000; // 60 seconds
 
-let teamsData = [];       // [{id, name, owner, items:[{idx,type,text,note,checked,checkedAt}]}]
-let curTeam   = null;
-let curFilter = 'all';
-let curTab    = 'teams';
-let loadReqId = 0;        // race condition guard
+let teamsData      = [];
+let curTeam        = null;
+let curFilter      = 'all';
+let curTab         = 'teams';
+let loadReqId      = 0;         // FIX: race condition guard on load
+let lastSyncTime   = null;
+let refreshTimer   = null;
+let isRefreshing   = false;
+
+// Per-item toggle lock — allows different items to toggle concurrently
+// but prevents double-tap on the same item
+const pendingToggles = {};
 
 // ── TYPE HELPERS ───────────────────────────────────────────────
-function typeClass(t){
-  if(!t) return '';
+function typeClass(t) {
+  if (!t) return '';
   const l = t.toLowerCase();
-  if(l==='verify') return 'verify';
-  if(l.includes('test')) return 'testlive';
-  if(l.includes('follow')) return 'followup';
+  if (l === 'verify')        return 'verify';
+  if (l.includes('test'))    return 'testlive';
+  if (l.includes('follow'))  return 'followup';
   return '';
 }
-function typeBadge(t){
+function typeBadge(t) {
   const c = typeClass(t);
-  if(c==='verify')   return '<span class="ci-badge badge-verify">Verify</span>';
-  if(c==='testlive') return '<span class="ci-badge badge-testlive">Test live</span>';
-  if(c==='followup') return '<span class="ci-badge badge-followup">Follow-up</span>';
+  if (c === 'verify')   return '<span class="ci-badge badge-verify">Verify</span>';
+  if (c === 'testlive') return '<span class="ci-badge badge-testlive">Test live</span>';
+  if (c === 'followup') return '<span class="ci-badge badge-followup">Follow-up</span>';
   return '';
 }
-function dotColor(t){
+function dotColor(t) {
   const c = typeClass(t);
-  if(c==='verify')   return '#1A4F96';
-  if(c==='testlive') return '#1D9E75';
-  if(c==='followup') return '#D4820A';
+  if (c === 'verify')   return '#1A4F96';
+  if (c === 'testlive') return '#1D9E75';
+  if (c === 'followup') return '#D4820A';
   return '#8E8E93';
 }
 
-// ── API ────────────────────────────────────────────────────────
-async function api(payload){
-  const r = await fetch(SCRIPT_URL, {
-    method:'POST',
-    body: JSON.stringify(payload),
-    headers:{'Content-Type':'text/plain'},
-    mode:'cors'
-  });
-  return r.json();
+// ── API with timeout (FIX #4) ──────────────────────────────────
+async function api(payload, timeoutMs = 10000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const r = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'text/plain' },
+      mode: 'cors',
+      signal: controller.signal
+    });
+    clearTimeout(timer);
+    return await r.json();
+  } catch (e) {
+    clearTimeout(timer);
+    throw e;
+  }
 }
 
 // ── LOAD ───────────────────────────────────────────────────────
-async function loadChecklist(){
+async function loadChecklist(silent = false) {
   const myId = ++loadReqId;
-  try {
-    const res = await api({action:'getChecklist'});
-    if(myId !== loadReqId) return; // stale response — newer load started
-    if(!res.ok) throw new Error(res.error||'Load failed');
-    teamsData = res.teams || [];
-    renderHome();
-  } catch(e){
-    if(myId !== loadReqId) return;
+  if (!silent) {
     document.getElementById('team-list').innerHTML =
-      '<div class="empty">Could not load checklist.<br>Check your connection and refresh.</div>';
+      '<div class="loading"><div class="spinner"></div><br>Loading checklist...</div>';
+  }
+  setSyncSpinner(true);
+  try {
+    const res = await api({ action: 'getChecklist' });
+    if (myId !== loadReqId) return; // stale — newer load started
+    if (!res.ok) throw new Error(res.error || 'Load failed');
+
+    // FIX: Smart merge — don't overwrite items with pending toggles
+    if (teamsData.length > 0) {
+      mergeRemoteState(res.teams);
+    } else {
+      teamsData = res.teams || [];
+    }
+
+    lastSyncTime = new Date();
+    updateSyncLabel();
+    renderHome();
+  } catch (e) {
+    if (myId !== loadReqId) return;
+    if (!silent) {
+      document.getElementById('team-list').innerHTML =
+        '<div class="empty">Could not load checklist.<br>Check your connection and tap ↻ to retry.</div>';
+    }
+    updateSyncLabel('Failed');
+  } finally {
+    setSyncSpinner(false);
+    isRefreshing = false;
   }
 }
 
-// ── TOGGLE ITEM ────────────────────────────────────────────────
-// Immediate UI update, then persist to Sheet in background
-// toggleId guards against concurrent taps on same item
-const pendingToggles = {};
+// Merge remote state without overwriting pending toggles (FIX: smart refresh)
+function mergeRemoteState(remoteTeams) {
+  for (const remoteTeam of remoteTeams) {
+    const localTeam = teamsData.find(t => t.id === remoteTeam.id);
+    if (!localTeam) { teamsData.push(remoteTeam); continue; }
+    for (const remoteItem of remoteTeam.items) {
+      const localItem = localTeam.items.find(i => i.idx === remoteItem.idx);
+      const key = `${remoteTeam.id}_${remoteItem.idx}`;
+      if (!localItem) { localTeam.items.push(remoteItem); continue; }
+      // Only update if no pending toggle on this item
+      if (!pendingToggles[key]) {
+        localItem.checked   = remoteItem.checked;
+        localItem.checkedAt = remoteItem.checkedAt;
+      }
+    }
+  }
+}
 
-async function toggleItem(teamId, itemIdx){
+// ── AUTO-REFRESH ───────────────────────────────────────────────
+function startAutoRefresh() {
+  stopAutoRefresh();
+  refreshTimer = setInterval(() => {
+    // Only refresh when on home screen (not when lead is actively checking items)
+    if (document.getElementById('home-screen').classList.contains('show')) {
+      // Skip if any toggle is pending
+      if (Object.keys(pendingToggles).length > 0) return;
+      isRefreshing = true;
+      loadChecklist(true); // silent — no loading spinner on auto-refresh
+    }
+  }, REFRESH_INTERVAL_MS);
+}
+
+function stopAutoRefresh() {
+  if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+}
+
+function manualRefresh() {
+  if (isRefreshing) return;
+  isRefreshing = true;
+  loadChecklist(true);
+}
+
+function setSyncSpinner(on) {
+  document.getElementById('sync-btn').classList.toggle('spinning', on);
+}
+
+function updateSyncLabel(override) {
+  const el = document.getElementById('sync-lbl');
+  if (override) { el.textContent = override; return; }
+  if (!lastSyncTime) { el.textContent = '–'; return; }
+  const secs = Math.round((new Date() - lastSyncTime) / 1000);
+  if (secs < 10)  el.textContent = 'Just now';
+  else if (secs < 60)  el.textContent = secs + 's ago';
+  else el.textContent = Math.floor(secs/60) + 'm ago';
+}
+
+// Update "X ago" label every 15 seconds
+setInterval(updateSyncLabel, 15000);
+
+// ── TOGGLE ─────────────────────────────────────────────────────
+async function toggleItem(teamId, itemIdx) {
   const team = teamsData.find(t => t.id === teamId);
-  if(!team) return;
+  if (!team) return;
   const item = team.items.find(i => i.idx === itemIdx);
-  if(!item) return;
+  if (!item) return;
 
   const key = `${teamId}_${itemIdx}`;
-  if(pendingToggles[key]) return; // prevent double-tap
+  if (pendingToggles[key]) return; // prevent double-tap on same item
   pendingToggles[key] = true;
 
-  // Flip state immediately in memory
-  item.checked = !item.checked;
+  // Optimistic update
+  item.checked   = !item.checked;
   item.checkedAt = item.checked ? 'Saving...' : '';
-
-  // Update the UI immediately (optimistic)
   updateItemUI(teamId, itemIdx, item);
   updateStats();
-  if(curTeam && curTeam.id === teamId) updateClHeader();
+  if (curTeam && curTeam.id === teamId) updateClHeader();
 
   try {
-    const res = await api({action:'toggleItem', teamId, itemIdx: item.idx, checked: item.checked});
-    if(res.ok){
+    const res = await api({
+      action: 'toggleItem',
+      teamId,
+      itemIdx: item.idx,
+      checked: item.checked
+    });
+    if (res.ok) {
+      // FIX #1+#2: checkedAt comes back as clean "hh:mm AM/PM" string from AppScript
       item.checkedAt = item.checked ? (res.checkedAt || '') : '';
     } else {
       // Revert on failure
-      item.checked = !item.checked;
+      item.checked   = !item.checked;
       item.checkedAt = '';
       alert('Could not save. Please try again.');
     }
-  } catch(e){
-    // Revert on network error
-    item.checked = !item.checked;
+  } catch (e) {
+    // FIX #4: timeout or network error — always revert
+    item.checked   = !item.checked;
     item.checkedAt = '';
     alert('Connection error. Please try again.');
+  } finally {
+    // Always re-render and release lock
+    updateItemUI(teamId, itemIdx, item);
+    updateStats();
+    if (curTeam && curTeam.id === teamId) updateClHeader();
+    delete pendingToggles[key];
   }
-
-  // Always re-render item after API response
-  updateItemUI(teamId, itemIdx, item);
-  updateStats();
-  if(curTeam && curTeam.id === teamId) updateClHeader();
-  delete pendingToggles[key];
 }
 
-// Update a single item element in DOM without full re-render
-function updateItemUI(teamId, itemIdx, item){
+// Update a single item in DOM (no full re-render)
+function updateItemUI(teamId, itemIdx, item) {
+  // Checklist screen item
   const el = document.getElementById(`ci-${teamId}-${itemIdx}`);
-  if(!el) return;
-  if(item.checked){
-    el.classList.add('done');
-    el.querySelector('.cb').style.cssText = 'background:#8E8E93;border-color:#8E8E93';
-    el.querySelector('.cb-tick').style.display = 'block';
-  } else {
-    el.classList.remove('done');
+  if (el) {
+    el.classList.toggle('done', item.checked);
+    const cb = el.querySelector('.cb');
     const tc = typeClass(item.type);
-    const colors = {verify:'#1A4F96', testlive:'#1D9E75', followup:'#D4820A'};
-    el.querySelector('.cb').style.cssText = `border-color:${colors[tc]||'#C7C7CC'}`;
-    el.querySelector('.cb-tick').style.display = 'none';
+    const colors = { verify:'#1A4F96', testlive:'#1D9E75', followup:'#D4820A' };
+    cb.style.cssText = item.checked
+      ? 'background:#8E8E93;border-color:#8E8E93'
+      : `border-color:${colors[tc]||'#C7C7CC'}`;
+    el.querySelector('.cb-tick').style.display = item.checked ? 'block' : 'none';
+    const tsEl = el.querySelector('.ci-ts');
+    if (tsEl) tsEl.textContent = item.checked && item.checkedAt ? `Checked · ${item.checkedAt}` : '';
   }
-  const tsEl = el.querySelector('.ci-ts');
-  if(tsEl) tsEl.textContent = item.checked && item.checkedAt ? `Checked · ${item.checkedAt}` : '';
-  // Update full list if visible
+  // Full list item
   const flEl = document.getElementById(`fl-${teamId}-${itemIdx}`);
-  if(flEl){
-    const statusEl = flEl.querySelector('.fl-status');
-    if(statusEl){
-      statusEl.className = 'fl-status ' + (item.checked ? 'fl-status-done' : 'fl-status-pend');
-      statusEl.textContent = item.checked ? 'Done' : 'Pending';
+  if (flEl) {
+    flEl.classList.toggle('fl-done', item.checked);
+    const s = flEl.querySelector('.fl-status');
+    if (s) {
+      s.className = 'fl-status ' + (item.checked ? 'fl-status-done' : 'fl-status-pend');
+      s.textContent = item.checked ? 'Done' : 'Pending';
     }
-    if(item.checked) flEl.classList.add('fl-done');
-    else flEl.classList.remove('fl-done');
   }
 }
 
 // ── STATS ──────────────────────────────────────────────────────
-function calcStats(){
-  let verifyDone=0, verifyTotal=0, testDone=0, testTotal=0,
-      followDone=0, followTotal=0, totalDone=0, total=0;
-  for(const team of teamsData){
-    for(const item of team.items){
+function calcStats() {
+  let vD=0,vT=0,tD=0,tT=0,fD=0,fT=0,totD=0,tot=0;
+  for (const team of teamsData) {
+    for (const item of team.items) {
       const tc = typeClass(item.type);
-      total++;
-      if(item.checked) totalDone++;
-      if(tc==='verify'){ verifyTotal++; if(item.checked) verifyDone++; }
-      else if(tc==='testlive'){ testTotal++; if(item.checked) testDone++; }
-      else if(tc==='followup'){ followTotal++; if(item.checked) followDone++; }
+      tot++; if (item.checked) totD++;
+      if (tc==='verify')   { vT++; if(item.checked) vD++; }
+      else if (tc==='testlive') { tT++; if(item.checked) tD++; }
+      else if (tc==='followup') { fT++; if(item.checked) fD++; }
     }
   }
-  return {verifyDone, verifyTotal, testDone, testTotal, followDone, followTotal, totalDone, total};
+  return {vD,vT,tD,tT,fD,fT,totD,tot};
 }
 
-function updateStats(){
+function updateStats() {
   const s = calcStats();
-  const pct = s.total ? Math.round(s.totalDone/s.total*100) : 0;
-  // Header bar
-  document.getElementById('home-pbar').style.width = pct+'%';
-  document.getElementById('home-plbl').textContent = `${s.totalDone} of ${s.total} complete`;
-  document.getElementById('home-ppct').textContent = pct+'%';
-  // Stat boxes
-  document.getElementById('st-verify').textContent   = `${s.verifyDone}/${s.verifyTotal}`;
-  document.getElementById('st-test').textContent     = `${s.testDone}/${s.testTotal}`;
-  document.getElementById('st-followup').textContent = `${s.followDone}/${s.followTotal}`;
-  document.getElementById('st-total').textContent    = `${s.totalDone}/${s.total}`;
-  // Update team cards
-  for(const team of teamsData){
-    const done  = team.items.filter(i=>i.checked).length;
+  const pct = s.tot ? Math.round(s.totD / s.tot * 100) : 0;
+
+  document.getElementById('home-pbar').style.width = pct + '%';
+  document.getElementById('home-plbl').textContent = `${s.totD} of ${s.tot} complete`;
+  document.getElementById('home-ppct').textContent = pct + '%';
+  document.getElementById('st-verify').textContent   = `${s.vD}/${s.vT}`;
+  document.getElementById('st-test').textContent     = `${s.tD}/${s.tT}`;
+  document.getElementById('st-followup').textContent = `${s.fD}/${s.fT}`;
+  document.getElementById('st-total').textContent    = `${s.totD}/${s.tot}`;
+
+  for (const team of teamsData) {
+    const done  = team.items.filter(i => i.checked).length;
     const total = team.items.length;
+    const pct   = total ? Math.round(done / total * 100) : 0;
+    const allDone = done === total && total > 0;
+
+    // Team card
     const pEl   = document.getElementById(`tp-${team.id}`);
     const bEl   = document.getElementById(`tpf-${team.id}`);
     const tagEl = document.getElementById(`ttag-${team.id}`);
-    const cardEl= document.getElementById(`tc-${team.id}`);
-    if(pEl) pEl.textContent = `${done}/${total}`;
-    if(bEl) bEl.style.width = (total ? Math.round(done/total*100) : 0)+'%';
-    if(tagEl && cardEl){
-      if(done===total&&total>0){
-        tagEl.className='ttag ttag-done'; tagEl.textContent='Done'; cardEl.classList.add('all-done');
-      } else if(done>0){
-        tagEl.className='ttag ttag-prog'; tagEl.textContent='In progress'; cardEl.classList.remove('all-done');
+    const cEl   = document.getElementById(`tc-${team.id}`);
+    if (pEl) pEl.textContent = `${done}/${total}`;
+    if (bEl) bEl.style.width = pct + '%';
+    if (tagEl && cEl) {
+      if (allDone) {
+        tagEl.className = 'ttag ttag-done'; tagEl.textContent = 'Done';
+        cEl.classList.add('all-done');
+      } else if (done > 0) {
+        tagEl.className = 'ttag ttag-prog'; tagEl.textContent = 'In progress';
+        cEl.classList.remove('all-done');
       } else {
-        tagEl.className='ttag ttag-pend'; tagEl.textContent='Pending'; cardEl.classList.remove('all-done');
+        tagEl.className = 'ttag ttag-pend'; tagEl.textContent = 'Pending';
+        cEl.classList.remove('all-done');
       }
     }
-    // Full list section header
-    const fsEl = document.getElementById(`fls-${team.id}`);
-    if(fsEl){
-      const fnEl = fsEl.querySelector('.fl-sec-prog');
-      if(fnEl){
-        fnEl.textContent = `${done}/${total}`;
-        if(done===total&&total>0){ fsEl.classList.add('fl-sec-done'); fnEl.textContent=`${done}/${total} ✓`; }
-        else fsEl.classList.remove('fl-sec-done');
+
+    // FIX #8: Full list section header
+    const secEl = document.getElementById(`fls-${team.id}`);
+    if (secEl) {
+      const progEl = secEl.querySelector('.fl-sec-prog');
+      if (progEl) {
+        progEl.textContent = allDone ? `${done}/${total} ✓` : `${done}/${total}`;
       }
+      secEl.classList.toggle('fl-sec-done', allDone);
     }
   }
 }
 
-// ── RENDER HOME ────────────────────────────────────────────────
-function renderHome(){
+// ── RENDER ─────────────────────────────────────────────────────
+function renderHome() {
   const list = document.getElementById('team-list');
-  if(!teamsData.length){ list.innerHTML='<div class="empty">No teams found</div>'; return; }
+  if (!teamsData.length) { list.innerHTML='<div class="empty">No teams found</div>'; return; }
   list.innerHTML = teamsData.map(team => {
-    const done  = team.items.filter(i=>i.checked).length;
+    const done  = team.items.filter(i => i.checked).length;
     const total = team.items.length;
-    const pct   = total ? Math.round(done/total*100) : 0;
-    const allDone = done===total&&total>0;
-    const tagClass = allDone?'ttag-done': done>0?'ttag-prog':'ttag-pend';
-    const tagText  = allDone?'Done': done>0?'In progress':'Pending';
+    const pct   = total ? Math.round(done / total * 100) : 0;
+    const allDone = done === total && total > 0;
     return `<div class="team-card${allDone?' all-done':''}" id="tc-${team.id}" onclick="openTeam('${team.id}')">
       <div class="tl">
         <div class="tn">${team.name}</div>
@@ -394,7 +489,9 @@ function renderHome(){
       <div class="tr">
         <div class="tp" id="tp-${team.id}">${done}/${total}</div>
         <div class="tpbar"><div class="tpfill" id="tpf-${team.id}" style="width:${pct}%"></div></div>
-        <span class="ttag ${tagClass}" id="ttag-${team.id}">${tagText}</span>
+        <span class="ttag ${allDone?'ttag-done':done>0?'ttag-prog':'ttag-pend'}" id="ttag-${team.id}">
+          ${allDone?'Done':done>0?'In progress':'Pending'}
+        </span>
       </div>
     </div>`;
   }).join('');
@@ -402,88 +499,88 @@ function renderHome(){
   updateStats();
 }
 
-// ── FULL LIST ──────────────────────────────────────────────────
-function renderFullList(){
+function renderFullList() {
   const fl = document.getElementById('fl-list');
-  if(!teamsData.length){ fl.innerHTML='<div class="empty">No data</div>'; return; }
+  if (!teamsData.length) { fl.innerHTML='<div class="empty">No data</div>'; return; }
   fl.innerHTML = teamsData.map(team => {
-    const done  = team.items.filter(i=>i.checked).length;
+    const done  = team.items.filter(i => i.checked).length;
     const total = team.items.length;
-    const allDone = done===total&&total>0;
-    const items = team.items.map(item =>
+    const allDone = done === total && total > 0;
+    const itemsHtml = team.items.map(item =>
       `<div class="fl-item${item.checked?' fl-done':''}" id="fl-${team.id}-${item.idx}">
         <div class="fl-dot" style="background:${dotColor(item.type)}"></div>
         <div class="fl-text">${item.text}</div>
         <span class="fl-status ${item.checked?'fl-status-done':'fl-status-pend'}">${item.checked?'Done':'Pending'}</span>
       </div>`
     ).join('');
-    return `<div class="fl-sec" id="fls-${team.id}${allDone?' fl-sec-done':''}">
+    return `<div class="fl-sec${allDone?' fl-sec-done':''}" id="fls-${team.id}">
       <div class="fl-sec-hdr" onclick="toggleFlSec('${team.id}')">
         <span class="fl-sec-name">${team.name}</span>
-        <span class="fl-sec-prog${allDone?' fl-sec-done':''}">${done}/${total}${allDone?' ✓':''}</span>
+        <span class="fl-sec-prog">${allDone?done+'/'+total+' ✓':done+'/'+total}</span>
       </div>
-      <div class="fl-items" id="fl-body-${team.id}">${items}</div>
+      <div class="fl-items" id="fl-body-${team.id}">${itemsHtml}</div>
     </div>`;
   }).join('');
 }
 
-function toggleFlSec(id){
+function toggleFlSec(id) {
   const el = document.getElementById(`fl-body-${id}`);
-  if(el) el.style.display = el.style.display==='none' ? '' : 'none';
+  if (el) el.style.display = el.style.display === 'none' ? '' : 'none';
 }
 
 // ── TEAM CHECKLIST ─────────────────────────────────────────────
-function openTeam(teamId){
+function openTeam(teamId) {
   curTeam = teamsData.find(t => t.id === teamId);
-  if(!curTeam) return;
+  if (!curTeam) return;
   curFilter = 'all';
-  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
   document.querySelector('.fbtn').classList.add('on');
   document.getElementById('home-screen').classList.remove('show');
   document.getElementById('cl-screen').classList.add('show');
   updateClHeader();
   renderItems();
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
-function updateClHeader(){
-  if(!curTeam) return;
-  const done  = curTeam.items.filter(i=>i.checked).length;
+function updateClHeader() {
+  if (!curTeam) return;
+  const done  = curTeam.items.filter(i => i.checked).length;
   const total = curTeam.items.length;
   document.getElementById('cl-title').textContent = curTeam.name;
   document.getElementById('cl-sub').textContent   = `${curTeam.owner} · ${done} of ${total} done`;
 }
 
-function goHome(){
+function goHome() {
   curTeam = null;
   document.getElementById('cl-screen').classList.remove('show');
   document.getElementById('home-screen').classList.add('show');
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
+  updateStats(); // refresh cards in case items were toggled
 }
 
-function setFilter(f, btn){
+function setFilter(f, btn) {
   curFilter = f;
-  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   renderItems();
 }
 
-function renderItems(){
-  if(!curTeam){ return; }
+function renderItems() {
+  if (!curTeam) return;
   const list = document.getElementById('items-list');
   const visible = curTeam.items.filter(item => {
-    if(curFilter==='all') return true;
-    if(curFilter==='pending') return !item.checked;
-    if(curFilter==='done') return item.checked;
+    if (curFilter === 'all')     return true;
+    if (curFilter === 'pending') return !item.checked;
+    if (curFilter === 'done')    return item.checked;
     return typeClass(item.type) === curFilter;
   });
-  if(!visible.length){
-    list.innerHTML='<div class="empty">No items in this filter</div>';
+  if (!visible.length) {
+    list.innerHTML = '<div class="empty">No items in this filter</div>';
     return;
   }
   list.innerHTML = visible.map(item => {
     const tc = typeClass(item.type);
-    const colors = {verify:'#1A4F96', testlive:'#1D9E75', followup:'#D4820A'};
+    const colors = { verify:'#1A4F96', testlive:'#1D9E75', followup:'#D4820A' };
     const cbStyle = item.checked
       ? 'background:#8E8E93;border-color:#8E8E93'
       : `border-color:${colors[tc]||'#C7C7CC'}`;
@@ -503,38 +600,40 @@ function renderItems(){
 }
 
 // ── TABS ───────────────────────────────────────────────────────
-function switchTab(tab){
+function switchTab(tab) {
   curTab = tab;
   document.getElementById('tab-teams').classList.toggle('on', tab==='teams');
   document.getElementById('tab-full').classList.toggle('on', tab==='full');
-  document.getElementById('view-teams').style.display = tab==='teams'?'':'none';
-  document.getElementById('view-full').style.display  = tab==='full'?'':'none';
+  document.getElementById('view-teams').style.display = tab==='teams' ? '' : 'none';
+  document.getElementById('view-full').style.display  = tab==='full'  ? '' : 'none';
 }
 
-// ── EXPORT ─────────────────────────────────────────────────────
-function exportSummary(){
-  const lines = ['Ashara 1448H Toronto — Dry Run Checklist Summary', 'Generated: '+new Date().toLocaleString('en-CA',{timeZone:'America/Toronto'}), ''];
-  for(const team of teamsData){
-    const done = team.items.filter(i=>i.checked).length;
+// ── EXPORT (FIX #9: Toronto timezone) ─────────────────────────
+function exportSummary() {
+  const now = new Date().toLocaleString('en-CA', { timeZone:'America/Toronto' });
+  const lines = [
+    'Ashara 1448H Toronto — Dry Run Checklist Summary',
+    'Generated: ' + now, ''
+  ];
+  for (const team of teamsData) {
+    const done = team.items.filter(i => i.checked).length;
     lines.push(`${team.name} — ${done}/${team.items.length}`);
-    for(const item of team.items){
-      lines.push(`  [${item.checked?'x':' '}] (${item.type}) ${item.text}${item.checkedAt?' — '+item.checkedAt:''}`);
+    for (const item of team.items) {
+      const ts = item.checked && item.checkedAt ? ` — ${item.checkedAt}` : '';
+      lines.push(`  [${item.checked?'x':' '}] (${item.type}) ${item.text}${ts}`);
     }
     lines.push('');
   }
-  const blob = new Blob([lines.join('\n')], {type:'text/plain'});
+  const blob = new Blob([lines.join('\n')], { type:'text/plain' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'Ashara_DryRun_Summary.txt';
   a.click();
 }
 
-function printView(){
-  window.print();
-}
-
 // ── INIT ───────────────────────────────────────────────────────
 loadChecklist();
+startAutoRefresh();
 </script>
 </body>
 </html>
