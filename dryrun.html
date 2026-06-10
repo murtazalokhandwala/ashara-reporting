@@ -8,113 +8,143 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#F2F2F7;min-height:100vh;overscroll-behavior:none}
 
-.hdr{background:#0F2744;padding:14px 14px 10px;padding-top:calc(14px + env(safe-area-inset-top));position:sticky;top:0;z-index:50}
+/* ── HEADER ── */
+.hdr{background:#0F2744;padding:14px 16px 10px;padding-top:calc(14px + env(safe-area-inset-top));position:sticky;top:0;z-index:100}
 .hdr-sub{font-size:10px;color:#90BAD8;text-transform:uppercase;letter-spacing:.06em}
-.hdr-title{font-size:20px;font-weight:700;color:#fff;margin-top:2px}
-.hdr-row{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
-.hdr-date{font-size:11px;color:#AACCEE}
-.hdr-sync{font-size:10px;color:#6B8FAA;cursor:pointer;padding:4px 0 4px 8px;min-height:28px;display:flex;align-items:center;gap:4px}
+.hdr-title{font-size:21px;font-weight:700;color:#fff;margin-top:2px}
+.hdr-row{display:flex;align-items:center;justify-content:space-between;margin-top:3px}
+.hdr-date{font-size:12px;color:#AACCEE}
+.hdr-sync{font-size:11px;color:#6B8FAA;cursor:pointer;padding:4px 0 4px 10px;min-height:32px;display:flex;align-items:center;gap:5px}
 .hdr-sync.spinning .sync-icon{animation:spin .8s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
-.pbar-wrap{height:5px;background:rgba(255,255,255,.15);border-radius:3px;margin-top:8px;overflow:hidden}
+.pbar-wrap{height:5px;background:rgba(255,255,255,.15);border-radius:3px;margin-top:10px;overflow:hidden}
 .pbar-fill{height:100%;border-radius:3px;background:#1D9E75;transition:width .4s}
-.pbar-lbl{display:flex;justify-content:space-between;font-size:10px;color:#90BAD8;margin-top:3px}
+.pbar-lbl{display:flex;justify-content:space-between;font-size:11px;color:#90BAD8;margin-top:4px}
 
-.tabs{display:flex;background:#fff;border-bottom:1px solid #E5E5EA;position:sticky;z-index:40}
-.tab{flex:1;padding:11px 4px;font-size:13px;font-weight:600;color:#8E8E93;text-align:center;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s}
+/* ── TABS — sticky below header (FIX #2) ── */
+.tabs{display:flex;background:#fff;border-bottom:1.5px solid #E5E5EA;position:sticky;z-index:90}
+.tab{flex:1;padding:13px 4px;font-size:14px;font-weight:600;color:#8E8E93;text-align:center;cursor:pointer;border-bottom:3px solid transparent;transition:all .15s}
 .tab.on{color:#0F2744;border-bottom-color:#0F2744}
 
-.stats{display:flex;gap:6px;padding:8px 12px;background:#fff;border-bottom:0.5px solid #E5E5EA;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.stats::-webkit-scrollbar{display:none}
-.stat{flex-shrink:0;background:#F2F2F7;border-radius:8px;padding:6px 12px;text-align:center;min-width:60px}
-.stat-n{font-size:16px;font-weight:700}
-.stat-l{font-size:9px;color:#8E8E93;margin-top:1px}
+/* ── STATS (FIX #3 — bigger) ── */
+.stats{display:flex;gap:8px;padding:10px 14px;background:#fff;border-bottom:0.5px solid #E5E5EA}
+.stat{flex:1;background:#F8F8F8;border-radius:10px;padding:10px 8px;text-align:center;border-bottom:3px solid #E5E5EA}
+.stat.s-verify  {border-bottom-color:#1A4F96}
+.stat.s-test    {border-bottom-color:#1D9E75}
+.stat.s-followup{border-bottom-color:#D4820A}
+.stat.s-total   {border-bottom-color:#0F2744}
+.stat-n{font-size:20px;font-weight:700;line-height:1}
+.stat-l{font-size:11px;color:#8E8E93;margin-top:4px;font-weight:500}
 
-.team-list{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
-.team-card{background:#fff;border:0.5px solid #E5E5EA;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:opacity .1s;min-height:60px}
+/* ── TEAM CARDS (FIX #1 — readable, no overflow) ── */
+.team-list{padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+.team-card{background:#fff;border:0.5px solid #E5E5EA;border-radius:14px;padding:14px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:opacity .1s}
 .team-card:active{opacity:.7}
 .team-card.all-done{border-color:#1D9E75;background:#F0FDF6}
 .tl{flex:1;min-width:0}
-.tn{font-size:14px;font-weight:600;color:#1C1C1E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.to{font-size:11px;color:#8E8E93;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tr{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
-.tp{font-size:12px;font-weight:600;color:#1C1C1E}
-.tpbar{width:56px;height:4px;background:#E5E5EA;border-radius:2px;overflow:hidden}
-.tpfill{height:100%;border-radius:2px;background:#1A4F96;transition:width .3s}
+.tn{font-size:15px;font-weight:700;color:#1C1C1E}
+/* FIX #1: dark readable colour, wraps, slightly smaller */
+.to{font-size:11px;color:#3A3835;margin-top:4px;line-height:1.5;word-break:break-word}
+.tr{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.tp{font-size:13px;font-weight:700;color:#1C1C1E}
+.tpbar{width:60px;height:5px;background:#E5E5EA;border-radius:3px;overflow:hidden}
+.tpfill{height:100%;border-radius:3px;background:#1A4F96;transition:width .3s}
 .team-card.all-done .tpfill{background:#1D9E75}
-.ttag{font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px}
+.ttag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:10px;white-space:nowrap}
 .ttag-done{background:#DFFAF0;color:#085041}
 .ttag-prog{background:#E0EEFF;color:#0A2E6E}
 .ttag-pend{background:#F2F2F7;color:#8E8E93}
 
-/* checklist screen */
-.cl-hdr{background:#0F2744;padding:12px 14px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
-.cl-back{font-size:13px;color:#AACCEE;cursor:pointer;padding:4px 8px 4px 0;min-height:44px;display:flex;align-items:center}
+/* ── CHECKLIST SCREEN ── */
+.cl-hdr{background:#0F2744;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
+.cl-back{font-size:14px;color:#AACCEE;cursor:pointer;padding:4px 10px 4px 0;min-height:44px;display:flex;align-items:center;font-weight:600}
 .cl-info{flex:1;min-width:0}
-.cl-title{font-size:15px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cl-sub{font-size:10px;color:#90BAD8;margin-top:2px}
+.cl-title{font-size:16px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl-sub{font-size:11px;color:#90BAD8;margin-top:2px}
 
-/* FIX #3: filter row sticky — top matches cl-hdr height */
-.filter-row{display:flex;gap:5px;padding:8px 12px;background:#fff;border-bottom:0.5px solid #E5E5EA;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:sticky;top:calc(58px + env(safe-area-inset-top));z-index:39}
+/* FIX #2: filter row sticky — sits just below cl-hdr */
+.filter-row{display:flex;gap:6px;padding:9px 14px;background:#fff;border-bottom:0.5px solid #E5E5EA;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:sticky;top:calc(62px + env(safe-area-inset-top));z-index:90}
 .filter-row::-webkit-scrollbar{display:none}
-.fbtn{flex-shrink:0;padding:5px 12px;border-radius:14px;font-size:11px;font-weight:600;background:#F2F2F7;border:none;color:#8E8E93;cursor:pointer;min-height:32px}
+.fbtn{flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:12px;font-weight:600;background:#F2F2F7;border:none;color:#8E8E93;cursor:pointer;min-height:34px}
 .fbtn.on{background:#0F2744;color:#fff}
-.items-list{padding:8px 12px;display:flex;flex-direction:column;gap:5px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
 
-.ci{display:flex;align-items:flex-start;gap:9px;background:#fff;border:0.5px solid #E5E5EA;border-radius:10px;padding:10px;border-left:3.5px solid #E5E5EA;cursor:pointer;transition:opacity .1s;min-height:44px}
+.items-list{padding:10px 14px;display:flex;flex-direction:column;gap:6px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+
+/* ── CHECKLIST ITEM (FIX #5 — bigger fonts, FIX #6 — number prefix) ── */
+.ci{display:flex;align-items:flex-start;gap:10px;background:#fff;border:0.5px solid #E5E5EA;border-radius:12px;padding:12px;border-left:4px solid #E5E5EA;cursor:pointer;transition:opacity .1s;min-height:48px}
 .ci:active{opacity:.75}
-.ci.verify{border-left-color:#1A4F96}
+.ci.verify  {border-left-color:#1A4F96}
 .ci.testlive{border-left-color:#1D9E75}
 .ci.followup{border-left-color:#D4820A}
 .ci.done{background:#FAFAFA}
-.cb{width:22px;height:22px;border:1.5px solid #C7C7CC;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
+
+/* checkbox */
+.cb{width:24px;height:24px;border:2px solid #C7C7CC;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
 .ci.verify   .cb{border-color:#1A4F96}
 .ci.testlive .cb{border-color:#1D9E75}
 .ci.followup .cb{border-color:#D4820A}
 .ci.done .cb{background:#8E8E93;border-color:#8E8E93}
-.cb-tick{font-size:13px;color:#fff;display:none}
+.cb-tick{font-size:14px;color:#fff;display:none}
 .ci.done .cb-tick{display:block}
+
+/* FIX #6: item number prefix */
+.ci-num{font-size:11px;font-weight:700;font-family:'Courier New',monospace;min-width:44px;padding-top:2px;flex-shrink:0;letter-spacing:-.01em}
+.ci.verify   .ci-num{color:#1A4F96}
+.ci.testlive .ci-num{color:#1D9E75}
+.ci.followup .ci-num{color:#D4820A}
+.ci.done     .ci-num{color:#8E8E93}
+
 .ci-body{flex:1;min-width:0}
-.ci-badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;margin-bottom:4px}
-.badge-verify{background:#E0EEFF;color:#0A2E6E}
+.ci-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;margin-bottom:5px}
+.badge-verify  {background:#E0EEFF;color:#0A2E6E}
 .badge-testlive{background:#DFFAF0;color:#085041}
 .badge-followup{background:#FEF3E2;color:#5C2E00}
-.ci-text{font-size:13px;line-height:1.45;color:#1C1C1E}
+/* FIX #5 — bigger item text */
+.ci-text{font-size:14px;line-height:1.5;color:#1C1C1E}
 .ci.done .ci-text{color:#8E8E93;text-decoration:line-through}
-.ci-note{font-size:11px;color:#8E8E93;margin-top:3px;font-style:italic}
-.ci-ts{font-size:10px;color:#1D9E75;margin-top:3px;font-weight:600}
+.ci-note{font-size:12px;color:#8E8E93;margin-top:4px;font-style:italic;line-height:1.4}
+.ci-ts{font-size:11px;color:#1D9E75;margin-top:4px;font-weight:600}
 
-/* full list */
-.fl-wrap{padding:8px 12px;display:flex;flex-direction:column;gap:0;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
-.fl-sec{background:#fff;border:0.5px solid #E5E5EA;border-radius:10px;margin-bottom:6px;overflow:hidden}
-.fl-sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;cursor:pointer}
-.fl-sec-hdr:active{background:#F2F2F7}
-.fl-sec-name{font-size:13px;font-weight:700;color:#1C1C1E}
-.fl-sec-prog{font-size:11px;font-weight:600;color:#8E8E93}
+/* ── FULL LIST ── */
+.fl-wrap{padding:10px 14px;display:flex;flex-direction:column;gap:8px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.fl-sec{background:#fff;border:0.5px solid #E5E5EA;border-radius:12px;overflow:hidden}
+.fl-sec-hdr{display:flex;align-items:flex-start;justify-content:space-between;padding:12px 14px;cursor:pointer;background:#fff}
+.fl-sec-hdr:active{background:#F5F5F5}
+.fl-sec-left{flex:1;min-width:0}
+.fl-sec-name{font-size:14px;font-weight:700;color:#1C1C1E}
+/* FIX #4 — owner name in full list */
+.fl-sec-owner{font-size:11px;color:#3A3835;margin-top:3px;line-height:1.4}
+.fl-sec-prog{font-size:12px;font-weight:700;color:#8E8E93;flex-shrink:0;margin-left:10px;margin-top:2px}
 .fl-sec.fl-sec-done .fl-sec-prog{color:#1D9E75}
-.fl-items{display:flex;flex-direction:column}
-.fl-item{display:flex;align-items:center;gap:8px;padding:7px 12px;border-top:0.5px solid #F2F2F7}
-.fl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.fl-text{font-size:11px;color:#1C1C1E;flex:1;line-height:1.4}
+.fl-items{display:flex;flex-direction:column;border-top:0.5px solid #F2F2F7}
+.fl-item{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:0.5px solid #F5F5F5}
+.fl-item:last-child{border-bottom:none}
+/* FIX #6 — number in full list */
+.fl-num{font-size:10px;font-weight:700;font-family:'Courier New',monospace;min-width:42px;flex-shrink:0;letter-spacing:-.01em}
+.fl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+/* FIX #5 — bigger full list text */
+.fl-text{font-size:12px;color:#1C1C1E;flex:1;line-height:1.45}
 .fl-item.fl-done .fl-text{color:#8E8E93}
-.fl-status{font-size:9px;font-weight:600;padding:2px 6px;border-radius:8px;flex-shrink:0}
+.fl-status{font-size:10px;font-weight:600;padding:3px 8px;border-radius:8px;flex-shrink:0}
 .fl-status-done{background:#DFFAF0;color:#085041}
 .fl-status-pend{background:#F2F2F7;color:#8E8E93}
-.export-row{padding:8px 12px 4px;display:flex;gap:8px}
-.exp-btn{flex:1;padding:11px;background:#fff;border:0.5px solid #E5E5EA;border-radius:10px;font-size:12px;font-weight:600;color:#0F2744;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+
+.export-row{padding:8px 14px 4px;display:flex;gap:8px}
+.exp-btn{flex:1;padding:12px;background:#fff;border:0.5px solid #E5E5EA;border-radius:12px;font-size:13px;font-weight:600;color:#0F2744;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 .exp-btn:active{background:#F2F2F7}
 
-.loading{text-align:center;padding:40px 20px;color:#8E8E93}
-.spinner{display:inline-block;width:20px;height:20px;border:2px solid #E5E5EA;border-top-color:#1A4F96;border-radius:50%;animation:spin .7s linear infinite;margin-bottom:8px}
-.empty{text-align:center;padding:30px 20px;color:#8E8E93;font-size:13px}
+.loading{text-align:center;padding:48px 20px;color:#8E8E93;font-size:14px}
+.spinner{display:inline-block;width:24px;height:24px;border:2px solid #E5E5EA;border-top-color:#1A4F96;border-radius:50%;animation:spin .7s linear infinite;margin-bottom:10px}
+.empty{text-align:center;padding:32px 20px;color:#8E8E93;font-size:14px}
 .screen{display:none}
 .screen.show{display:block}
 </style>
 </head>
 <body>
 
+<!-- HOME SCREEN -->
 <div id="home-screen" class="screen show">
-  <div class="hdr">
+  <div class="hdr" id="home-hdr">
     <div class="hdr-sub">Ashara 1448H Toronto · PMO</div>
     <div class="hdr-title">Dry Run Checklist</div>
     <div class="hdr-row">
@@ -128,23 +158,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
     <div class="pbar-lbl"><span id="home-plbl">Loading...</span><span id="home-ppct"></span></div>
   </div>
 
-  <div class="tabs" style="top:calc(92px + env(safe-area-inset-top))">
+  <!-- FIX #2: tabs sticky — top set dynamically by JS after hdr height known -->
+  <div class="tabs" id="home-tabs">
     <div class="tab on" id="tab-teams" onclick="switchTab('teams')">By team</div>
-    <div class="tab" id="tab-full"  onclick="switchTab('full')">Full list</div>
+    <div class="tab"    id="tab-full"  onclick="switchTab('full')">Full list</div>
   </div>
 
+  <!-- TEAMS TAB -->
   <div id="view-teams">
     <div class="stats">
-      <div class="stat"><div class="stat-n" id="st-verify"   style="color:#1A4F96">–</div><div class="stat-l">Verified</div></div>
-      <div class="stat"><div class="stat-n" id="st-test"     style="color:#1D9E75">–</div><div class="stat-l">Tested</div></div>
-      <div class="stat"><div class="stat-n" id="st-followup" style="color:#D4820A">–</div><div class="stat-l">Follow-ups</div></div>
-      <div class="stat"><div class="stat-n" id="st-total"    style="color:#0F2744">–</div><div class="stat-l">Total done</div></div>
+      <div class="stat s-verify">
+        <div class="stat-n" id="st-verify" style="color:#1A4F96">–</div>
+        <div class="stat-l">Verified</div>
+      </div>
+      <div class="stat s-test">
+        <div class="stat-n" id="st-test" style="color:#1D9E75">–</div>
+        <div class="stat-l">Tested</div>
+      </div>
+      <div class="stat s-followup">
+        <div class="stat-n" id="st-followup" style="color:#D4820A">–</div>
+        <div class="stat-l">Follow-ups</div>
+      </div>
+      <div class="stat s-total">
+        <div class="stat-n" id="st-total" style="color:#0F2744">–</div>
+        <div class="stat-l">Total done</div>
+      </div>
     </div>
     <div class="team-list" id="team-list">
-      <div class="loading"><div class="spinner"></div><br>Loading checklist...</div>
+      <div class="loading"><div class="spinner"></div><br>Loading checklist...<br><span style="font-size:12px;color:#8E8E93;margin-top:6px;display:block">First load may take up to 30 seconds</span></div>
     </div>
   </div>
 
+  <!-- FULL LIST TAB -->
   <div id="view-full" style="display:none">
     <div class="export-row">
       <button class="exp-btn" onclick="exportSummary()">⬇ Export summary</button>
@@ -156,6 +201,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
   </div>
 </div>
 
+<!-- CHECKLIST SCREEN -->
 <div id="cl-screen" class="screen">
   <div class="cl-hdr">
     <div class="cl-back" onclick="goHome()">← Back</div>
@@ -177,28 +223,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEM6b47I6w3wDMv4IRRYQl59sAlwey4sYztoKnInKP9hn2ac94L3Hfwhqz2BYngrs-mg/exec';
-const REFRESH_INTERVAL_MS = 60000; // 60 seconds
+const REFRESH_INTERVAL_MS = 60000;
 
-let teamsData      = [];
-let curTeam        = null;
-let curFilter      = 'all';
-let curTab         = 'teams';
-let loadReqId      = 0;         // FIX: race condition guard on load
-let lastSyncTime   = null;
-let refreshTimer   = null;
-let isRefreshing   = false;
+// ── TEAM PREFIXES (FIX #6) ────────────────────────────────────
+const TEAM_PREFIX = {
+  facilities:'FAC', av:'AV',  parking:'PKG', its:'ITS',
+  rahat:'RAH',      sehat:'SEH', niyaz:'NIY',  karamat:'KAR',
+  nazafat:'NAZ',    tayzeen:'TAY', hr:'HR',    comms:'COM',
+  pr:'PR',          finance:'FIN', pmo:'PMO'
+};
 
-// Per-item toggle lock — allows different items to toggle concurrently
-// but prevents double-tap on the same item
+function getPrefix(teamId) {
+  return TEAM_PREFIX[teamId] || teamId.toUpperCase().slice(0,3);
+}
+
+let teamsData    = [];
+let curTeam      = null;
+let curFilter    = 'all';
+let curTab       = 'teams';
+let loadReqId    = 0;
+let lastSyncTime = null;
+let refreshTimer = null;
+let isRefreshing = false;
 const pendingToggles = {};
 
-// ── TYPE HELPERS ───────────────────────────────────────────────
+// ── FIX #2: Set sticky top after header renders ───────────────
+function fixStickyTops() {
+  const hdrH = document.getElementById('home-hdr').offsetHeight;
+  document.getElementById('home-tabs').style.top = hdrH + 'px';
+}
+
+// ── TYPE HELPERS ──────────────────────────────────────────────
 function typeClass(t) {
   if (!t) return '';
   const l = t.toLowerCase();
-  if (l === 'verify')        return 'verify';
-  if (l.includes('test'))    return 'testlive';
-  if (l.includes('follow'))  return 'followup';
+  if (l === 'verify')       return 'verify';
+  if (l.includes('test'))   return 'testlive';
+  if (l.includes('follow')) return 'followup';
   return '';
 }
 function typeBadge(t) {
@@ -216,7 +277,7 @@ function dotColor(t) {
   return '#8E8E93';
 }
 
-// ── API with timeout (FIX #4) ──────────────────────────────────
+// ── API with timeout + retry ──────────────────────────────────
 async function api(payload, timeoutMs = 35000, retries = 1) {
   for (let attempt = 0; attempt <= retries; attempt++) {
     const controller = new AbortController();
@@ -233,11 +294,9 @@ async function api(payload, timeoutMs = 35000, retries = 1) {
       return await r.json();
     } catch (e) {
       clearTimeout(timer);
-      console.error('API attempt', attempt+1, 'error:', e.name, e.message);
-      // On AbortError (timeout) retry once with a longer timeout
+      console.error('API attempt', attempt+1, ':', e.name, e.message);
       if (e.name === 'AbortError' && attempt < retries) {
-        console.log('Cold start timeout — retrying with 45s timeout...');
-        timeoutMs = 45000; // give more time on retry
+        timeoutMs = 45000;
         continue;
       }
       throw e;
@@ -245,35 +304,32 @@ async function api(payload, timeoutMs = 35000, retries = 1) {
   }
 }
 
-// ── LOAD ───────────────────────────────────────────────────────
+// ── LOAD ──────────────────────────────────────────────────────
 async function loadChecklist(silent = false) {
   const myId = ++loadReqId;
   if (!silent) {
     document.getElementById('team-list').innerHTML =
-      '<div class="loading"><div class="spinner"></div><br>Loading checklist...<br><span style="font-size:11px;color:#8E8E93;margin-top:6px;display:block">First load may take up to 30 seconds</span></div>';
+      '<div class="loading"><div class="spinner"></div><br>Loading checklist...<br><span style="font-size:12px;color:#8E8E93;margin-top:6px;display:block">First load may take up to 30 seconds</span></div>';
   }
   setSyncSpinner(true);
   try {
     const res = await api({ action: 'getChecklist' });
-    if (myId !== loadReqId) return; // stale — newer load started
+    if (myId !== loadReqId) return;
     if (!res.ok) throw new Error(res.error || 'Load failed');
-
-    // FIX: Smart merge — don't overwrite items with pending toggles
     if (teamsData.length > 0) {
       mergeRemoteState(res.teams);
     } else {
       teamsData = res.teams || [];
     }
-
     lastSyncTime = new Date();
     updateSyncLabel();
     renderHome();
+    fixStickyTops();
   } catch (e) {
     if (myId !== loadReqId) return;
-    console.error('loadChecklist error:', e.name, e.message, e);
     if (!silent) {
       document.getElementById('team-list').innerHTML =
-        '<div class="empty">Could not load checklist.<br><small style="color:#C0392B">' + e.name + ': ' + e.message + '</small><br>Tap ↻ to retry.</div>';
+        '<div class="empty">Could not load checklist.<br><small style="color:#C0392B">' + e.name + ': ' + e.message + '</small><br><br>Tap ↻ to retry.</div>';
     }
     updateSyncLabel('Failed');
   } finally {
@@ -282,77 +338,65 @@ async function loadChecklist(silent = false) {
   }
 }
 
-// Merge remote state without overwriting pending toggles (FIX: smart refresh)
 function mergeRemoteState(remoteTeams) {
-  for (const remoteTeam of remoteTeams) {
-    const localTeam = teamsData.find(t => t.id === remoteTeam.id);
-    if (!localTeam) { teamsData.push(remoteTeam); continue; }
-    for (const remoteItem of remoteTeam.items) {
-      const localItem = localTeam.items.find(i => i.idx === remoteItem.idx);
-      const key = `${remoteTeam.id}_${remoteItem.idx}`;
-      if (!localItem) { localTeam.items.push(remoteItem); continue; }
-      // Only update if no pending toggle on this item
+  for (const rt of remoteTeams) {
+    const lt = teamsData.find(t => t.id === rt.id);
+    if (!lt) { teamsData.push(rt); continue; }
+    for (const ri of rt.items) {
+      const li = lt.items.find(i => i.idx === ri.idx);
+      const key = `${rt.id}_${ri.idx}`;
+      if (!li) { lt.items.push(ri); continue; }
       if (!pendingToggles[key]) {
-        localItem.checked   = remoteItem.checked;
-        localItem.checkedAt = remoteItem.checkedAt;
+        li.checked   = ri.checked;
+        li.checkedAt = ri.checkedAt;
       }
     }
   }
 }
 
-// ── AUTO-REFRESH ───────────────────────────────────────────────
+// ── AUTO-REFRESH ──────────────────────────────────────────────
 function startAutoRefresh() {
   stopAutoRefresh();
   refreshTimer = setInterval(() => {
-    // Only refresh when on home screen (not when lead is actively checking items)
     if (document.getElementById('home-screen').classList.contains('show')) {
-      // Skip if any toggle is pending
       if (Object.keys(pendingToggles).length > 0) return;
       isRefreshing = true;
-      loadChecklist(true); // silent — no loading spinner on auto-refresh
+      loadChecklist(true);
     }
   }, REFRESH_INTERVAL_MS);
 }
-
 function stopAutoRefresh() {
   if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
 }
-
 function manualRefresh() {
   if (isRefreshing) return;
   isRefreshing = true;
   loadChecklist(true);
 }
-
 function setSyncSpinner(on) {
   document.getElementById('sync-btn').classList.toggle('spinning', on);
 }
-
 function updateSyncLabel(override) {
   const el = document.getElementById('sync-lbl');
   if (override) { el.textContent = override; return; }
   if (!lastSyncTime) { el.textContent = '–'; return; }
   const secs = Math.round((new Date() - lastSyncTime) / 1000);
-  if (secs < 10)  el.textContent = 'Just now';
-  else if (secs < 60)  el.textContent = secs + 's ago';
-  else el.textContent = Math.floor(secs/60) + 'm ago';
+  if (secs < 10)      el.textContent = 'Just now';
+  else if (secs < 60) el.textContent = secs + 's ago';
+  else                el.textContent = Math.floor(secs/60) + 'm ago';
 }
-
-// Update "X ago" label every 15 seconds
 setInterval(updateSyncLabel, 15000);
 
-// ── TOGGLE ─────────────────────────────────────────────────────
+// ── TOGGLE ────────────────────────────────────────────────────
 async function toggleItem(teamId, itemIdx) {
   const team = teamsData.find(t => t.id === teamId);
   if (!team) return;
   const item = team.items.find(i => i.idx === itemIdx);
   if (!item) return;
-
   const key = `${teamId}_${itemIdx}`;
-  if (pendingToggles[key]) return; // prevent double-tap on same item
+  if (pendingToggles[key]) return;
   pendingToggles[key] = true;
 
-  // Optimistic update
   item.checked   = !item.checked;
   item.checkedAt = item.checked ? 'Saving...' : '';
   updateItemUI(teamId, itemIdx, item);
@@ -360,28 +404,17 @@ async function toggleItem(teamId, itemIdx) {
   if (curTeam && curTeam.id === teamId) updateClHeader();
 
   try {
-    const res = await api({
-      action: 'toggleItem',
-      teamId,
-      itemIdx: item.idx,
-      checked: item.checked
-    });
+    const res = await api({ action:'toggleItem', teamId, itemIdx:item.idx, checked:item.checked });
     if (res.ok) {
-      // FIX #1+#2: checkedAt comes back as clean "hh:mm AM/PM" string from AppScript
       item.checkedAt = item.checked ? (res.checkedAt || '') : '';
     } else {
-      // Revert on failure
-      item.checked   = !item.checked;
-      item.checkedAt = '';
+      item.checked = !item.checked; item.checkedAt = '';
       alert('Could not save. Please try again.');
     }
   } catch (e) {
-    // FIX #4: timeout or network error — always revert
-    item.checked   = !item.checked;
-    item.checkedAt = '';
+    item.checked = !item.checked; item.checkedAt = '';
     alert('Connection error. Please try again.');
   } finally {
-    // Always re-render and release lock
     updateItemUI(teamId, itemIdx, item);
     updateStats();
     if (curTeam && curTeam.id === teamId) updateClHeader();
@@ -389,9 +422,7 @@ async function toggleItem(teamId, itemIdx) {
   }
 }
 
-// Update a single item in DOM (no full re-render)
 function updateItemUI(teamId, itemIdx, item) {
-  // Checklist screen item
   const el = document.getElementById(`ci-${teamId}-${itemIdx}`);
   if (el) {
     el.classList.toggle('done', item.checked);
@@ -405,7 +436,6 @@ function updateItemUI(teamId, itemIdx, item) {
     const tsEl = el.querySelector('.ci-ts');
     if (tsEl) tsEl.textContent = item.checked && item.checkedAt ? `Checked · ${item.checkedAt}` : '';
   }
-  // Full list item
   const flEl = document.getElementById(`fl-${teamId}-${itemIdx}`);
   if (flEl) {
     flEl.classList.toggle('fl-done', item.checked);
@@ -417,7 +447,7 @@ function updateItemUI(teamId, itemIdx, item) {
   }
 }
 
-// ── STATS ──────────────────────────────────────────────────────
+// ── STATS ─────────────────────────────────────────────────────
 function calcStats() {
   let vD=0,vT=0,tD=0,tT=0,fD=0,fT=0,totD=0,tot=0;
   for (const team of teamsData) {
@@ -434,63 +464,53 @@ function calcStats() {
 
 function updateStats() {
   const s = calcStats();
-  const pct = s.tot ? Math.round(s.totD / s.tot * 100) : 0;
-
-  document.getElementById('home-pbar').style.width = pct + '%';
+  const pct = s.tot ? Math.round(s.totD/s.tot*100) : 0;
+  document.getElementById('home-pbar').style.width = pct+'%';
   document.getElementById('home-plbl').textContent = `${s.totD} of ${s.tot} complete`;
-  document.getElementById('home-ppct').textContent = pct + '%';
+  document.getElementById('home-ppct').textContent = pct+'%';
   document.getElementById('st-verify').textContent   = `${s.vD}/${s.vT}`;
   document.getElementById('st-test').textContent     = `${s.tD}/${s.tT}`;
   document.getElementById('st-followup').textContent = `${s.fD}/${s.fT}`;
   document.getElementById('st-total').textContent    = `${s.totD}/${s.tot}`;
 
   for (const team of teamsData) {
-    const done  = team.items.filter(i => i.checked).length;
+    const done  = team.items.filter(i=>i.checked).length;
     const total = team.items.length;
-    const pct   = total ? Math.round(done / total * 100) : 0;
-    const allDone = done === total && total > 0;
-
-    // Team card
+    const pct   = total ? Math.round(done/total*100) : 0;
+    const allDone = done===total && total>0;
     const pEl   = document.getElementById(`tp-${team.id}`);
     const bEl   = document.getElementById(`tpf-${team.id}`);
     const tagEl = document.getElementById(`ttag-${team.id}`);
     const cEl   = document.getElementById(`tc-${team.id}`);
     if (pEl) pEl.textContent = `${done}/${total}`;
-    if (bEl) bEl.style.width = pct + '%';
+    if (bEl) bEl.style.width = pct+'%';
     if (tagEl && cEl) {
       if (allDone) {
-        tagEl.className = 'ttag ttag-done'; tagEl.textContent = 'Done';
-        cEl.classList.add('all-done');
-      } else if (done > 0) {
-        tagEl.className = 'ttag ttag-prog'; tagEl.textContent = 'In progress';
-        cEl.classList.remove('all-done');
+        tagEl.className='ttag ttag-done'; tagEl.textContent='Done'; cEl.classList.add('all-done');
+      } else if (done>0) {
+        tagEl.className='ttag ttag-prog'; tagEl.textContent='In progress'; cEl.classList.remove('all-done');
       } else {
-        tagEl.className = 'ttag ttag-pend'; tagEl.textContent = 'Pending';
-        cEl.classList.remove('all-done');
+        tagEl.className='ttag ttag-pend'; tagEl.textContent='Pending'; cEl.classList.remove('all-done');
       }
     }
-
-    // FIX #8: Full list section header
     const secEl = document.getElementById(`fls-${team.id}`);
     if (secEl) {
       const progEl = secEl.querySelector('.fl-sec-prog');
-      if (progEl) {
-        progEl.textContent = allDone ? `${done}/${total} ✓` : `${done}/${total}`;
-      }
+      if (progEl) progEl.textContent = allDone ? `${done}/${total} ✓` : `${done}/${total}`;
       secEl.classList.toggle('fl-sec-done', allDone);
     }
   }
 }
 
-// ── RENDER ─────────────────────────────────────────────────────
+// ── RENDER HOME ───────────────────────────────────────────────
 function renderHome() {
   const list = document.getElementById('team-list');
   if (!teamsData.length) { list.innerHTML='<div class="empty">No teams found</div>'; return; }
   list.innerHTML = teamsData.map(team => {
-    const done  = team.items.filter(i => i.checked).length;
+    const done  = team.items.filter(i=>i.checked).length;
     const total = team.items.length;
-    const pct   = total ? Math.round(done / total * 100) : 0;
-    const allDone = done === total && total > 0;
+    const pct   = total ? Math.round(done/total*100) : 0;
+    const allDone = done===total && total>0;
     return `<div class="team-card${allDone?' all-done':''}" id="tc-${team.id}" onclick="openTeam('${team.id}')">
       <div class="tl">
         <div class="tn">${team.name}</div>
@@ -509,24 +529,32 @@ function renderHome() {
   updateStats();
 }
 
+// ── FULL LIST (FIX #4 owner, FIX #6 numbers) ─────────────────
 function renderFullList() {
   const fl = document.getElementById('fl-list');
   if (!teamsData.length) { fl.innerHTML='<div class="empty">No data</div>'; return; }
   fl.innerHTML = teamsData.map(team => {
-    const done  = team.items.filter(i => i.checked).length;
-    const total = team.items.length;
-    const allDone = done === total && total > 0;
-    const itemsHtml = team.items.map(item =>
-      `<div class="fl-item${item.checked?' fl-done':''}" id="fl-${team.id}-${item.idx}">
-        <div class="fl-dot" style="background:${dotColor(item.type)}"></div>
+    const done    = team.items.filter(i=>i.checked).length;
+    const total   = team.items.length;
+    const allDone = done===total && total>0;
+    const prefix  = getPrefix(team.id);
+    const itemsHtml = team.items.map((item, pos) => {
+      const num   = `${prefix}-${pos+1}`;
+      const dc    = dotColor(item.type);
+      return `<div class="fl-item${item.checked?' fl-done':''}" id="fl-${team.id}-${item.idx}">
+        <span class="fl-num" style="color:${dc}">${num}</span>
+        <div class="fl-dot" style="background:${dc}"></div>
         <div class="fl-text">${item.text}</div>
         <span class="fl-status ${item.checked?'fl-status-done':'fl-status-pend'}">${item.checked?'Done':'Pending'}</span>
-      </div>`
-    ).join('');
+      </div>`;
+    }).join('');
     return `<div class="fl-sec${allDone?' fl-sec-done':''}" id="fls-${team.id}">
       <div class="fl-sec-hdr" onclick="toggleFlSec('${team.id}')">
-        <span class="fl-sec-name">${team.name}</span>
-        <span class="fl-sec-prog">${allDone?done+'/'+total+' ✓':done+'/'+total}</span>
+        <div class="fl-sec-left">
+          <div class="fl-sec-name">${team.name}</div>
+          <div class="fl-sec-owner">${team.owner}</div>
+        </div>
+        <div class="fl-sec-prog">${allDone?done+'/'+total+' ✓':done+'/'+total}</div>
       </div>
       <div class="fl-items" id="fl-body-${team.id}">${itemsHtml}</div>
     </div>`;
@@ -535,10 +563,10 @@ function renderFullList() {
 
 function toggleFlSec(id) {
   const el = document.getElementById(`fl-body-${id}`);
-  if (el) el.style.display = el.style.display === 'none' ? '' : 'none';
+  if (el) el.style.display = el.style.display==='none' ? '' : 'none';
 }
 
-// ── TEAM CHECKLIST ─────────────────────────────────────────────
+// ── TEAM CHECKLIST (FIX #6 numbers) ──────────────────────────
 function openTeam(teamId) {
   curTeam = teamsData.find(t => t.id === teamId);
   if (!curTeam) return;
@@ -549,12 +577,12 @@ function openTeam(teamId) {
   document.getElementById('cl-screen').classList.add('show');
   updateClHeader();
   renderItems();
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
 }
 
 function updateClHeader() {
   if (!curTeam) return;
-  const done  = curTeam.items.filter(i => i.checked).length;
+  const done  = curTeam.items.filter(i=>i.checked).length;
   const total = curTeam.items.length;
   document.getElementById('cl-title').textContent = curTeam.name;
   document.getElementById('cl-sub').textContent   = `${curTeam.owner} · ${done} of ${total} done`;
@@ -564,8 +592,8 @@ function goHome() {
   curTeam = null;
   document.getElementById('cl-screen').classList.remove('show');
   document.getElementById('home-screen').classList.add('show');
-  window.scrollTo(0, 0);
-  updateStats(); // refresh cards in case items were toggled
+  window.scrollTo(0,0);
+  updateStats();
 }
 
 function setFilter(f, btn) {
@@ -577,19 +605,27 @@ function setFilter(f, btn) {
 
 function renderItems() {
   if (!curTeam) return;
-  const list = document.getElementById('items-list');
-  const visible = curTeam.items.filter(item => {
-    if (curFilter === 'all')     return true;
-    if (curFilter === 'pending') return !item.checked;
-    if (curFilter === 'done')    return item.checked;
+  const prefix  = getPrefix(curTeam.id);
+  const list    = document.getElementById('items-list');
+
+  // Build full ordered list first (for numbering), then filter for display
+  const allItems = curTeam.items;
+  const visible  = allItems.filter((item, pos) => {
+    if (curFilter==='all')     return true;
+    if (curFilter==='pending') return !item.checked;
+    if (curFilter==='done')    return item.checked;
     return typeClass(item.type) === curFilter;
   });
+
   if (!visible.length) {
     list.innerHTML = '<div class="empty">No items in this filter</div>';
     return;
   }
+
   list.innerHTML = visible.map(item => {
-    const tc = typeClass(item.type);
+    const pos   = allItems.indexOf(item) + 1; // 1-based position in full list
+    const num   = `${prefix}-${pos}`;
+    const tc    = typeClass(item.type);
     const colors = { verify:'#1A4F96', testlive:'#1D9E75', followup:'#D4820A' };
     const cbStyle = item.checked
       ? 'background:#8E8E93;border-color:#8E8E93'
@@ -599,6 +635,7 @@ function renderItems() {
       <div class="cb" style="${cbStyle}">
         <span class="cb-tick" style="display:${item.checked?'block':'none'}">✓</span>
       </div>
+      <div class="ci-num">${num}</div>
       <div class="ci-body">
         ${typeBadge(item.type)}
         <div class="ci-text">${item.text}</div>
@@ -609,7 +646,7 @@ function renderItems() {
   }).join('');
 }
 
-// ── TABS ───────────────────────────────────────────────────────
+// ── TABS ──────────────────────────────────────────────────────
 function switchTab(tab) {
   curTab = tab;
   document.getElementById('tab-teams').classList.toggle('on', tab==='teams');
@@ -618,20 +655,19 @@ function switchTab(tab) {
   document.getElementById('view-full').style.display  = tab==='full'  ? '' : 'none';
 }
 
-// ── EXPORT (FIX #9: Toronto timezone) ─────────────────────────
+// ── EXPORT ────────────────────────────────────────────────────
 function exportSummary() {
   const now = new Date().toLocaleString('en-CA', { timeZone:'America/Toronto' });
-  const lines = [
-    'Ashara 1448H Toronto — Dry Run Checklist Summary',
-    'Generated: ' + now, ''
-  ];
+  const lines = ['Ashara 1448H Toronto — Dry Run Checklist Summary', 'Generated: '+now, ''];
   for (const team of teamsData) {
-    const done = team.items.filter(i => i.checked).length;
+    const done   = team.items.filter(i=>i.checked).length;
+    const prefix = getPrefix(team.id);
     lines.push(`${team.name} — ${done}/${team.items.length}`);
-    for (const item of team.items) {
-      const ts = item.checked && item.checkedAt ? ` — ${item.checkedAt}` : '';
-      lines.push(`  [${item.checked?'x':' '}] (${item.type}) ${item.text}${ts}`);
-    }
+    team.items.forEach((item, pos) => {
+      const num = `${prefix}-${pos+1}`;
+      const ts  = item.checked && item.checkedAt ? ` — ${item.checkedAt}` : '';
+      lines.push(`  [${item.checked?'x':' '}] ${num} (${item.type}) ${item.text}${ts}`);
+    });
     lines.push('');
   }
   const blob = new Blob([lines.join('\n')], { type:'text/plain' });
@@ -641,9 +677,10 @@ function exportSummary() {
   a.click();
 }
 
-// ── INIT ───────────────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────────
 loadChecklist();
 startAutoRefresh();
+window.addEventListener('resize', fixStickyTops);
 </script>
 </body>
 </html>
