@@ -176,7 +176,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 </div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0F6WyLOUqhpHBuLVnXswOySe9eZKSJ6hYttMhdddJ/dev';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEM6b47I6w3wDMv4IRRYQl59sAlwey4sYztoKnInKP9hn2ac94L3Hfwhqz2BYngrs-mg/exec';
 const REFRESH_INTERVAL_MS = 60000; // 60 seconds
 
 let teamsData      = [];
@@ -217,23 +217,31 @@ function dotColor(t) {
 }
 
 // ── API with timeout (FIX #4) ──────────────────────────────────
-async function api(payload, timeoutMs = 10000) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const r = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: { 'Content-Type': 'text/plain' },
-      mode: 'cors',
-      signal: controller.signal
-    });
-    clearTimeout(timer);
-    return await r.json();
-  } catch (e) {
-    clearTimeout(timer);
-    console.error('API fetch error:', e.name, e.message);
-    throw e;
+async function api(payload, timeoutMs = 35000, retries = 1) {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const r = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'text/plain' },
+        mode: 'cors',
+        signal: controller.signal
+      });
+      clearTimeout(timer);
+      return await r.json();
+    } catch (e) {
+      clearTimeout(timer);
+      console.error('API attempt', attempt+1, 'error:', e.name, e.message);
+      // On AbortError (timeout) retry once with a longer timeout
+      if (e.name === 'AbortError' && attempt < retries) {
+        console.log('Cold start timeout — retrying with 45s timeout...');
+        timeoutMs = 45000; // give more time on retry
+        continue;
+      }
+      throw e;
+    }
   }
 }
 
@@ -242,7 +250,7 @@ async function loadChecklist(silent = false) {
   const myId = ++loadReqId;
   if (!silent) {
     document.getElementById('team-list').innerHTML =
-      '<div class="loading"><div class="spinner"></div><br>Loading checklist...</div>';
+      '<div class="loading"><div class="spinner"></div><br>Loading checklist...<br><span style="font-size:11px;color:#8E8E93;margin-top:6px;display:block">First load may take up to 30 seconds</span></div>';
   }
   setSyncSpinner(true);
   try {
