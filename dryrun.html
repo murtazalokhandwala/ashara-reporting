@@ -84,6 +84,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .ci.testlive .cb{border-color:#1D9E75}
 .ci.followup .cb{border-color:#D4820A}
 .ci.done .cb{background:#8E8E93;border-color:#8E8E93}
+
+/* ── LADIES ITEMS ── */
+.ci.ladies{border-left-color:#C0185C;background:#FFF0F5}
+.ci.ladies.done{background:#FAE8F0}
+.ci.ladies .cb{border-color:#C0185C}
+.ci.ladies.done .cb{background:#8E8E93;border-color:#8E8E93}
+.ci.ladies .ci-text{color:#6B2040}
+.ci.ladies.done .ci-text{color:#B08090;text-decoration:line-through}
+.ci.ladies .ci-note{color:#A06070}
+.ci.ladies .ci-num{color:#C0185C}
+.ladies-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:#C0185C;background:#FFE0EC;padding:2px 8px;border-radius:8px;margin-left:6px;vertical-align:middle}
+/* ladies in full list */
+.fl-item.fl-ladies{background:#FFF0F5}
+.fl-item.fl-ladies .fl-text{color:#6B2040}
+.fl-item.fl-ladies.fl-done .fl-text{color:#B08090}
+.fl-ladies-tag{font-size:9px;font-weight:700;color:#C0185C;background:#FFE0EC;padding:1px 6px;border-radius:6px;flex-shrink:0}
 .cb-tick{font-size:14px;color:#fff;display:none}
 .ci.done .cb-tick{display:block}
 
@@ -133,6 +149,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .exp-btn{flex:1;padding:12px;background:#fff;border:0.5px solid #E5E5EA;border-radius:12px;font-size:13px;font-weight:600;color:#0F2744;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 .exp-btn:active{background:#F2F2F7}
 
+.ladies-legend{display:flex;align-items:center;gap:8px;background:#FFF0F5;border:0.5px solid #F0C0D0;border-radius:10px;padding:9px 14px;margin:10px 14px 0;font-size:12px;color:#6B2040;font-weight:500}
 .loading{text-align:center;padding:48px 20px;color:#8E8E93;font-size:14px}
 .spinner{display:inline-block;width:24px;height:24px;border:2px solid #E5E5EA;border-top-color:#1A4F96;border-radius:50%;animation:spin .7s linear infinite;margin-bottom:10px}
 .empty{text-align:center;padding:32px 20px;color:#8E8E93;font-size:14px}
@@ -217,6 +234,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
     <button class="fbtn"    onclick="setFilter('followup',this)">Follow-up</button>
     <button class="fbtn"    onclick="setFilter('pending',this)">Pending</button>
     <button class="fbtn"    onclick="setFilter('done',this)">Done</button>
+  </div>
+  <div id="ladies-legend" class="ladies-legend" style="display:none">
+    <span style="font-size:16px">🧕</span>
+    <span>Pink highlighted items require ladies lead input</span>
   </div>
   <div class="items-list" id="items-list"></div>
 </div>
@@ -428,10 +449,11 @@ function updateItemUI(teamId, itemIdx, item) {
     el.classList.toggle('done', item.checked);
     const cb = el.querySelector('.cb');
     const tc = typeClass(item.type);
+    const isLadies = item.side && item.side.toLowerCase() === 'ladies';
     const colors = { verify:'#1A4F96', testlive:'#1D9E75', followup:'#D4820A' };
     cb.style.cssText = item.checked
       ? 'background:#8E8E93;border-color:#8E8E93'
-      : `border-color:${colors[tc]||'#C7C7CC'}`;
+      : isLadies ? 'border-color:#C0185C' : `border-color:${colors[tc]||'#C7C7CC'}`;
     el.querySelector('.cb-tick').style.display = item.checked ? 'block' : 'none';
     const tsEl = el.querySelector('.ci-ts');
     if (tsEl) tsEl.textContent = item.checked && item.checkedAt ? `Checked · ${item.checkedAt}` : '';
@@ -622,22 +644,28 @@ function renderItems() {
     return;
   }
 
+  // Show/hide legend based on whether any ladies items exist in this team
+  const hasLadies = allItems.some(i => i.side && i.side.toLowerCase() === 'ladies');
+  document.getElementById('ladies-legend').style.display = hasLadies ? 'flex' : 'none';
+
   list.innerHTML = visible.map(item => {
-    const pos   = allItems.indexOf(item) + 1; // 1-based position in full list
-    const num   = `${prefix}-${pos}`;
-    const tc    = typeClass(item.type);
-    const colors = { verify:'#1A4F96', testlive:'#1D9E75', followup:'#D4820A' };
-    const cbStyle = item.checked
+    const pos      = allItems.indexOf(item) + 1;
+    const num      = `${prefix}-${pos}`;
+    const tc       = typeClass(item.type);
+    const isLadies = item.side && item.side.toLowerCase() === 'ladies';
+    const colors   = { verify:'#1A4F96', testlive:'#1D9E75', followup:'#D4820A' };
+    const cbStyle  = item.checked
       ? 'background:#8E8E93;border-color:#8E8E93'
-      : `border-color:${colors[tc]||'#C7C7CC'}`;
-    return `<div class="ci ${tc}${item.checked?' done':''}" id="ci-${curTeam.id}-${item.idx}"
+      : isLadies ? 'border-color:#C0185C' : `border-color:${colors[tc]||'#C7C7CC'}`;
+    const ladiesTag = isLadies ? '<span class="ladies-tag">🧕 Ladies</span>' : '';
+    return `<div class="ci ${isLadies?'ladies':tc}${item.checked?' done':''}" id="ci-${curTeam.id}-${item.idx}"
         onclick="toggleItem('${curTeam.id}',${item.idx})">
       <div class="cb" style="${cbStyle}">
         <span class="cb-tick" style="display:${item.checked?'block':'none'}">✓</span>
       </div>
       <div class="ci-num">${num}</div>
       <div class="ci-body">
-        ${typeBadge(item.type)}
+        ${typeBadge(item.type)}${ladiesTag}
         <div class="ci-text">${item.text}</div>
         ${item.note ? `<div class="ci-note">${item.note}</div>` : ''}
         <div class="ci-ts">${item.checked && item.checkedAt ? `Checked · ${item.checkedAt}` : ''}</div>
