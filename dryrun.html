@@ -21,12 +21,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .pbar-fill{height:100%;border-radius:3px;background:#1D9E75;transition:width .4s}
 .pbar-lbl{display:flex;justify-content:space-between;font-size:11px;color:#90BAD8;margin-top:4px}
 
-/* ── TABS — sticky below header (FIX #2) ── */
+/* ── TABS — sticky below header ── */
 .tabs{display:flex;background:#fff;border-bottom:1.5px solid #E5E5EA;position:sticky;z-index:90}
-.tab{flex:1;padding:13px 4px;font-size:14px;font-weight:600;color:#8E8E93;text-align:center;cursor:pointer;border-bottom:3px solid transparent;transition:all .15s}
+.tab{flex:1;padding:13px 4px;font-size:13px;font-weight:600;color:#8E8E93;text-align:center;cursor:pointer;border-bottom:3px solid transparent;transition:all .15s}
 .tab.on{color:#0F2744;border-bottom-color:#0F2744}
 
-/* ── STATS (FIX #3 — bigger) ── */
+/* ── STATS ── */
 .stats{display:flex;gap:8px;padding:10px 14px;background:#fff;border-bottom:0.5px solid #E5E5EA}
 .stat{flex:1;background:#F8F8F8;border-radius:10px;padding:10px 8px;text-align:center;border-bottom:3px solid #E5E5EA}
 .stat.s-verify  {border-bottom-color:#1A4F96}
@@ -36,14 +36,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .stat-n{font-size:20px;font-weight:700;line-height:1}
 .stat-l{font-size:11px;color:#8E8E93;margin-top:4px;font-weight:500}
 
-/* ── TEAM CARDS (FIX #1 — readable, no overflow) ── */
+/* ── TEAM CARDS ── */
 .team-list{padding:10px 14px;display:flex;flex-direction:column;gap:8px}
 .team-card{background:#fff;border:0.5px solid #E5E5EA;border-radius:14px;padding:14px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:opacity .1s}
 .team-card:active{opacity:.7}
 .team-card.all-done{border-color:#1D9E75;background:#F0FDF6}
 .tl{flex:1;min-width:0}
 .tn{font-size:15px;font-weight:700;color:#1C1C1E}
-/* FIX #1: dark readable colour, wraps, slightly smaller */
 .to{font-size:11px;color:#3A3835;margin-top:4px;line-height:1.5;word-break:break-word}
 .tr{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
 .tp{font-size:13px;font-weight:700;color:#1C1C1E}
@@ -61,95 +60,123 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .cl-info{flex:1;min-width:0}
 .cl-title{font-size:16px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cl-sub{font-size:11px;color:#90BAD8;margin-top:2px}
-
-/* FIX #2: filter row sticky — sits just below cl-hdr */
-.filter-row{display:flex;gap:6px;padding:9px 14px;background:#fff;border-bottom:0.5px solid #E5E5EA;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:sticky;top:calc(62px + env(safe-area-inset-top));z-index:90}
+/* FIX #2: filter row sticky — measured dynamically by JS */
+.filter-row{display:flex;gap:6px;padding:9px 14px;background:#fff;border-bottom:0.5px solid #E5E5EA;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:sticky;z-index:89}
 .filter-row::-webkit-scrollbar{display:none}
 .fbtn{flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:12px;font-weight:600;background:#F2F2F7;border:none;color:#8E8E93;cursor:pointer;min-height:34px}
 .fbtn.on{background:#0F2744;color:#fff}
-
 .items-list{padding:10px 14px;display:flex;flex-direction:column;gap:6px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
 
-/* ── CHECKLIST ITEM (FIX #5 — bigger fonts, FIX #6 — number prefix) ── */
+/* ── CHECKLIST ITEM ── */
 .ci{display:flex;align-items:flex-start;gap:10px;background:#fff;border:0.5px solid #E5E5EA;border-radius:12px;padding:12px;border-left:4px solid #E5E5EA;cursor:pointer;transition:opacity .1s;min-height:48px}
 .ci:active{opacity:.75}
 .ci.verify  {border-left-color:#1A4F96}
 .ci.testlive{border-left-color:#1D9E75}
 .ci.followup{border-left-color:#D4820A}
 .ci.done{background:#FAFAFA}
-
-/* checkbox */
-.cb{width:24px;height:24px;border:2px solid #C7C7CC;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
-.ci.verify   .cb{border-color:#1A4F96}
-.ci.testlive .cb{border-color:#1D9E75}
-.ci.followup .cb{border-color:#D4820A}
-.ci.done .cb{background:#8E8E93;border-color:#8E8E93}
-
-/* ── LADIES ITEMS ── */
 .ci.ladies{border-left-color:#C0185C;background:#FFF0F5}
 .ci.ladies.done{background:#FAE8F0}
-.ci.ladies .cb{border-color:#C0185C}
-.ci.ladies.done .cb{background:#8E8E93;border-color:#8E8E93}
 .ci.ladies .ci-text{color:#6B2040}
 .ci.ladies.done .ci-text{color:#B08090;text-decoration:line-through}
 .ci.ladies .ci-note{color:#A06070}
 .ci.ladies .ci-num{color:#C0185C}
-.ladies-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:#C0185C;background:#FFE0EC;padding:2px 8px;border-radius:8px;margin-left:6px;vertical-align:middle}
-/* ladies in full list */
-.fl-item.fl-ladies{background:#FFF0F5}
-.fl-item.fl-ladies .fl-text{color:#6B2040}
-.fl-item.fl-ladies.fl-done .fl-text{color:#B08090}
-.fl-ladies-tag{font-size:9px;font-weight:700;color:#C0185C;background:#FFE0EC;padding:1px 6px;border-radius:6px;flex-shrink:0}
+.cb{width:24px;height:24px;border:2px solid #C7C7CC;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
+.ci.verify   .cb{border-color:#1A4F96}
+.ci.testlive .cb{border-color:#1D9E75}
+.ci.followup .cb{border-color:#D4820A}
+.ci.ladies   .cb{border-color:#C0185C}
+.ci.done .cb{background:#8E8E93;border-color:#8E8E93}
+.ci.ladies.done .cb{background:#8E8E93;border-color:#8E8E93}
 .cb-tick{font-size:14px;color:#fff;display:none}
 .ci.done .cb-tick{display:block}
-
-/* FIX #6: item number prefix */
 .ci-num{font-size:11px;font-weight:700;font-family:'Courier New',monospace;min-width:44px;padding-top:2px;flex-shrink:0;letter-spacing:-.01em}
 .ci.verify   .ci-num{color:#1A4F96}
 .ci.testlive .ci-num{color:#1D9E75}
 .ci.followup .ci-num{color:#D4820A}
 .ci.done     .ci-num{color:#8E8E93}
-
 .ci-body{flex:1;min-width:0}
 .ci-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;margin-bottom:5px}
 .badge-verify  {background:#E0EEFF;color:#0A2E6E}
 .badge-testlive{background:#DFFAF0;color:#085041}
 .badge-followup{background:#FEF3E2;color:#5C2E00}
-/* FIX #5 — bigger item text */
+.ladies-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:#C0185C;background:#FFE0EC;padding:2px 8px;border-radius:8px;margin-left:6px;vertical-align:middle}
 .ci-text{font-size:14px;line-height:1.5;color:#1C1C1E}
 .ci.done .ci-text{color:#8E8E93;text-decoration:line-through}
 .ci-note{font-size:12px;color:#8E8E93;margin-top:4px;font-style:italic;line-height:1.4}
 .ci-ts{font-size:11px;color:#1D9E75;margin-top:4px;font-weight:600}
 
+/* ── LADIES LEGEND ── */
+.ladies-legend{display:flex;align-items:center;gap:8px;background:#FFF0F5;border:0.5px solid #F0C0D0;border-radius:10px;padding:9px 14px;margin:10px 14px 0;font-size:12px;color:#6B2040;font-weight:500}
+
+/* ── FIX #3 — sync indicator on checklist screen ── */
+.cl-sync{font-size:10px;color:#6B8FAA;padding:4px 0;display:flex;align-items:center;gap:4px;flex-shrink:0}
+.cl-sync.spinning .sync-icon{animation:spin .8s linear infinite;display:inline-block}
+
 /* ── FULL LIST ── */
 .fl-wrap{padding:10px 14px;display:flex;flex-direction:column;gap:8px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
 .fl-sec{background:#fff;border:0.5px solid #E5E5EA;border-radius:12px;overflow:hidden}
-.fl-sec-hdr{display:flex;align-items:flex-start;justify-content:space-between;padding:12px 14px;cursor:pointer;background:#fff}
+.fl-sec-hdr{display:flex;align-items:flex-start;justify-content:space-between;padding:12px 14px;cursor:pointer}
 .fl-sec-hdr:active{background:#F5F5F5}
 .fl-sec-left{flex:1;min-width:0}
 .fl-sec-name{font-size:14px;font-weight:700;color:#1C1C1E}
-/* FIX #4 — owner name in full list */
 .fl-sec-owner{font-size:11px;color:#3A3835;margin-top:3px;line-height:1.4}
 .fl-sec-prog{font-size:12px;font-weight:700;color:#8E8E93;flex-shrink:0;margin-left:10px;margin-top:2px}
 .fl-sec.fl-sec-done .fl-sec-prog{color:#1D9E75}
 .fl-items{display:flex;flex-direction:column;border-top:0.5px solid #F2F2F7}
 .fl-item{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:0.5px solid #F5F5F5}
 .fl-item:last-child{border-bottom:none}
-/* FIX #6 — number in full list */
-.fl-num{font-size:10px;font-weight:700;font-family:'Courier New',monospace;min-width:42px;flex-shrink:0;letter-spacing:-.01em}
+.fl-num{font-size:10px;font-weight:700;font-family:'Courier New',monospace;min-width:42px;flex-shrink:0}
 .fl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-/* FIX #5 — bigger full list text */
 .fl-text{font-size:12px;color:#1C1C1E;flex:1;line-height:1.45}
 .fl-item.fl-done .fl-text{color:#8E8E93}
+.fl-item.fl-ladies{background:#FFF0F5}
+.fl-item.fl-ladies .fl-text{color:#6B2040}
+.fl-item.fl-ladies.fl-done .fl-text{color:#B08090}
+.fl-ladies-tag{font-size:9px;font-weight:700;color:#C0185C;background:#FFE0EC;padding:1px 6px;border-radius:6px;flex-shrink:0}
 .fl-status{font-size:10px;font-weight:600;padding:3px 8px;border-radius:8px;flex-shrink:0}
 .fl-status-done{background:#DFFAF0;color:#085041}
 .fl-status-pend{background:#F2F2F7;color:#8E8E93}
 
-.export-row{padding:8px 14px 4px;display:flex;gap:8px}
-.exp-btn{flex:1;padding:12px;background:#fff;border:0.5px solid #E5E5EA;border-radius:12px;font-size:13px;font-weight:600;color:#0F2744;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
-.exp-btn:active{background:#F2F2F7}
+/* ── SUMMARY SCREEN ── */
+.sum-wrap{padding:10px 14px;display:flex;flex-direction:column;gap:10px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.sum-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sum-metric{background:#fff;border:0.5px solid #E5E5EA;border-radius:12px;padding:12px;text-align:center;border-bottom:3px solid #E5E5EA}
+.sum-metric.sm-total  {border-bottom-color:#0F2744}
+.sum-metric.sm-verify {border-bottom-color:#1A4F96}
+.sum-metric.sm-test   {border-bottom-color:#1D9E75}
+.sum-metric.sm-follow {border-bottom-color:#D4820A}
+.sum-metric.sm-teams  {border-bottom-color:#1D9E75}
+.sum-metric.sm-pct    {border-bottom-color:#0F2744}
+.sum-n{font-size:22px;font-weight:700;line-height:1}
+.sum-l{font-size:11px;color:#8E8E93;margin-top:4px;font-weight:500}
+.sum-section-hdr{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:.05em;padding:4px 0}
+.sum-team-row{background:#fff;border:0.5px solid #E5E5EA;border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.sum-team-row.std{border-color:#1D9E75;background:#F0FDF6}
+.str-left{flex:1;min-width:0}
+.str-name{font-size:13px;font-weight:700;color:#1C1C1E}
+.str-owner{font-size:10px;color:#3A3835;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.str-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+.str-prog{font-size:12px;font-weight:700;color:#1C1C1E}
+.str-bar{width:50px;height:4px;background:#E5E5EA;border-radius:2px;overflow:hidden}
+.str-fill{height:100%;border-radius:2px;background:#1A4F96}
+.sum-team-row.std .str-fill{background:#1D9E75}
+.str-tag{font-size:9px;font-weight:600;padding:2px 7px;border-radius:8px}
+.fu-item{background:#fff;border:0.5px solid #E5E5EA;border-radius:10px;padding:10px 12px;display:flex;align-items:flex-start;gap:8px;border-left:3px solid #D4820A}
+.fu-item-dot{width:7px;height:7px;border-radius:50%;background:#D4820A;flex-shrink:0;margin-top:4px}
+.fu-item-body{flex:1;min-width:0}
+.fu-item-text{font-size:12px;color:#1C1C1E;line-height:1.45}
+.fu-item-team{font-size:10px;color:#D4820A;font-weight:700;margin-top:2px}
+.sum-share-row{display:flex;gap:8px}
+.sum-share-btn{flex:1;padding:13px;border-radius:12px;font-size:13px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;min-height:48px}
+.sum-share-btn.primary{background:#0F2744;color:#fff}
+.sum-share-btn.primary:active{background:#1A4F96}
+.sum-share-btn.secondary{background:#fff;border:0.5px solid #E5E5EA;color:#0F2744}
+.sum-share-btn.secondary:active{background:#F2F2F7}
 
-.ladies-legend{display:flex;align-items:center;gap:8px;background:#FFF0F5;border:0.5px solid #F0C0D0;border-radius:10px;padding:9px 14px;margin:10px 14px 0;font-size:12px;color:#6B2040;font-weight:500}
+/* ── COPY TOAST ── */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.show{opacity:1}
+
 .loading{text-align:center;padding:48px 20px;color:#8E8E93;font-size:14px}
 .spinner{display:inline-block;width:24px;height:24px;border:2px solid #E5E5EA;border-top-color:#1A4F96;border-radius:50%;animation:spin .7s linear infinite;margin-bottom:10px}
 .empty{text-align:center;padding:32px 20px;color:#8E8E93;font-size:14px}
@@ -158,6 +185,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 </style>
 </head>
 <body>
+
+<div id="toast" class="toast">Copied to clipboard</div>
 
 <!-- HOME SCREEN -->
 <div id="home-screen" class="screen show">
@@ -175,10 +204,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
     <div class="pbar-lbl"><span id="home-plbl">Loading...</span><span id="home-ppct"></span></div>
   </div>
 
-  <!-- FIX #2: tabs sticky — top set dynamically by JS after hdr height known -->
   <div class="tabs" id="home-tabs">
-    <div class="tab on" id="tab-teams" onclick="switchTab('teams')">By team</div>
-    <div class="tab"    id="tab-full"  onclick="switchTab('full')">Full list</div>
+    <div class="tab on" id="tab-teams"  onclick="switchTab('teams')">By team</div>
+    <div class="tab"    id="tab-full"   onclick="switchTab('full')">Full list</div>
+    <div class="tab"    id="tab-summary"onclick="switchTab('summary')">Summary</div>
   </div>
 
   <!-- TEAMS TAB -->
@@ -202,17 +231,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
       </div>
     </div>
     <div class="team-list" id="team-list">
-      <div class="loading"><div class="spinner"></div><br>Loading checklist...<br><span style="font-size:12px;color:#8E8E93;margin-top:6px;display:block">First load may take up to 30 seconds</span></div>
+      <div class="loading"><div class="spinner"></div><br>Loading checklist...<br>
+        <span style="font-size:12px;color:#8E8E93;margin-top:6px;display:block">First load may take up to 30 seconds</span>
+      </div>
     </div>
   </div>
 
   <!-- FULL LIST TAB -->
   <div id="view-full" style="display:none">
-    <div class="export-row">
-      <button class="exp-btn" onclick="exportSummary()">⬇ Export summary</button>
-      <button class="exp-btn" onclick="window.print()">🖨 Print view</button>
-    </div>
     <div class="fl-wrap" id="fl-list">
+      <div class="loading"><div class="spinner"></div><br>Loading...</div>
+    </div>
+  </div>
+
+  <!-- SUMMARY TAB -->
+  <div id="view-summary" style="display:none">
+    <div class="sum-wrap" id="sum-wrap">
       <div class="loading"><div class="spinner"></div><br>Loading...</div>
     </div>
   </div>
@@ -226,18 +260,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
       <div class="cl-title" id="cl-title"></div>
       <div class="cl-sub"   id="cl-sub"></div>
     </div>
+    <!-- FIX #3: sync indicator on checklist screen -->
+    <div class="cl-sync" id="cl-sync-ind">
+      <span class="sync-icon">↻</span>
+      <span id="cl-sync-lbl">–</span>
+    </div>
   </div>
-  <div class="filter-row">
+  <div class="filter-row" id="filter-row">
     <button class="fbtn on" onclick="setFilter('all',this)">All</button>
     <button class="fbtn"    onclick="setFilter('verify',this)">Verify</button>
     <button class="fbtn"    onclick="setFilter('testlive',this)">Test live</button>
     <button class="fbtn"    onclick="setFilter('followup',this)">Follow-up</button>
+    <button class="fbtn"    onclick="setFilter('ladies',this)">Ladies</button>
     <button class="fbtn"    onclick="setFilter('pending',this)">Pending</button>
     <button class="fbtn"    onclick="setFilter('done',this)">Done</button>
   </div>
   <div id="ladies-legend" class="ladies-legend" style="display:none">
     <span style="font-size:16px">🧕</span>
-    <span>Pink highlighted items require ladies lead input</span>
+    <span>Pink items require ladies lead input</span>
   </div>
   <div class="items-list" id="items-list"></div>
 </div>
@@ -246,17 +286,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEM6b47I6w3wDMv4IRRYQl59sAlwey4sYztoKnInKP9hn2ac94L3Hfwhqz2BYngrs-mg/exec';
 const REFRESH_INTERVAL_MS = 60000;
 
-// ── TEAM PREFIXES (FIX #6) ────────────────────────────────────
 const TEAM_PREFIX = {
   facilities:'FAC', av:'AV',  parking:'PKG', its:'ITS',
-  rahat:'RAH',      sehat:'SEH', niyaz:'NIY',  karamat:'KAR',
-  nazafat:'NAZ',    tayzeen:'TAY', hr:'HR',    comms:'COM',
-  pr:'PR',          finance:'FIN', pmo:'PMO'
+  rahat:'RAH', sehat:'SEH',   niyaz:'NIY',   karamat:'KAR',
+  nazafat:'NAZ', tayzeen:'TAY', hr:'HR',      comms:'COM',
+  pr:'PR', finance:'FIN',     pmo:'PMO'
 };
-
-function getPrefix(teamId) {
-  return TEAM_PREFIX[teamId] || teamId.toUpperCase().slice(0,3);
-}
+function getPrefix(id){ return TEAM_PREFIX[id]||id.toUpperCase().slice(0,3); }
 
 let teamsData    = [];
 let curTeam      = null;
@@ -268,271 +304,266 @@ let refreshTimer = null;
 let isRefreshing = false;
 const pendingToggles = {};
 
-// ── FIX #2: Set sticky top after header renders ───────────────
-function fixStickyTops() {
+// ── FIX #2: Set sticky tops after header height is known ──────
+function fixStickyTops(){
   const hdrH = document.getElementById('home-hdr').offsetHeight;
   document.getElementById('home-tabs').style.top = hdrH + 'px';
+  // Checklist filter row: cl-hdr height
+  const clHdrH = document.querySelector('.cl-hdr') ? document.querySelector('.cl-hdr').offsetHeight : 68;
+  document.getElementById('filter-row').style.top = clHdrH + 'px';
 }
 
 // ── TYPE HELPERS ──────────────────────────────────────────────
-function typeClass(t) {
-  if (!t) return '';
-  const l = t.toLowerCase();
-  if (l === 'verify')       return 'verify';
-  if (l.includes('test'))   return 'testlive';
-  if (l.includes('follow')) return 'followup';
+function typeClass(t){
+  if(!t) return '';
+  const l=t.toLowerCase();
+  if(l==='verify') return 'verify';
+  if(l.includes('test')) return 'testlive';
+  if(l.includes('follow')) return 'followup';
   return '';
 }
-function typeBadge(t) {
-  const c = typeClass(t);
-  if (c === 'verify')   return '<span class="ci-badge badge-verify">Verify</span>';
-  if (c === 'testlive') return '<span class="ci-badge badge-testlive">Test live</span>';
-  if (c === 'followup') return '<span class="ci-badge badge-followup">Follow-up</span>';
+function typeBadge(t){
+  const c=typeClass(t);
+  if(c==='verify')   return '<span class="ci-badge badge-verify">Verify</span>';
+  if(c==='testlive') return '<span class="ci-badge badge-testlive">Test live</span>';
+  if(c==='followup') return '<span class="ci-badge badge-followup">Follow-up</span>';
   return '';
 }
-function dotColor(t) {
-  const c = typeClass(t);
-  if (c === 'verify')   return '#1A4F96';
-  if (c === 'testlive') return '#1D9E75';
-  if (c === 'followup') return '#D4820A';
+function dotColor(t){
+  const c=typeClass(t);
+  if(c==='verify')   return '#1A4F96';
+  if(c==='testlive') return '#1D9E75';
+  if(c==='followup') return '#D4820A';
   return '#8E8E93';
 }
+function isLadiesItem(item){ return item.side && item.side.toLowerCase()==='ladies'; }
 
 // ── API with timeout + retry ──────────────────────────────────
-async function api(payload, timeoutMs = 35000, retries = 1) {
-  for (let attempt = 0; attempt <= retries; attempt++) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-      const r = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'text/plain' },
-        mode: 'cors',
-        signal: controller.signal
+async function api(payload, timeoutMs=35000, retries=1){
+  for(let attempt=0; attempt<=retries; attempt++){
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(), timeoutMs);
+    try{
+      const r=await fetch(SCRIPT_URL,{
+        method:'POST', body:JSON.stringify(payload),
+        headers:{'Content-Type':'text/plain'}, mode:'cors',
+        signal:controller.signal
       });
       clearTimeout(timer);
       return await r.json();
-    } catch (e) {
+    } catch(e){
       clearTimeout(timer);
-      console.error('API attempt', attempt+1, ':', e.name, e.message);
-      if (e.name === 'AbortError' && attempt < retries) {
-        timeoutMs = 45000;
-        continue;
-      }
+      console.error('API attempt',attempt+1,':',e.name,e.message);
+      if(e.name==='AbortError' && attempt<retries){ timeoutMs=45000; continue; }
       throw e;
     }
   }
 }
 
 // ── LOAD ──────────────────────────────────────────────────────
-async function loadChecklist(silent = false) {
-  const myId = ++loadReqId;
-  if (!silent) {
-    document.getElementById('team-list').innerHTML =
+async function loadChecklist(silent=false){
+  const myId=++loadReqId;
+  if(!silent){
+    document.getElementById('team-list').innerHTML=
       '<div class="loading"><div class="spinner"></div><br>Loading checklist...<br><span style="font-size:12px;color:#8E8E93;margin-top:6px;display:block">First load may take up to 30 seconds</span></div>';
   }
   setSyncSpinner(true);
-  try {
-    const res = await api({ action: 'getChecklist' });
-    if (myId !== loadReqId) return;
-    if (!res.ok) throw new Error(res.error || 'Load failed');
-    if (teamsData.length > 0) {
-      mergeRemoteState(res.teams);
-    } else {
-      teamsData = res.teams || [];
-    }
-    lastSyncTime = new Date();
+  try{
+    const res=await api({action:'getChecklist'});
+    if(myId!==loadReqId) return;
+    if(!res.ok) throw new Error(res.error||'Load failed');
+    if(teamsData.length>0){ mergeRemoteState(res.teams); }
+    else { teamsData=res.teams||[]; }
+    lastSyncTime=new Date();
     updateSyncLabel();
     renderHome();
     fixStickyTops();
-  } catch (e) {
-    if (myId !== loadReqId) return;
-    if (!silent) {
-      document.getElementById('team-list').innerHTML =
-        '<div class="empty">Could not load checklist.<br><small style="color:#C0392B">' + e.name + ': ' + e.message + '</small><br><br>Tap ↻ to retry.</div>';
+    // If checklist screen is open — update items silently (FIX #2 for checklist screen)
+    if(curTeam && document.getElementById('cl-screen').classList.contains('show')){
+      renderItems();
+      updateClHeader();
+    }
+  } catch(e){
+    if(myId!==loadReqId) return;
+    if(!silent){
+      document.getElementById('team-list').innerHTML=
+        '<div class="empty">Could not load checklist.<br><small style="color:#C0392B">'+e.name+': '+e.message+'</small><br><br>Tap ↻ to retry.</div>';
     }
     updateSyncLabel('Failed');
-  } finally {
+  } finally{
     setSyncSpinner(false);
-    isRefreshing = false;
+    isRefreshing=false;
   }
 }
 
-function mergeRemoteState(remoteTeams) {
-  for (const rt of remoteTeams) {
-    const lt = teamsData.find(t => t.id === rt.id);
-    if (!lt) { teamsData.push(rt); continue; }
-    for (const ri of rt.items) {
-      const li = lt.items.find(i => i.idx === ri.idx);
-      const key = `${rt.id}_${ri.idx}`;
-      if (!li) { lt.items.push(ri); continue; }
-      if (!pendingToggles[key]) {
-        li.checked   = ri.checked;
-        li.checkedAt = ri.checkedAt;
-      }
+function mergeRemoteState(remoteTeams){
+  for(const rt of remoteTeams){
+    const lt=teamsData.find(t=>t.id===rt.id);
+    if(!lt){ teamsData.push(rt); continue; }
+    for(const ri of rt.items){
+      const li=lt.items.find(i=>i.idx===ri.idx);
+      const key=`${rt.id}_${ri.idx}`;
+      if(!li){ lt.items.push(ri); continue; }
+      if(!pendingToggles[key]){ li.checked=ri.checked; li.checkedAt=ri.checkedAt; }
     }
   }
 }
 
-// ── AUTO-REFRESH ──────────────────────────────────────────────
-function startAutoRefresh() {
+// ── AUTO-REFRESH (FIX #2: runs on both screens) ───────────────
+function startAutoRefresh(){
   stopAutoRefresh();
-  refreshTimer = setInterval(() => {
-    if (document.getElementById('home-screen').classList.contains('show')) {
-      if (Object.keys(pendingToggles).length > 0) return;
-      isRefreshing = true;
-      loadChecklist(true);
-    }
+  refreshTimer=setInterval(()=>{
+    if(Object.keys(pendingToggles).length>0) return; // skip if toggle in flight
+    isRefreshing=true;
+    loadChecklist(true);
   }, REFRESH_INTERVAL_MS);
 }
-function stopAutoRefresh() {
-  if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+function stopAutoRefresh(){
+  if(refreshTimer){ clearInterval(refreshTimer); refreshTimer=null; }
 }
-function manualRefresh() {
-  if (isRefreshing) return;
-  isRefreshing = true;
+function manualRefresh(){
+  if(isRefreshing) return;
+  isRefreshing=true;
   loadChecklist(true);
 }
-function setSyncSpinner(on) {
-  document.getElementById('sync-btn').classList.toggle('spinning', on);
+function setSyncSpinner(on){
+  document.getElementById('sync-btn').classList.toggle('spinning',on);
+  // FIX #3: also update checklist screen sync indicator
+  const clSync=document.getElementById('cl-sync-ind');
+  if(clSync) clSync.classList.toggle('spinning',on);
 }
-function updateSyncLabel(override) {
-  const el = document.getElementById('sync-lbl');
-  if (override) { el.textContent = override; return; }
-  if (!lastSyncTime) { el.textContent = '–'; return; }
-  const secs = Math.round((new Date() - lastSyncTime) / 1000);
-  if (secs < 10)      el.textContent = 'Just now';
-  else if (secs < 60) el.textContent = secs + 's ago';
-  else                el.textContent = Math.floor(secs/60) + 'm ago';
+function updateSyncLabel(override){
+  const el=document.getElementById('sync-lbl');
+  const clEl=document.getElementById('cl-sync-lbl'); // FIX #3
+  const text=override||getSyncText();
+  if(el) el.textContent=text;
+  if(clEl) clEl.textContent=text;
 }
-setInterval(updateSyncLabel, 15000);
+function getSyncText(){
+  if(!lastSyncTime) return '–';
+  const secs=Math.round((new Date()-lastSyncTime)/1000);
+  if(secs<10)     return 'Just now';
+  if(secs<60)     return secs+'s ago';
+  return Math.floor(secs/60)+'m ago';
+}
+setInterval(()=>{ updateSyncLabel(); }, 15000);
 
 // ── TOGGLE ────────────────────────────────────────────────────
-async function toggleItem(teamId, itemIdx) {
-  const team = teamsData.find(t => t.id === teamId);
-  if (!team) return;
-  const item = team.items.find(i => i.idx === itemIdx);
-  if (!item) return;
-  const key = `${teamId}_${itemIdx}`;
-  if (pendingToggles[key]) return;
-  pendingToggles[key] = true;
+async function toggleItem(teamId, itemIdx){
+  const team=teamsData.find(t=>t.id===teamId);
+  if(!team) return;
+  const item=team.items.find(i=>i.idx===itemIdx);
+  if(!item) return;
+  const key=`${teamId}_${itemIdx}`;
+  if(pendingToggles[key]) return;
+  pendingToggles[key]=true;
 
-  item.checked   = !item.checked;
-  item.checkedAt = item.checked ? 'Saving...' : '';
-  updateItemUI(teamId, itemIdx, item);
+  item.checked=!item.checked;
+  item.checkedAt=item.checked?'Saving...':'';
+  updateItemUI(teamId,itemIdx,item);
   updateStats();
-  if (curTeam && curTeam.id === teamId) updateClHeader();
+  if(curTeam&&curTeam.id===teamId) updateClHeader();
 
-  try {
-    const res = await api({ action:'toggleItem', teamId, itemIdx:item.idx, checked:item.checked });
-    if (res.ok) {
-      item.checkedAt = item.checked ? (res.checkedAt || '') : '';
-    } else {
-      item.checked = !item.checked; item.checkedAt = '';
-      alert('Could not save. Please try again.');
-    }
-  } catch (e) {
-    item.checked = !item.checked; item.checkedAt = '';
+  try{
+    const res=await api({action:'toggleItem',teamId,itemIdx:item.idx,checked:item.checked});
+    if(res.ok){ item.checkedAt=item.checked?(res.checkedAt||''):''; }
+    else{ item.checked=!item.checked; item.checkedAt=''; alert('Could not save. Please try again.'); }
+  } catch(e){
+    item.checked=!item.checked; item.checkedAt='';
     alert('Connection error. Please try again.');
-  } finally {
-    updateItemUI(teamId, itemIdx, item);
+  } finally{
+    updateItemUI(teamId,itemIdx,item);
     updateStats();
-    if (curTeam && curTeam.id === teamId) updateClHeader();
+    if(curTeam&&curTeam.id===teamId) updateClHeader();
     delete pendingToggles[key];
   }
 }
 
-function updateItemUI(teamId, itemIdx, item) {
-  const el = document.getElementById(`ci-${teamId}-${itemIdx}`);
-  if (el) {
-    el.classList.toggle('done', item.checked);
-    const cb = el.querySelector('.cb');
-    const tc = typeClass(item.type);
-    const isLadies = item.side && item.side.toLowerCase() === 'ladies';
-    const colors = { verify:'#1A4F96', testlive:'#1D9E75', followup:'#D4820A' };
-    cb.style.cssText = item.checked
+function updateItemUI(teamId, itemIdx, item){
+  const el=document.getElementById(`ci-${teamId}-${itemIdx}`);
+  if(el){
+    el.classList.toggle('done',item.checked);
+    const cb=el.querySelector('.cb');
+    const ladies=isLadiesItem(item);
+    const tc=typeClass(item.type);
+    const colors={verify:'#1A4F96',testlive:'#1D9E75',followup:'#D4820A'};
+    cb.style.cssText=item.checked
       ? 'background:#8E8E93;border-color:#8E8E93'
-      : isLadies ? 'border-color:#C0185C' : `border-color:${colors[tc]||'#C7C7CC'}`;
-    el.querySelector('.cb-tick').style.display = item.checked ? 'block' : 'none';
-    const tsEl = el.querySelector('.ci-ts');
-    if (tsEl) tsEl.textContent = item.checked && item.checkedAt ? `Checked · ${item.checkedAt}` : '';
+      : ladies?'border-color:#C0185C':`border-color:${colors[tc]||'#C7C7CC'}`;
+    el.querySelector('.cb-tick').style.display=item.checked?'block':'none';
+    const tsEl=el.querySelector('.ci-ts');
+    if(tsEl) tsEl.textContent=item.checked&&item.checkedAt?`Checked · ${item.checkedAt}`:'';
   }
-  const flEl = document.getElementById(`fl-${teamId}-${itemIdx}`);
-  if (flEl) {
-    flEl.classList.toggle('fl-done', item.checked);
-    const s = flEl.querySelector('.fl-status');
-    if (s) {
-      s.className = 'fl-status ' + (item.checked ? 'fl-status-done' : 'fl-status-pend');
-      s.textContent = item.checked ? 'Done' : 'Pending';
-    }
+  const flEl=document.getElementById(`fl-${teamId}-${itemIdx}`);
+  if(flEl){
+    flEl.classList.toggle('fl-done',item.checked);
+    const s=flEl.querySelector('.fl-status');
+    if(s){ s.className='fl-status '+(item.checked?'fl-status-done':'fl-status-pend'); s.textContent=item.checked?'Done':'Pending'; }
   }
 }
 
 // ── STATS ─────────────────────────────────────────────────────
-function calcStats() {
+function calcStats(){
   let vD=0,vT=0,tD=0,tT=0,fD=0,fT=0,totD=0,tot=0;
-  for (const team of teamsData) {
-    for (const item of team.items) {
-      const tc = typeClass(item.type);
-      tot++; if (item.checked) totD++;
-      if (tc==='verify')   { vT++; if(item.checked) vD++; }
-      else if (tc==='testlive') { tT++; if(item.checked) tD++; }
-      else if (tc==='followup') { fT++; if(item.checked) fD++; }
+  for(const team of teamsData){
+    for(const item of team.items){
+      const tc=typeClass(item.type);
+      tot++; if(item.checked) totD++;
+      if(tc==='verify'){vT++;if(item.checked)vD++;}
+      else if(tc==='testlive'){tT++;if(item.checked)tD++;}
+      else if(tc==='followup'){fT++;if(item.checked)fD++;}
     }
   }
-  return {vD,vT,tD,tT,fD,fT,totD,tot};
+  return{vD,vT,tD,tT,fD,fT,totD,tot};
 }
 
-function updateStats() {
-  const s = calcStats();
-  const pct = s.tot ? Math.round(s.totD/s.tot*100) : 0;
-  document.getElementById('home-pbar').style.width = pct+'%';
-  document.getElementById('home-plbl').textContent = `${s.totD} of ${s.tot} complete`;
-  document.getElementById('home-ppct').textContent = pct+'%';
-  document.getElementById('st-verify').textContent   = `${s.vD}/${s.vT}`;
-  document.getElementById('st-test').textContent     = `${s.tD}/${s.tT}`;
-  document.getElementById('st-followup').textContent = `${s.fD}/${s.fT}`;
-  document.getElementById('st-total').textContent    = `${s.totD}/${s.tot}`;
+function updateStats(){
+  const s=calcStats();
+  const pct=s.tot?Math.round(s.totD/s.tot*100):0;
+  document.getElementById('home-pbar').style.width=pct+'%';
+  document.getElementById('home-plbl').textContent=`${s.totD} of ${s.tot} complete`;
+  document.getElementById('home-ppct').textContent=pct+'%';
+  document.getElementById('st-verify').textContent=`${s.vD}/${s.vT}`;
+  document.getElementById('st-test').textContent=`${s.tD}/${s.tT}`;
+  document.getElementById('st-followup').textContent=`${s.fD}/${s.fT}`;
+  document.getElementById('st-total').textContent=`${s.totD}/${s.tot}`;
 
-  for (const team of teamsData) {
-    const done  = team.items.filter(i=>i.checked).length;
-    const total = team.items.length;
-    const pct   = total ? Math.round(done/total*100) : 0;
-    const allDone = done===total && total>0;
-    const pEl   = document.getElementById(`tp-${team.id}`);
-    const bEl   = document.getElementById(`tpf-${team.id}`);
-    const tagEl = document.getElementById(`ttag-${team.id}`);
-    const cEl   = document.getElementById(`tc-${team.id}`);
-    if (pEl) pEl.textContent = `${done}/${total}`;
-    if (bEl) bEl.style.width = pct+'%';
-    if (tagEl && cEl) {
-      if (allDone) {
-        tagEl.className='ttag ttag-done'; tagEl.textContent='Done'; cEl.classList.add('all-done');
-      } else if (done>0) {
-        tagEl.className='ttag ttag-prog'; tagEl.textContent='In progress'; cEl.classList.remove('all-done');
-      } else {
-        tagEl.className='ttag ttag-pend'; tagEl.textContent='Pending'; cEl.classList.remove('all-done');
-      }
+  for(const team of teamsData){
+    const done=team.items.filter(i=>i.checked).length;
+    const total=team.items.length;
+    const p=total?Math.round(done/total*100):0;
+    const allDone=done===total&&total>0;
+    const pEl=document.getElementById(`tp-${team.id}`);
+    const bEl=document.getElementById(`tpf-${team.id}`);
+    const tagEl=document.getElementById(`ttag-${team.id}`);
+    const cEl=document.getElementById(`tc-${team.id}`);
+    if(pEl) pEl.textContent=`${done}/${total}`;
+    if(bEl) bEl.style.width=p+'%';
+    if(tagEl&&cEl){
+      if(allDone){tagEl.className='ttag ttag-done';tagEl.textContent='Done';cEl.classList.add('all-done');}
+      else if(done>0){tagEl.className='ttag ttag-prog';tagEl.textContent='In progress';cEl.classList.remove('all-done');}
+      else{tagEl.className='ttag ttag-pend';tagEl.textContent='Pending';cEl.classList.remove('all-done');}
     }
-    const secEl = document.getElementById(`fls-${team.id}`);
-    if (secEl) {
-      const progEl = secEl.querySelector('.fl-sec-prog');
-      if (progEl) progEl.textContent = allDone ? `${done}/${total} ✓` : `${done}/${total}`;
-      secEl.classList.toggle('fl-sec-done', allDone);
+    const secEl=document.getElementById(`fls-${team.id}`);
+    if(secEl){
+      const progEl=secEl.querySelector('.fl-sec-prog');
+      if(progEl) progEl.textContent=allDone?`${done}/${total} ✓`:`${done}/${total}`;
+      secEl.classList.toggle('fl-sec-done',allDone);
     }
   }
+  // Update summary if visible
+  if(curTab==='summary') renderSummary();
 }
 
 // ── RENDER HOME ───────────────────────────────────────────────
-function renderHome() {
-  const list = document.getElementById('team-list');
-  if (!teamsData.length) { list.innerHTML='<div class="empty">No teams found</div>'; return; }
-  list.innerHTML = teamsData.map(team => {
-    const done  = team.items.filter(i=>i.checked).length;
-    const total = team.items.length;
-    const pct   = total ? Math.round(done/total*100) : 0;
-    const allDone = done===total && total>0;
+function renderHome(){
+  const list=document.getElementById('team-list');
+  if(!teamsData.length){list.innerHTML='<div class="empty">No teams found</div>';return;}
+  list.innerHTML=teamsData.map(team=>{
+    const done=team.items.filter(i=>i.checked).length;
+    const total=team.items.length;
+    const pct=total?Math.round(done/total*100):0;
+    const allDone=done===total&&total>0;
     return `<div class="team-card${allDone?' all-done':''}" id="tc-${team.id}" onclick="openTeam('${team.id}')">
       <div class="tl">
         <div class="tn">${team.name}</div>
@@ -548,25 +579,29 @@ function renderHome() {
     </div>`;
   }).join('');
   renderFullList();
+  if(curTab==='summary') renderSummary();
   updateStats();
 }
 
-// ── FULL LIST (FIX #4 owner, FIX #6 numbers) ─────────────────
-function renderFullList() {
-  const fl = document.getElementById('fl-list');
-  if (!teamsData.length) { fl.innerHTML='<div class="empty">No data</div>'; return; }
-  fl.innerHTML = teamsData.map(team => {
-    const done    = team.items.filter(i=>i.checked).length;
-    const total   = team.items.length;
-    const allDone = done===total && total>0;
-    const prefix  = getPrefix(team.id);
-    const itemsHtml = team.items.map((item, pos) => {
-      const num   = `${prefix}-${pos+1}`;
-      const dc    = dotColor(item.type);
-      return `<div class="fl-item${item.checked?' fl-done':''}" id="fl-${team.id}-${item.idx}">
+// ── FULL LIST ─────────────────────────────────────────────────
+function renderFullList(){
+  const fl=document.getElementById('fl-list');
+  if(!teamsData.length){fl.innerHTML='<div class="empty">No data</div>';return;}
+  fl.innerHTML=teamsData.map(team=>{
+    const done=team.items.filter(i=>i.checked).length;
+    const total=team.items.length;
+    const allDone=done===total&&total>0;
+    const prefix=getPrefix(team.id);
+    const itemsHtml=team.items.map((item,pos)=>{
+      const num=`${prefix}-${pos+1}`;
+      const ladies=isLadiesItem(item);
+      const dc=ladies?'#C0185C':dotColor(item.type);
+      const ladiesTag=ladies?'<span class="fl-ladies-tag">🧕 Ladies</span>':'';
+      return `<div class="fl-item${item.checked?' fl-done':''}${ladies?' fl-ladies':''}" id="fl-${team.id}-${item.idx}">
         <span class="fl-num" style="color:${dc}">${num}</span>
         <div class="fl-dot" style="background:${dc}"></div>
         <div class="fl-text">${item.text}</div>
+        ${ladiesTag}
         <span class="fl-status ${item.checked?'fl-status-done':'fl-status-pend'}">${item.checked?'Done':'Pending'}</span>
       </div>`;
     }).join('');
@@ -582,83 +617,219 @@ function renderFullList() {
     </div>`;
   }).join('');
 }
-
-function toggleFlSec(id) {
-  const el = document.getElementById(`fl-body-${id}`);
-  if (el) el.style.display = el.style.display==='none' ? '' : 'none';
+function toggleFlSec(id){
+  const el=document.getElementById(`fl-body-${id}`);
+  if(el) el.style.display=el.style.display==='none'?'':'none';
 }
 
-// ── TEAM CHECKLIST (FIX #6 numbers) ──────────────────────────
-function openTeam(teamId) {
-  curTeam = teamsData.find(t => t.id === teamId);
-  if (!curTeam) return;
-  curFilter = 'all';
-  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
+// ── SUMMARY SCREEN ────────────────────────────────────────────
+function renderSummary(){
+  const wrap=document.getElementById('sum-wrap');
+  if(!teamsData.length){wrap.innerHTML='<div class="empty">No data</div>';return;}
+
+  const s=calcStats();
+  const pct=s.tot?Math.round(s.totD/s.tot*100):0;
+  const teamsDone=teamsData.filter(t=>t.items.every(i=>i.checked)&&t.items.length>0).length;
+
+  // Outstanding follow-ups
+  const openFollowups=[];
+  for(const team of teamsData){
+    const prefix=getPrefix(team.id);
+    team.items.forEach((item,pos)=>{
+      if(typeClass(item.type)==='followup'&&!item.checked){
+        openFollowups.push({num:`${prefix}-${pos+1}`,text:item.text,team:team.name});
+      }
+    });
+  }
+
+  const metricsHtml=`
+    <div class="sum-metrics">
+      <div class="sum-metric sm-total">
+        <div class="sum-n" style="color:#0F2744">${s.totD}/${s.tot}</div>
+        <div class="sum-l">Total complete</div>
+      </div>
+      <div class="sum-metric sm-pct">
+        <div class="sum-n" style="color:#0F2744">${pct}%</div>
+        <div class="sum-l">Progress</div>
+      </div>
+      <div class="sum-metric sm-verify">
+        <div class="sum-n" style="color:#1A4F96">${s.vD}/${s.vT}</div>
+        <div class="sum-l">Verified</div>
+      </div>
+      <div class="sum-metric sm-test">
+        <div class="sum-n" style="color:#1D9E75">${s.tD}/${s.tT}</div>
+        <div class="sum-l">Tested</div>
+      </div>
+      <div class="sum-metric sm-follow">
+        <div class="sum-n" style="color:#D4820A">${s.fD}/${s.fT}</div>
+        <div class="sum-l">Follow-ups done</div>
+      </div>
+      <div class="sum-metric sm-teams">
+        <div class="sum-n" style="color:#1D9E75">${teamsDone}/${teamsData.length}</div>
+        <div class="sum-l">Teams complete</div>
+      </div>
+    </div>`;
+
+  const teamRowsHtml=teamsData.map(team=>{
+    const done=team.items.filter(i=>i.checked).length;
+    const total=team.items.length;
+    const p=total?Math.round(done/total*100):0;
+    const allDone=done===total&&total>0;
+    const tag=allDone?'<span class="str-tag ttag-done">Done</span>':
+              done>0?'<span class="str-tag ttag-prog">In progress</span>':
+                     '<span class="str-tag ttag-pend">Pending</span>';
+    return `<div class="sum-team-row${allDone?' std':''}">
+      <div class="str-left">
+        <div class="str-name">${team.name}</div>
+        <div class="str-owner">${team.owner}</div>
+      </div>
+      <div class="str-right">
+        <div class="str-prog">${done}/${total}</div>
+        <div class="str-bar"><div class="str-fill" style="width:${p}%"></div></div>
+        ${tag}
+      </div>
+    </div>`;
+  }).join('');
+
+  const fuHtml=openFollowups.length===0
+    ? '<div class="empty" style="padding:12px 0;font-size:13px">All follow-ups complete ✓</div>'
+    : openFollowups.map(f=>`
+      <div class="fu-item">
+        <div class="fu-item-dot"></div>
+        <div class="fu-item-body">
+          <div class="fu-item-text">${f.text}</div>
+          <div class="fu-item-team">${f.num} · ${f.team}</div>
+        </div>
+      </div>`).join('');
+
+  wrap.innerHTML=`
+    ${metricsHtml}
+    <div class="sum-section-hdr">Team progress</div>
+    <div style="display:flex;flex-direction:column;gap:6px">${teamRowsHtml}</div>
+    <div class="sum-section-hdr">Outstanding follow-ups (${openFollowups.length})</div>
+    <div style="display:flex;flex-direction:column;gap:6px">${fuHtml}</div>
+    <div class="sum-share-row">
+      <button class="sum-share-btn primary" onclick="copyWhatsApp()">🧕 Copy for WhatsApp</button>
+      <button class="sum-share-btn secondary" onclick="window.print()">🖨 Print</button>
+    </div>`;
+}
+
+// ── WHATSAPP COPY ─────────────────────────────────────────────
+function copyWhatsApp(){
+  const s=calcStats();
+  const pct=s.tot?Math.round(s.totD/s.tot*100):0;
+  const now=new Date().toLocaleString('en-CA',{timeZone:'America/Toronto',hour:'2-digit',minute:'2-digit'});
+  const openFollowups=[];
+  for(const team of teamsData){
+    const prefix=getPrefix(team.id);
+    team.items.forEach((item,pos)=>{
+      if(typeClass(item.type)==='followup'&&!item.checked)
+        openFollowups.push(`• ${prefix}-${pos+1}: ${item.text} (${team.name})`);
+    });
+  }
+
+  let msg=`📋 *Dry Run Progress — Ashara 1448H Toronto*\n`;
+  msg+=`🕐 ${now} · June 13, 2026\n\n`;
+  msg+=`✅ ${s.totD}/${s.tot} complete (${pct}%)\n\n`;
+  msg+=`*By team:*\n`;
+  for(const team of teamsData){
+    const done=team.items.filter(i=>i.checked).length;
+    const total=team.items.length;
+    const allDone=done===total&&total>0;
+    const icon=allDone?'✅':done>0?'🔄':'⏳';
+    msg+=`${icon} ${team.name} — ${done}/${total}\n`;
+  }
+  if(openFollowups.length>0){
+    msg+=`\n*Outstanding follow-ups (${openFollowups.length}):*\n`;
+    msg+=openFollowups.join('\n');
+  }
+  msg+=`\n\n— PMO Command Center · Ashara 1448H Toronto`;
+
+  // Copy to clipboard
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(msg).then(()=>showToast('Copied to clipboard')).catch(()=>fallbackCopy(msg));
+  } else { fallbackCopy(msg); }
+}
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); showToast('Copied to clipboard'); }
+  catch(e){ showToast('Copy failed — please screenshot instead'); }
+  document.body.removeChild(ta);
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ── TEAM CHECKLIST ────────────────────────────────────────────
+function openTeam(teamId){
+  curTeam=teamsData.find(t=>t.id===teamId);
+  if(!curTeam) return;
+  curFilter='all';
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
   document.querySelector('.fbtn').classList.add('on');
   document.getElementById('home-screen').classList.remove('show');
   document.getElementById('cl-screen').classList.add('show');
   updateClHeader();
   renderItems();
+  fixStickyTops();
   window.scrollTo(0,0);
 }
-
-function updateClHeader() {
-  if (!curTeam) return;
-  const done  = curTeam.items.filter(i=>i.checked).length;
-  const total = curTeam.items.length;
-  document.getElementById('cl-title').textContent = curTeam.name;
-  document.getElementById('cl-sub').textContent   = `${curTeam.owner} · ${done} of ${total} done`;
+function updateClHeader(){
+  if(!curTeam) return;
+  const done=curTeam.items.filter(i=>i.checked).length;
+  const total=curTeam.items.length;
+  document.getElementById('cl-title').textContent=curTeam.name;
+  document.getElementById('cl-sub').textContent=`${curTeam.owner} · ${done} of ${total} done`;
 }
-
-function goHome() {
-  curTeam = null;
+function goHome(){
+  curTeam=null;
   document.getElementById('cl-screen').classList.remove('show');
   document.getElementById('home-screen').classList.add('show');
   window.scrollTo(0,0);
   updateStats();
 }
-
-function setFilter(f, btn) {
-  curFilter = f;
-  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
+function setFilter(f,btn){
+  curFilter=f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   renderItems();
 }
+function renderItems(){
+  if(!curTeam) return;
+  const prefix=getPrefix(curTeam.id);
+  const allItems=curTeam.items;
 
-function renderItems() {
-  if (!curTeam) return;
-  const prefix  = getPrefix(curTeam.id);
-  const list    = document.getElementById('items-list');
+  // Show ladies legend only if team has ladies items
+  const hasLadies=allItems.some(i=>isLadiesItem(i));
+  document.getElementById('ladies-legend').style.display=hasLadies?'flex':'none';
 
-  // Build full ordered list first (for numbering), then filter for display
-  const allItems = curTeam.items;
-  const visible  = allItems.filter((item, pos) => {
-    if (curFilter==='all')     return true;
-    if (curFilter==='pending') return !item.checked;
-    if (curFilter==='done')    return item.checked;
-    return typeClass(item.type) === curFilter;
+  const visible=allItems.filter(item=>{
+    if(curFilter==='all')     return true;
+    if(curFilter==='pending') return !item.checked;
+    if(curFilter==='done')    return item.checked;
+    if(curFilter==='ladies')  return isLadiesItem(item);
+    return typeClass(item.type)===curFilter;
   });
 
-  if (!visible.length) {
-    list.innerHTML = '<div class="empty">No items in this filter</div>';
-    return;
-  }
+  const list=document.getElementById('items-list');
+  if(!visible.length){ list.innerHTML='<div class="empty">No items in this filter</div>'; return; }
 
-  // Show/hide legend based on whether any ladies items exist in this team
-  const hasLadies = allItems.some(i => i.side && i.side.toLowerCase() === 'ladies');
-  document.getElementById('ladies-legend').style.display = hasLadies ? 'flex' : 'none';
-
-  list.innerHTML = visible.map(item => {
-    const pos      = allItems.indexOf(item) + 1;
-    const num      = `${prefix}-${pos}`;
-    const tc       = typeClass(item.type);
-    const isLadies = item.side && item.side.toLowerCase() === 'ladies';
-    const colors   = { verify:'#1A4F96', testlive:'#1D9E75', followup:'#D4820A' };
-    const cbStyle  = item.checked
-      ? 'background:#8E8E93;border-color:#8E8E93'
-      : isLadies ? 'border-color:#C0185C' : `border-color:${colors[tc]||'#C7C7CC'}`;
-    const ladiesTag = isLadies ? '<span class="ladies-tag">🧕 Ladies</span>' : '';
-    return `<div class="ci ${isLadies?'ladies':tc}${item.checked?' done':''}" id="ci-${curTeam.id}-${item.idx}"
+  list.innerHTML=visible.map(item=>{
+    const pos=allItems.indexOf(item)+1;
+    const num=`${prefix}-${pos}`;
+    const tc=typeClass(item.type);
+    const ladies=isLadiesItem(item);
+    const colors={verify:'#1A4F96',testlive:'#1D9E75',followup:'#D4820A'};
+    const cbStyle=item.checked
+      ?'background:#8E8E93;border-color:#8E8E93'
+      :ladies?'border-color:#C0185C':`border-color:${colors[tc]||'#C7C7CC'}`;
+    const ladiesTag=ladies?'<span class="ladies-tag">🧕 Ladies</span>':'';
+    const itemClass=ladies?'ladies':tc;
+    return `<div class="ci ${itemClass}${item.checked?' done':''}" id="ci-${curTeam.id}-${item.idx}"
         onclick="toggleItem('${curTeam.id}',${item.idx})">
       <div class="cb" style="${cbStyle}">
         <span class="cb-tick" style="display:${item.checked?'block':'none'}">✓</span>
@@ -667,48 +838,27 @@ function renderItems() {
       <div class="ci-body">
         ${typeBadge(item.type)}${ladiesTag}
         <div class="ci-text">${item.text}</div>
-        ${item.note ? `<div class="ci-note">${item.note}</div>` : ''}
-        <div class="ci-ts">${item.checked && item.checkedAt ? `Checked · ${item.checkedAt}` : ''}</div>
+        ${item.note?`<div class="ci-note">${item.note}</div>`:''}
+        <div class="ci-ts">${item.checked&&item.checkedAt?`Checked · ${item.checkedAt}`:''}</div>
       </div>
     </div>`;
   }).join('');
 }
 
 // ── TABS ──────────────────────────────────────────────────────
-function switchTab(tab) {
-  curTab = tab;
-  document.getElementById('tab-teams').classList.toggle('on', tab==='teams');
-  document.getElementById('tab-full').classList.toggle('on', tab==='full');
-  document.getElementById('view-teams').style.display = tab==='teams' ? '' : 'none';
-  document.getElementById('view-full').style.display  = tab==='full'  ? '' : 'none';
-}
-
-// ── EXPORT ────────────────────────────────────────────────────
-function exportSummary() {
-  const now = new Date().toLocaleString('en-CA', { timeZone:'America/Toronto' });
-  const lines = ['Ashara 1448H Toronto — Dry Run Checklist Summary', 'Generated: '+now, ''];
-  for (const team of teamsData) {
-    const done   = team.items.filter(i=>i.checked).length;
-    const prefix = getPrefix(team.id);
-    lines.push(`${team.name} — ${done}/${team.items.length}`);
-    team.items.forEach((item, pos) => {
-      const num = `${prefix}-${pos+1}`;
-      const ts  = item.checked && item.checkedAt ? ` — ${item.checkedAt}` : '';
-      lines.push(`  [${item.checked?'x':' '}] ${num} (${item.type}) ${item.text}${ts}`);
-    });
-    lines.push('');
-  }
-  const blob = new Blob([lines.join('\n')], { type:'text/plain' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'Ashara_DryRun_Summary.txt';
-  a.click();
+function switchTab(tab){
+  curTab=tab;
+  ['teams','full','summary'].forEach(t=>{
+    document.getElementById(`tab-${t}`)?.classList.toggle('on',t===tab);
+    document.getElementById(`view-${t}`)?.style && (document.getElementById(`view-${t}`).style.display=t===tab?'':'none');
+  });
+  if(tab==='summary') renderSummary();
 }
 
 // ── INIT ──────────────────────────────────────────────────────
 loadChecklist();
 startAutoRefresh();
-window.addEventListener('resize', fixStickyTops);
+window.addEventListener('resize',fixStickyTops);
 </script>
 </body>
 </html>
