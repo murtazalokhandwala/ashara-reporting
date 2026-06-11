@@ -53,6 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 .ttag-done{background:#DFFAF0;color:#085041}
 .ttag-prog{background:#E0EEFF;color:#0A2E6E}
 .ttag-pend{background:#F2F2F7;color:#8E8E93}
+.ladies-indicator{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:#C0185C;background:#FFE0EC;padding:3px 9px;border-radius:10px;margin-top:5px}
 
 /* ── CHECKLIST SCREEN ── */
 .cl-hdr{background:#0F2744;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
@@ -107,6 +108,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 
 /* ── LADIES LEGEND ── */
 .ladies-legend{display:flex;align-items:center;gap:8px;background:#FFF0F5;border:0.5px solid #F0C0D0;border-radius:10px;padding:9px 14px;margin:10px 14px 0;font-size:12px;color:#6B2040;font-weight:500}
+.instructions{background:#fff;border-bottom:0.5px solid #E5E5EA;padding:10px 16px;display:flex;flex-direction:column;gap:5px}
+.instr-row{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:#3A3835;line-height:1.45}
+.instr-num{width:20px;height:20px;border-radius:50%;background:#0F2744;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
 
 /* ── FIX #3 — sync indicator on checklist screen ── */
 .cl-sync{font-size:10px;color:#6B8FAA;padding:4px 0;display:flex;align-items:center;gap:4px;flex-shrink:0}
@@ -229,6 +233,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
         <div class="stat-n" id="st-total" style="color:#0F2744">–</div>
         <div class="stat-l">Total done</div>
       </div>
+    </div>
+    <div class="instructions">
+      <div class="instr-row"><div class="instr-num">1</div><span>Tap your team card to open your checklist</span></div>
+      <div class="instr-row"><div class="instr-num">2</div><span>Tap an item to mark it done — tap again to undo</span></div>
+      <div class="instr-row"><div class="instr-num">3</div><span>Pink items 🧕 require ladies lead to confirm</span></div>
+      <div class="instr-row"><div class="instr-num">4</div><span>Come back to this page to see overall progress</span></div>
     </div>
     <div class="team-list" id="team-list">
       <div class="loading"><div class="spinner"></div><br>Loading checklist...<br>
@@ -550,6 +560,12 @@ function updateStats(){
       if(progEl) progEl.textContent=allDone?`${done}/${total} ✓`:`${done}/${total}`;
       secEl.classList.toggle('fl-sec-done',allDone);
     }
+    // Update ladies indicator on team card
+    const liEl=document.getElementById(`li-${team.id}`);
+    if(liEl){
+      const hasLadiesPending=team.items.some(i=>isLadiesItem(i)&&!i.checked);
+      liEl.style.display=hasLadiesPending?'inline-flex':'none';
+    }
   }
   // Update summary if visible
   if(curTab==='summary') renderSummary();
@@ -564,10 +580,16 @@ function renderHome(){
     const total=team.items.length;
     const pct=total?Math.round(done/total*100):0;
     const allDone=done===total&&total>0;
+    // Show ladies indicator if any ladies items are pending
+    const hasLadiesPending = team.items.some(i => isLadiesItem(i) && !i.checked);
+    const ladiesInd = hasLadiesPending
+      ? '<div class="ladies-indicator" id="li-'+team.id+'">🧕 Ladies input required</div>'
+      : '<div class="ladies-indicator" id="li-'+team.id+'" style="display:none">🧕 Ladies input required</div>';
     return `<div class="team-card${allDone?' all-done':''}" id="tc-${team.id}" onclick="openTeam('${team.id}')">
       <div class="tl">
         <div class="tn">${team.name}</div>
         <div class="to">${team.owner}</div>
+        ${ladiesInd}
       </div>
       <div class="tr">
         <div class="tp" id="tp-${team.id}">${done}/${total}</div>
