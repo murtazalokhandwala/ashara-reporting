@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comms Generator — Ashara 1448H Toronto</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F2F2F7; min-height: 100vh; padding: 16px; }
+.app { max-width: 560px; margin: 0 auto; }
+.topbar { background: #0F2744; color: white; padding: 16px 20px; border-radius: 14px 14px 0 0; display: flex; align-items: center; gap: 12px; }
+.topbar-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.topbar-title { font-size: 15px; font-weight: 600; }
+.topbar-sub { font-size: 11px; opacity: 0.6; margin-top: 2px; }
+.body { background: white; border: 1px solid #E5E5EA; border-top: none; border-radius: 0 0 14px 14px; padding: 18px; }
+.section { margin-bottom: 16px; }
+.row-label { font-size: 11px; font-weight: 600; color: #8E8E93; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip { padding: 7px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #D1D1D6; background: #F2F2F7; color: #1C1C1E; transition: all 0.15s; user-select: none; -webkit-tap-highlight-color: transparent; }
+.chip:hover { border-color: #1A4F96; color: #1A4F96; }
+.chip.on { background: #0F2744; color: white; border-color: #0F2744; }
+.chip.on-blue { background: #1A4F96; color: white; border-color: #1A4F96; }
+.divider { border: none; border-top: 1px solid #F2F2F7; margin: 16px 0; }
+.day-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+select { width: 100%; padding: 9px 12px; border-radius: 10px; border: 1px solid #D1D1D6; background: #F2F2F7; font-size: 13px; color: #1C1C1E; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238E8E93' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+select:focus { outline: none; border-color: #1A4F96; }
+.lot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+.lot-chip { padding: 8px 12px; border-radius: 10px; font-size: 12px; cursor: pointer; border: 1px solid #E5E5EA; background: #F2F2F7; color: #8E8E93; transition: all 0.15s; display: flex; align-items: center; gap: 7px; user-select: none; -webkit-tap-highlight-color: transparent; }
+.lot-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: #D1D1D6; flex-shrink: 0; transition: background 0.15s; }
+.lot-chip.full-on { background: #FCEBEB; color: #6B0000; border-color: #E24B4A; }
+.lot-chip.full-on .dot { background: #E24B4A; }
+.lot-chip.space-on { background: #DFFAF0; color: #085041; border-color: #1D9E75; }
+.lot-chip.space-on .dot { background: #1D9E75; }
+.tone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.tone-chip { padding: 9px 10px; border-radius: 10px; font-size: 12px; cursor: pointer; border: 1px solid #E5E5EA; background: #F2F2F7; color: #8E8E93; text-align: center; transition: all 0.15s; user-select: none; -webkit-tap-highlight-color: transparent; }
+.tone-chip:hover { color: #1C1C1E; border-color: #D1D1D6; }
+.tone-chip.on { background: #1A4F96; color: white; border-color: #1A4F96; }
+.toggle-row { display: flex; gap: 7px; margin-top: 10px; }
+.toggle-chip { flex: 1; padding: 8px 10px; border-radius: 10px; font-size: 12px; cursor: pointer; border: 1px solid #E5E5EA; background: #F2F2F7; color: #8E8E93; text-align: center; transition: all 0.15s; user-select: none; -webkit-tap-highlight-color: transparent; }
+.toggle-chip.on-green { background: #DFFAF0; color: #085041; border-color: #1D9E75; }
+.toggle-chip.on-blue { background: #E0EEFF; color: #0A2E6E; border-color: #1A4F96; }
+.preview-wrap { background: #F2F2F7; border-radius: 12px; padding: 14px; border: 1px solid #E5E5EA; margin-bottom: 8px; }
+.preview-label { font-size: 11px; color: #8E8E93; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: #1D9E75; display: inline-block; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.preview-msg { font-size: 13px; line-height: 1.85; color: #1C1C1E; white-space: pre-wrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.char-count { font-size: 11px; color: #8E8E93; text-align: right; margin-bottom: 12px; }
+.copy-btn { width: 100%; padding: 13px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; background: #25D366; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
+.copy-btn:hover { background: #1DA851; }
+.copy-btn:active { transform: scale(0.98); }
+.copy-btn.copied { background: #1D9E75; }
+.auto-note { font-size: 11px; color: #8E8E93; font-style: italic; margin-top: 4px; }
+.sub-label { font-size: 11px; font-weight: 600; color: #8E8E93; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; margin-top: 12px; }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="topbar-icon">💬</div>
+    <div>
+      <div class="topbar-title">Comms Message Generator</div>
+      <div class="topbar-sub">Ashara 1448H Toronto · Anjuman-e-Burhani</div>
+    </div>
+  </div>
+  <div class="body">
+
+    <!-- DAY & TIME -->
+    <div class="section">
+      <div class="row-label">1. Day & Time</div>
+      <div class="day-row">
+        <select id="daySelect">
+          <option value="">— Moharram day —</option>
+          <option value="Pehli Raat|June 14">Pehli Raat — June 14</option>
+          <option value="1st Moharram|June 15">1st Moharram — June 15</option>
+          <option value="2nd Moharram|June 16">2nd Moharram — June 16</option>
+          <option value="3rd Moharram|June 17">3rd Moharram — June 17</option>
+          <option value="4th Moharram|June 18">4th Moharram — June 18</option>
+          <option value="5th Moharram|June 19">5th Moharram — June 19</option>
+          <option value="6th Moharram|June 20">6th Moharram — June 20</option>
+          <option value="7th Moharram|June 21">7th Moharram — June 21</option>
+          <option value="8th Moharram|June 22">8th Moharram — June 22</option>
+          <option value="9th Moharram|June 23">9th Moharram — June 23</option>
+          <option value="Yaume Ashura|June 24">Yaume Ashura — June 24</option>
+        </select>
+        <select id="timeSelect">
+          <option value="">— Time (optional) —</option>
+          <option value="current">Use current time</option>
+          <option value="6:00 AM">6:00 AM</option><option value="6:30 AM">6:30 AM</option>
+          <option value="7:00 AM">7:00 AM</option><option value="7:30 AM">7:30 AM</option>
+          <option value="8:00 AM">8:00 AM</option><option value="8:30 AM">8:30 AM</option>
+          <option value="9:00 AM">9:00 AM</option><option value="9:30 AM">9:30 AM</option>
+          <option value="10:00 AM">10:00 AM</option><option value="10:30 AM">10:30 AM</option>
+          <option value="11:00 AM">11:00 AM</option><option value="11:30 AM">11:30 AM</option>
+          <option value="12:00 PM">12:00 PM</option><option value="12:30 PM">12:30 PM</option>
+          <option value="1:00 PM">1:00 PM</option><option value="1:30 PM">1:30 PM</option>
+          <option value="2:00 PM">2:00 PM</option><option value="2:30 PM">2:30 PM</option>
+          <option value="3:00 PM">3:00 PM</option><option value="3:30 PM">3:30 PM</option>
+          <option value="4:00 PM">4:00 PM</option><option value="4:30 PM">4:30 PM</option>
+          <option value="5:00 PM">5:00 PM</option><option value="5:30 PM">5:30 PM</option>
+          <option value="6:00 PM">6:00 PM</option><option value="6:30 PM">6:30 PM</option>
+          <option value="7:00 PM">7:00 PM</option><option value="7:30 PM">7:30 PM</option>
+          <option value="8:00 PM">8:00 PM</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- CATEGORY -->
+    <div class="section">
+      <div class="row-label">2. Category</div>
+      <div class="chip-row" id="catRow">
+        <span class="chip on" data-cat="parking">🅿️ Parking</span>
+        <span class="chip" data-cat="flow_nizaam">🚶 Flow Nizaam</span>
+        <span class="chip" data-cat="entry">🚪 Entry & Flow</span>
+        <span class="chip" data-cat="niyaz">🍽️ Niyaz</span>
+        <span class="chip" data-cat="sehat">🏥 Sehat</span>
+        <span class="chip" data-cat="rahat">🤲 Rahat</span>
+        <span class="chip" data-cat="general">📢 General</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SCENARIO BLOCKS -->
+
+    <!-- PARKING -->
+    <div id="parkingBlock" class="section">
+      <div class="row-label">3. Scenario</div>
+      <div class="chip-row" id="psRow">
+        <span class="chip on-blue" data-ps="full">🔴 Lots full</span>
+        <span class="chip" data-ps="space">🟢 Lots have space</span>
+        <span class="chip" data-ps="nizaam">📋 Parking Nizaam</span>
+      </div>
+      <div id="lotSection">
+        <div class="sub-label" id="lotNote">Select lots that are full:</div>
+        <div class="lot-grid" id="lotGrid">
+          <div class="lot-chip" data-lot="Masjid School Parking"><span class="dot"></span>Masjid School Parking</div>
+          <div class="lot-chip" data-lot="Church of Latter Day Saints"><span class="dot"></span>Church of Latter Day Saints</div>
+          <div class="lot-chip" data-lot="Elvis Stojko Arena"><span class="dot"></span>Elvis Stojko Arena</div>
+          <div class="lot-chip" data-lot="Lauremont School"><span class="dot"></span>Lauremont School</div>
+          <div class="lot-chip" data-lot="Loblaws"><span class="dot"></span>Loblaws</div>
+        </div>
+      </div>
+      <div id="nizaamNote" class="hidden"><p class="auto-note">Full daily parking nizaam generated automatically.</p></div>
+    </div>
+
+    <!-- FLOW NIZAAM -->
+    <div id="flowNizaamBlock" class="section hidden">
+      <div class="row-label">3. Flow Nizaam</div>
+      <p class="auto-note">Full entry, ITS and exit nizaam generated automatically.</p>
+    </div>
+
+    <!-- ENTRY & FLOW -->
+    <div id="entryBlock" class="section hidden">
+      <div class="row-label">3. Scenario</div>
+      <div class="chip-row">
+        <span class="chip on-blue">🚶 Entry flow (Gents & Ladies)</span>
+      </div>
+    </div>
+
+    <!-- NIYAZ -->
+    <div id="niyazBlock" class="section hidden">
+      <div class="row-label">3. Scenario</div>
+      <div class="chip-row" id="niyazRow">
+        <span class="chip on-blue" data-ns="nizaam">🍽️ Niyaz Nizaam</span>
+        <span class="chip" data-ns="registration">📋 Registration reminder</span>
+      </div>
+      <div id="niyazToggleWrap">
+        <div class="sub-label">Include meals:</div>
+        <div class="toggle-row">
+          <div class="toggle-chip on-green" id="toggleAfternoon">🌅 Afternoon Niyaz</div>
+          <div class="toggle-chip on-green" id="toggleRaat">🌙 Raat Niyaz</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEHAT -->
+    <div id="sehatBlock" class="section hidden">
+      <div class="row-label">3. Scenario</div>
+      <div class="chip-row" id="sehatRow">
+        <span class="chip on-blue" data-sc="open">🏥 Mahal us Shifa open</span>
+        <span class="chip" data-sc="emergency">🚨 Medical emergency</span>
+        <span class="chip" data-sc="services">💊 Health camp services</span>
+      </div>
+    </div>
+
+    <!-- RAHAT -->
+    <div id="rahatBlock" class="section hidden">
+      <div class="row-label">3. Rahat Nizaam</div>
+      <p class="auto-note">Full Rahat nizaam generated automatically.</p>
+    </div>
+
+    <!-- GENERAL -->
+    <div id="generalBlock" class="section hidden">
+      <div class="row-label">3. Scenario</div>
+      <div class="chip-row" id="generalRow">
+        <span class="chip on-blue" data-gs="update">📋 General daily update</span>
+        <span class="chip" data-gs="helpline">📞 Helpline reminder</span>
+        <span class="chip" data-gs="comms">📢 Comms protocol</span>
+        <span class="chip" data-gs="waaz">🕐 Waaz timing</span>
+      </div>
+      <div id="parkingToggleWrap">
+        <div class="sub-label">Options:</div>
+        <div class="toggle-row">
+          <div class="toggle-chip on-blue" id="toggleParking">🅿️ Include parking details</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- TONE -->
+    <div class="section">
+      <div class="row-label">4. Tone</div>
+      <div class="tone-grid" id="toneGrid">
+        <div class="tone-chip on" data-tone="standard">📋 Standard update</div>
+        <div class="tone-chip" data-tone="attention">⚠️ Attention required</div>
+        <div class="tone-chip" data-tone="urgent">🚨 Urgent reminder</div>
+        <div class="tone-chip" data-tone="instructions">📌 Few important instructions</div>
+        <div class="tone-chip" data-tone="salaam">🌹 Salaam-e-Jameel</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- PREVIEW -->
+    <div class="preview-wrap">
+      <div class="preview-label"><span class="live-dot"></span> Live preview</div>
+      <div class="preview-msg" id="preview">Select options above to generate your message...</div>
+    </div>
+    <div class="char-count" id="charCount"></div>
+
+    <button class="copy-btn" id="copyBtn" onclick="copyMsg()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      Copy message
+    </button>
+
+  </div>
+</div>
+
+<script>
+const LOTS = {
+  "Masjid School Parking":       { addr:"8919 Bayview Ave", walk:null,     km:null },
+  "Church of Latter Day Saints": { addr:"108 Briggs Ave",   walk:"15 min", km:"1.0 km" },
+  "Elvis Stojko Arena":          { addr:"350 16th Ave",     walk:"28 min", km:"1.9 km" },
+  "Lauremont School":            { addr:"8569 Bayview Ave", walk:"14 min", km:"900 m" },
+  "Loblaws":                     { addr:"301 High Tech Rd", walk:"13 min", km:"800 m" },
+};
+const PRIMARY = ["Church of Latter Day Saints","Elvis Stojko Arena","Lauremont School","Loblaws"];
+const SIGNOFF = "\n\n_Anjuman-e-Burhani, Toronto Ashara 1448H_";
+const PKG_FOOTER = "\n🚫 *No parking is permitted on Masjid premises until Ashura.*";
+
+let S = {
+  cat:"parking", ps:"full", lots:[], sehatSc:"open",
+  niyazSc:"nizaam", generalSc:"update",
+  tone:"standard", day:"", time:"",
+  showAfternoon:true, showRaat:true, showParking:true
+};
+
+function nowStr() {
+  const d=new Date(); let h=d.getHours(),m=d.getMinutes();
+  const ap=h>=12?"PM":"AM"; h=h%12||12;
+  return `${h}:${m<10?"0"+m:m} ${ap}`;
+}
+function timeStr() { return !S.time?"":S.time==="current"?nowStr():S.time; }
+function dayParts() {
+  if(!S.day) return {i:"",g:""};
+  const p=S.day.split("|"); return {i:p[0].trim(),g:p[1].trim()};
+}
+function hdr(heading) {
+  const {i,g}=dayParts(); const t=timeStr();
+  let tp="";
+  if(S.tone==="attention") tp="⚠️ ATTENTION REQUIRED\n";
+  if(S.tone==="urgent")    tp="🚨 URGENT REMINDER\n";
+  if(S.tone==="instructions") tp="📌 FEW IMPORTANT INSTRUCTIONS\n";
+  let ds="";
+  if(i) ds=` — ${i.toUpperCase()} | ${g.toUpperCase()}`;
+  if(t) ds+=(ds?" | ":" — ")+t;
+  const sl=S.tone==="salaam"?"\nSalaam-e-Jameel\n":"";
+  return `${tp}${heading}${ds}${sl}`;
+}
+
+function msgParking() {
+  if(S.ps==="nizaam") return msgParkingNizaam();
+  const h=hdr("🅿️ PARKING UPDATE"); const l=S.lots;
+  let b="";
+  if(S.ps==="full"){
+    if(!l.length){b="\nThe following parking lot(s) are now *full:*\n\n_(Select lots above)_";}
+    else{
+      b="\nThe following parking lot(s) are now *full:*\n\n";
+      l.forEach(x=>{b+=`🔴 *${x}* — ${LOTS[x].addr}\n`;});
+      const alts=PRIMARY.filter(x=>!l.includes(x));
+      if(alts.length){b+="\nMumineen are requested to use alternative parking:\n\n";alts.forEach(x=>{const i=LOTS[x];b+=`🟢 *${x}* — ${i.addr} (${i.walk} walk · ${i.km})\n`;});}
+    }
+  } else {
+    if(!l.length){b="\nThe following parking lot(s) have *space available:*\n\n_(Select lots above)_";}
+    else{b="\nThe following parking lot(s) have *space available:*\n\n";l.forEach(x=>{const i=LOTS[x];b+=`🟢 *${x}* — ${i.addr}${i.walk?` (${i.walk} walk · ${i.km})`:""}\n`;});}
+  }
+  return h+b+"\n"+PKG_FOOTER;
+}
+
+function msgParkingNizaam() {
+  return hdr("🅿️ PARKING NIZAAM")+`\nTo assist mumineen and help ensure smooth traffic flow, please review the parking and drop-off arrangements below.\n\n🅿️ *Free Parking Options*\n• Nearby street parking (please follow all City of Richmond Hill parking regulations)\n• Lauremont School – 8569 Bayview Ave (14 min walk / 900 m)\n• Loblaws – 301 High Tech Rd (13 min walk / 800 m)\n  _(Please use free spaces away from store traffic lanes)_\n\n🅿️ *Additional Designated Free Parking*\n• Church of Latter Day Saints – 108 Briggs Ave (15 min walk / 1.0 km)\n• Elvis Stojko Arena – 350 16th Ave (28 min walk / 1.9 km)\n\n📍 *Drop-Off at Masjid School*\nFamilies, seniors, and mumineen with medical conditions may be dropped off at the Masjid School only when traffic conditions permit.\n\n• Enter via the South Entrance\n• Follow the circular driveway\n• Exit via the North Entrance\n• No left turn onto Bayview Ave — proceed North\n\n📍 *Recommended Alternative Drop-Off Locations*\nTo reduce congestion at the Masjid School:\n\n• Russell Park – Bantry Ave (across from the Masjid)\n• Dar ul Imarat – Queensmill Ct (Amil Saheb Residence)\n\n⚠️ *Important Reminders*\n🚫 No stopping or drop-off on Bayview Avenue\n🚫 No parking on Masjid premises until Ashura\n\nYour cooperation will help ensure the safety and convenience of all attendees.`;
+}
+
+function msgFlowNizaam() {
+  return hdr("🚶 FLOW NIZAAM")+`\nTo assist mumineen and help ensure smooth entry and exit, please review the arrangements below.\n\n🪪 *ITS Scanning*\n• A physical ITS card is mandatory for entry — please have it ready at the gate\n• Digital cards will only be accepted in extenuating circumstances\n• Self-scanning is not available during Ashara — all mumineen will be scanned by a Khidmatguzaar at the gate\n\n🚹 *Gents Entry*\n• Arrive at the Masjid and follow signage to your gate\n• *G1 / G2* — Entry into Masjid and Sehan\n• *G3* — Men's tent behind Qibla (also for Rahat and overflow if Masjid and Sehan is full)\n\n🚺 *Ladies Entry*\n• Arrive at the Masjid and follow signage to your gate\n• *L1* — Masjid Main Entrance (Misaaq wala Bairo)\n• *L2* — Ladies Tent (Bairo with kids 5+ and general ladies)\n• *L3* — Ladies Rahat in Tent\n• *L4* — Atfal in School (ladies with kids under 5)\n\n🚪 *Exit — After Waaz / Jaman*\n• A staggered exit plan is in place\n• BGI members will guide the flow — please follow their directions\n• Mumineen are requested to exit in an orderly manner\n\n⚠️ *Important*\n• Scanning opens at *9:00 AM* — Waaz begins at *10:30 AM*\n• Arrive early to avoid congestion at the gates\n\nYour cooperation will help ensure the safety and smooth flow of all mumineen.`;
+}
+
+function msgEntry() {
+  return hdr("🚪 ENTRY & FLOW UPDATE")+"\n\n🚹 *Gents Entry:*\n• Arrive at the Masjid and follow signage to your gate\n• *G1 / G2* — Entry into Masjid and Sehan\n• *G3* — Men's tent behind Qibla (also for Rahat and overflow if Masjid and Sehan is full)\n\n🚺 *Ladies Entry:*\n• Arrive at the Masjid and follow signage to your gate\n• *L1* — Masjid Main Entrance (Misaaq wala Bairo)\n• *L2* — Ladies Tent (Bairo with kids 5+ and general ladies)\n• *L3* — Ladies Rahat in Tent\n• *L4* — Atfal in School (ladies with kids under 5)";
+}
+
+function msgNiyaz() {
+  if(S.niyazSc==="registration"){
+    return hdr("🍽️ NIYAZ UPDATE")+"\n\nMumineen are requested to *register for Niyaz* via the registration form. This helps us better arrange the Mawaid Nizaam and avoid food wastage.\n\n🔗 Registration: https://ashara1448htoronto.web.app/";
+  }
+  const h=hdr("🍽️ NIYAZ NIZAAM");
+  if(!S.showAfternoon&&!S.showRaat) return h+"\n\n_(Select at least one meal above)_";
+  let b="\nThe following Niyaz arrangements have been made for today.\n";
+  if(S.showAfternoon) b+="\n🌅 *Afternoon Niyaz (Lunch)*\nServed after Waaz ends.\n\n• *Gents / Rahat* — Tent behind the Masjid\n• *Ladies / Rahat* — Front parking lot tent\n";
+  if(S.showRaat) b+="\n🌙 *Raat Niyaz (Dinner)*\nServed after Evening Majlis at *6:30 PM*.\n\n• *Gents / Rahat* — Tent behind the Masjid\n• *Ladies / Rahat* — Front parking lot tent\n";
+  b+="\n🪑 *Thaal Nizaam*\nA minimum of 8 mumineen must be seated at a thaal before food is served. Mumineen are requested to cooperate with this nizaam.\n\n📋 *Niyaz Registration*\nWe request all mumineen to register for Niyaz via the registration form. This helps us better arrange the Mawaid Nizaam and avoid food wastage.\n\n🔗 Registration: https://ashara1448htoronto.web.app/\n\nYour cooperation is greatly appreciated.";
+  return h+b;
+}
+
+function msgSehat() {
+  const h=hdr("🏥 SEHAT UPDATE");
+  const msgs={
+    open:"🏥 *Mahal us Shifa* is open today from *9:00 AM* until after Raat Majlis.\n\nAll services are *FREE*. First come, first served — no appointment needed.\n\nFor emergencies: Dr. Shabbir bhai Rangwala — 647-869-7952",
+    emergency:"🚨 *Medical Emergency Protocol:*\n\n1. Find nearest medical Khidmatguzaar (stationed throughout)\n2. On-the-spot assessment\n3. BGI transport to Mahal us Shifa if needed\n4. Life-threatening: *call 911*\n\n🏥 Nearest ER: Mackenzie Health Richmond Hill Hospital — 10 Trench St",
+    services:"🏥 *Mahal us Shifa services available:*\n\nFirst aid · Health screening · Physiotherapy\nDental & optometrist · Pharmacist · Dietician\nFamily physicians · Internal medicine\n\nAll services FREE. Dedicated section in ladies tent — separate entrance.",
+  };
+  return h+"\n\n"+(msgs[S.sehatSc]||"");
+}
+
+function msgRahat() {
+  return hdr("🤲 RAHAT NIZAAM")+"\n\nThe following Rahat Nizaam has been put in place for Ashara 1448H Toronto.\n\n📍 *Rahat Locations*\n• *Gents Rahat* — Tent behind the Masjid\n• *Ladies Rahat* — Front parking lot tent\n\n🚗 *Drop-Off for Seniors*\nSeniors and Mumineen with medical conditions are requested to use the Masjid School drop-off point. Rahat volunteers will be available at the drop-off to assist and escort you to the Rahat area.\n\n♿ *Wheelchair Service*\nWheelchair assistance is available from the drop-off point to the Rahat area. Assistance is also available during Waaz if needed.\n\n🧥 *Please Note*\nThe Rahat area is air-conditioned. Seniors — particularly Muminaat Behno — are requested to bring a sweater or shawl in case they feel cold. Those with back pain may bring back support.\n\nYour comfort and well-being is our priority. Rahat volunteers are here to assist you.";
+}
+
+function msgGeneral() {
+  const gs=S.generalSc;
+  if(gs==="helpline") return hdr("📢 ASHARA UPDATE")+"\n\n📞 *Human Helpline — 437-427-4662*\n\nFor general information and event assistance:\n• Morning (Ashara days): 8:00 AM – 10:00 AM\n• Afternoon: 2:00 PM – 7:00 PM";
+  if(gs==="comms") return hdr("📢 COMMUNICATIONS PROTOCOL — ASHARA 1448H TORONTO")+"\n\nThe following nizaam has been put in place for all leads to request daily broadcast of messages to the community.\n\nPlease follow the process below when sending any community communication:\n\n1️⃣ *Draft your message* — prepare the message you wish to broadcast to the community\n\n2️⃣ *Get approval* — where applicable, ensure the message has been reviewed and approved before sending\n\n3️⃣ *Send to Communications Lead* — send your draft message via *private WhatsApp message* to Mustansir bhai Mukhi for broadcast to the community channel and applicable WhatsApp groups\n\n⚡ *For Urgent Messages*\nIf the matter is time-critical, coordinate directly via *walkie-talkie*. Alternatively, write *URGENT* at the top of your WhatsApp message to Mustansir bhai Mukhi so it is prioritised immediately.\n\nYour cooperation ensures timely and accurate information reaches all mumineen.";
+  if(gs==="waaz") return hdr("📢 ASHARA UPDATE")+"\n\n📋 *Today's Timings:*\n\n• Entry / Scanning: *9:00 AM*\n• Waaz: *10:30 AM*\n• Afternoon Niyaz (Lunch): After Waaz ends\n• Evening Majlis: *6:30 PM*\n• Raat Niyaz (Dinner): After Evening Majlis\n• Maghrib / Isha Namaz: After Raat Niyaz\n\nMumineen are requested to arrive early.";
+  const h=hdr("📢 ASHARA UPDATE");
+  let b="\nPlease note the following arrangements for today.\n\n🕐 *Today's Schedule*\n• Entry / Scanning opens: *9:00 AM*\n• Waaz begins: *10:30 AM*\n• Afternoon Niyaz (Lunch): After Waaz ends\n• Evening Majlis: *6:30 PM*\n• Raat Niyaz (Dinner): After Evening Majlis\n• Maghrib / Isha Namaz: After Raat Niyaz";
+  if(S.showParking) b+="\n\n🅿️ *Parking*\n• Nearby street parking (please follow City of Richmond Hill parking regulations)\n• Lauremont School – 8569 Bayview Ave (14 min walk / 900 m)\n• Loblaws – 301 High Tech Rd (13 min walk / 800 m)\n• Church of Latter Day Saints – 108 Briggs Ave (15 min walk / 1.0 km)\n• Elvis Stojko Arena – 350 16th Ave (28 min walk / 1.9 km)\n🚫 No parking on Masjid premises until Ashura.";
+  b+="\n\n📞 *Need Help?*\nHuman Helpline: *437-427-4662*\n• Morning: 8:00 AM – 10:00 AM\n• Afternoon: 2:00 PM – 7:00 PM\n\nYour cooperation and patience is greatly appreciated.";
+  return h+b;
+}
+
+function buildMsg() {
+  let m="";
+  if(S.cat==="parking")      m=msgParking();
+  else if(S.cat==="flow_nizaam") m=msgFlowNizaam();
+  else if(S.cat==="entry")   m=msgEntry();
+  else if(S.cat==="niyaz")   m=msgNiyaz();
+  else if(S.cat==="sehat")   m=msgSehat();
+  else if(S.cat==="rahat")   m=msgRahat();
+  else if(S.cat==="general") m=msgGeneral();
+  return m+SIGNOFF;
+}
+
+function render() {
+  const msg=buildMsg();
+  document.getElementById("preview").textContent=msg;
+  document.getElementById("charCount").textContent=`${msg.length} characters`;
+}
+
+function copyMsg() {
+  navigator.clipboard.writeText(document.getElementById("preview").textContent).then(()=>{
+    const btn=document.getElementById("copyBtn");
+    btn.classList.add("copied");
+    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+    setTimeout(()=>{btn.classList.remove("copied");btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy message';},2200);
+  });
+}
+
+function showBlocks() {
+  ["parkingBlock","flowNizaamBlock","entryBlock","niyazBlock","sehatBlock","rahatBlock","generalBlock"].forEach(id=>{
+    document.getElementById(id).classList.add("hidden");
+  });
+  const map={parking:"parkingBlock",flow_nizaam:"flowNizaamBlock",entry:"entryBlock",niyaz:"niyazBlock",sehat:"sehatBlock",rahat:"rahatBlock",general:"generalBlock"};
+  if(map[S.cat]) document.getElementById(map[S.cat]).classList.remove("hidden");
+  const pt=document.getElementById("parkingToggleWrap");
+  if(pt) pt.style.display=(S.cat==="general"&&S.generalSc==="update")?"":"none";
+}
+
+function updateParkingScenario() {
+  const show=S.ps==="full"||S.ps==="space";
+  document.getElementById("lotSection").style.display=show?"":"none";
+  document.getElementById("nizaamNote").classList.toggle("hidden",S.ps!=="nizaam");
+  if(show){
+    document.getElementById("lotNote").textContent=S.ps==="full"?"Select lots that are full:":"Select lots with space available:";
+    document.querySelectorAll(".lot-chip").forEach(c=>c.className="lot-chip");
+    S.lots=[];
+  }
+}
+
+// Listeners
+document.getElementById("daySelect").addEventListener("change",e=>{S.day=e.target.value;render();});
+document.getElementById("timeSelect").addEventListener("change",e=>{S.time=e.target.value;render();});
+
+document.getElementById("catRow").addEventListener("click",e=>{
+  const c=e.target.closest("[data-cat]");if(!c)return;
+  document.querySelectorAll("[data-cat]").forEach(x=>x.className="chip");
+  c.classList.add("on"); S.cat=c.dataset.cat; S.lots=[];
+  showBlocks(); render();
+});
+
+document.getElementById("psRow").addEventListener("click",e=>{
+  const c=e.target.closest("[data-ps]");if(!c)return;
+  document.querySelectorAll("[data-ps]").forEach(x=>x.className="chip");
+  c.classList.add("on-blue"); S.ps=c.dataset.ps;
+  updateParkingScenario(); render();
+});
+
+document.getElementById("lotGrid").addEventListener("click",e=>{
+  const c=e.target.closest(".lot-chip");if(!c)return;
+  const lot=c.dataset.lot; const cls=S.ps==="full"?"full-on":"space-on";
+  if(c.classList.contains(cls)){c.classList.remove(cls);S.lots=S.lots.filter(l=>l!==lot);}
+  else{c.classList.add(cls);if(!S.lots.includes(lot))S.lots.push(lot);}
+  render();
+});
+
+document.getElementById("niyazRow").addEventListener("click",e=>{
+  const c=e.target.closest("[data-ns]");if(!c)return;
+  document.querySelectorAll("[data-ns]").forEach(x=>x.className="chip");
+  c.classList.add("on-blue"); S.niyazSc=c.dataset.ns;
+  document.getElementById("niyazToggleWrap").style.display=S.niyazSc==="nizaam"?"":"none";
+  render();
+});
+
+document.getElementById("sehatRow").addEventListener("click",e=>{
+  const c=e.target.closest("[data-sc]");if(!c)return;
+  document.querySelectorAll("#sehatRow [data-sc]").forEach(x=>x.className="chip");
+  c.classList.add("on-blue"); S.sehatSc=c.dataset.sc; render();
+});
+
+document.getElementById("generalRow").addEventListener("click",e=>{
+  const c=e.target.closest("[data-gs]");if(!c)return;
+  document.querySelectorAll("[data-gs]").forEach(x=>x.className="chip");
+  c.classList.add("on-blue"); S.generalSc=c.dataset.gs;
+  const pt=document.getElementById("parkingToggleWrap");
+  if(pt) pt.style.display=S.generalSc==="update"?"":"none";
+  render();
+});
+
+document.getElementById("toggleAfternoon").addEventListener("click",e=>{
+  S.showAfternoon=!S.showAfternoon;
+  e.target.className="toggle-chip"+(S.showAfternoon?" on-green":"");render();
+});
+document.getElementById("toggleRaat").addEventListener("click",e=>{
+  S.showRaat=!S.showRaat;
+  e.target.className="toggle-chip"+(S.showRaat?" on-green":"");render();
+});
+document.getElementById("toggleParking").addEventListener("click",e=>{
+  S.showParking=!S.showParking;
+  e.target.className="toggle-chip"+(S.showParking?" on-blue":"");render();
+});
+
+document.getElementById("toneGrid").addEventListener("click",e=>{
+  const c=e.target.closest("[data-tone]");if(!c)return;
+  document.querySelectorAll("[data-tone]").forEach(x=>x.classList.remove("on"));
+  c.classList.add("on"); S.tone=c.dataset.tone; render();
+});
+
+showBlocks();
+render();
+</script>
+</body>
+</html>
