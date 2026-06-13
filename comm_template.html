@@ -2,72 +2,246 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comms Generator — Ashara 1448H Toronto</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Comms Generator — Ashara 1448H</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F2F2F7; min-height: 100vh; padding: 16px; }
-.app { max-width: 560px; margin: 0 auto; }
-.topbar { background: #0F2744; color: white; padding: 16px 20px; border-radius: 14px 14px 0 0; display: flex; align-items: center; gap: 12px; }
-.topbar-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.topbar-title { font-size: 15px; font-weight: 600; }
-.topbar-sub { font-size: 11px; opacity: 0.6; margin-top: 2px; }
-.body { background: white; border: 1px solid #E5E5EA; border-top: none; border-radius: 0 0 14px 14px; padding: 18px; }
-.section { margin-bottom: 16px; }
-.row-label { font-size: 11px; font-weight: 600; color: #8E8E93; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
-.chip-row { display: flex; flex-wrap: wrap; gap: 7px; }
-.chip { padding: 7px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #D1D1D6; background: #F2F2F7; color: #1C1C1E; transition: all 0.15s; user-select: none; -webkit-tap-highlight-color: transparent; }
-.chip:hover { border-color: #1A4F96; color: #1A4F96; }
-.chip.on { background: #0F2744; color: white; border-color: #0F2744; }
-.chip.on-blue { background: #1A4F96; color: white; border-color: #1A4F96; }
-.divider { border: none; border-top: 1px solid #F2F2F7; margin: 16px 0; }
+:root {
+  --navy: #0F2744;
+  --blue: #1A4F96;
+  --green: #1D9E75;
+  --red: #E24B4A;
+  --bg: #F2F2F7;
+  --card: #FFFFFF;
+  --border: #E5E5EA;
+  --muted: #8E8E93;
+  --text: #1C1C1E;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  overscroll-behavior: none;
+}
+
+/* LAYOUT */
+.screen { display: flex; flex-direction: column; min-height: 100dvh; }
+
+/* HEADER */
+.header {
+  background: var(--navy);
+  color: white;
+  padding: 14px 16px;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+.header-icon { font-size: 22px; }
+.header-title { font-size: 15px; font-weight: 600; line-height: 1.3; }
+.header-sub { font-size: 11px; opacity: 0.6; margin-top: 1px; }
+
+/* SCROLLABLE CONTENT */
+.content { flex: 1; overflow-y: auto; padding: 12px 12px 0; }
+
+/* CARDS */
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+}
+.card-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+
+/* SELECTS */
 .day-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-select { width: 100%; padding: 9px 12px; border-radius: 10px; border: 1px solid #D1D1D6; background: #F2F2F7; font-size: 13px; color: #1C1C1E; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238E8E93' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-select:focus { outline: none; border-color: #1A4F96; }
-.lot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
-.lot-chip { padding: 8px 12px; border-radius: 10px; font-size: 12px; cursor: pointer; border: 1px solid #E5E5EA; background: #F2F2F7; color: #8E8E93; transition: all 0.15s; display: flex; align-items: center; gap: 7px; user-select: none; -webkit-tap-highlight-color: transparent; }
-.lot-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: #D1D1D6; flex-shrink: 0; transition: background 0.15s; }
-.lot-chip.full-on { background: #FCEBEB; color: #6B0000; border-color: #E24B4A; }
-.lot-chip.full-on .dot { background: #E24B4A; }
-.lot-chip.space-on { background: #DFFAF0; color: #085041; border-color: #1D9E75; }
-.lot-chip.space-on .dot { background: #1D9E75; }
-.tone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.tone-chip { padding: 9px 10px; border-radius: 10px; font-size: 12px; cursor: pointer; border: 1px solid #E5E5EA; background: #F2F2F7; color: #8E8E93; text-align: center; transition: all 0.15s; user-select: none; -webkit-tap-highlight-color: transparent; }
-.tone-chip:hover { color: #1C1C1E; border-color: #D1D1D6; }
-.tone-chip.on { background: #1A4F96; color: white; border-color: #1A4F96; }
-.toggle-row { display: flex; gap: 7px; margin-top: 10px; }
-.toggle-chip { flex: 1; padding: 8px 10px; border-radius: 10px; font-size: 12px; cursor: pointer; border: 1px solid #E5E5EA; background: #F2F2F7; color: #8E8E93; text-align: center; transition: all 0.15s; user-select: none; -webkit-tap-highlight-color: transparent; }
-.toggle-chip.on-green { background: #DFFAF0; color: #085041; border-color: #1D9E75; }
-.toggle-chip.on-blue { background: #E0EEFF; color: #0A2E6E; border-color: #1A4F96; }
-.preview-wrap { background: #F2F2F7; border-radius: 12px; padding: 14px; border: 1px solid #E5E5EA; margin-bottom: 8px; }
-.preview-label { font-size: 11px; color: #8E8E93; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-.live-dot { width: 6px; height: 6px; border-radius: 50%; background: #1D9E75; display: inline-block; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-.preview-msg { font-size: 13px; line-height: 1.85; color: #1C1C1E; white-space: pre-wrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-.char-count { font-size: 11px; color: #8E8E93; text-align: right; margin-bottom: 12px; }
-.copy-btn { width: 100%; padding: 13px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; background: #25D366; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
-.copy-btn:hover { background: #1DA851; }
-.copy-btn:active { transform: scale(0.98); }
-.copy-btn.copied { background: #1D9E75; }
-.auto-note { font-size: 11px; color: #8E8E93; font-style: italic; margin-top: 4px; }
-.sub-label { font-size: 11px; font-weight: 600; color: #8E8E93; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; margin-top: 12px; }
-.hidden { display: none; }
+select {
+  width: 100%;
+  padding: 11px 32px 11px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238E8E93' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+}
+select:focus { outline: none; border-color: var(--blue); }
+
+/* CHIP ROWS */
+.chip-row { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip {
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  transition: all 0.15s;
+  user-select: none;
+  white-space: nowrap;
+}
+.chip.on     { background: var(--navy); color: white; border-color: var(--navy); }
+.chip.on-blue { background: var(--blue); color: white; border-color: var(--blue); }
+
+/* LOT GRID */
+.lot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 10px; }
+.lot-chip {
+  padding: 10px 11px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 8px;
+  user-select: none;
+}
+.lot-chip .dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--border); flex-shrink: 0;
+  transition: background 0.15s;
+}
+.lot-chip.full-on  { background: #FCEBEB; color: #6B0000; border-color: var(--red); }
+.lot-chip.full-on .dot  { background: var(--red); }
+.lot-chip.space-on { background: #DFFAF0; color: #085041; border-color: var(--green); }
+.lot-chip.space-on .dot { background: var(--green); }
+
+/* TONE GRID */
+.tone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.tone-chip {
+  padding: 11px 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  text-align: center;
+  transition: all 0.15s;
+  user-select: none;
+}
+.tone-chip.on { background: var(--blue); color: white; border-color: var(--blue); }
+
+/* TOGGLES */
+.toggle-row { display: flex; gap: 8px; margin-top: 10px; }
+.toggle-chip {
+  flex: 1;
+  padding: 11px 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  text-align: center;
+  transition: all 0.15s;
+  user-select: none;
+}
+.toggle-chip.on-green { background: #DFFAF0; color: #085041; border-color: var(--green); }
+.toggle-chip.on-blue  { background: #E0EEFF; color: #0A2E6E; border-color: var(--blue); }
+
+/* SUB LABEL */
+.sub-label {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.07em;
+  margin-top: 12px; margin-bottom: 6px;
+}
+.auto-note { font-size: 12px; color: var(--muted); font-style: italic; }
+
+/* PREVIEW CARD */
+.preview-card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+}
+.preview-label {
+  font-size: 11px; color: var(--muted);
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); display: inline-block;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+.preview-msg {
+  font-size: 14px; line-height: 1.85;
+  color: var(--text); white-space: pre-wrap;
+  font-family: inherit;
+}
+.char-count {
+  font-size: 11px; color: var(--muted);
+  text-align: right; margin-top: 6px;
+}
+
+/* STICKY FOOTER */
+.footer {
+  position: sticky;
+  bottom: 0;
+  background: var(--bg);
+  padding: 10px 12px;
+  padding-bottom: calc(10px + var(--safe-bottom));
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.copy-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: #25D366;
+  color: white;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.15s;
+  letter-spacing: 0.01em;
+}
+.copy-btn:active { transform: scale(0.98); background: #1DA851; }
+.copy-btn.copied { background: var(--green); }
+
+.hidden { display: none !important; }
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="topbar">
-    <div class="topbar-icon">💬</div>
+<div class="screen">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-icon">💬</div>
     <div>
-      <div class="topbar-title">Comms Message Generator</div>
-      <div class="topbar-sub">Ashara 1448H Toronto · Anjuman-e-Burhani</div>
+      <div class="header-title">Comms Message Generator</div>
+      <div class="header-sub">Ashara 1448H Toronto · Anjuman-e-Burhani</div>
     </div>
   </div>
-  <div class="body">
+
+  <!-- SCROLLABLE CONTENT -->
+  <div class="content">
 
     <!-- DAY & TIME -->
-    <div class="section">
-      <div class="row-label">1. Day & Time</div>
+    <div class="card">
+      <div class="card-label">1. Day & Time</div>
       <div class="day-row">
         <select id="daySelect">
           <option value="">— Moharram day —</option>
@@ -105,11 +279,9 @@ select:focus { outline: none; border-color: #1A4F96; }
       </div>
     </div>
 
-    <div class="divider"></div>
-
     <!-- CATEGORY -->
-    <div class="section">
-      <div class="row-label">2. Category</div>
+    <div class="card">
+      <div class="card-label">2. Category</div>
       <div class="chip-row" id="catRow">
         <span class="chip on" data-cat="parking">🅿️ Parking</span>
         <span class="chip" data-cat="flow_nizaam">🚶 Flow Nizaam</span>
@@ -121,13 +293,11 @@ select:focus { outline: none; border-color: #1A4F96; }
       </div>
     </div>
 
-    <div class="divider"></div>
-
     <!-- SCENARIO BLOCKS -->
 
     <!-- PARKING -->
-    <div id="parkingBlock" class="section">
-      <div class="row-label">3. Scenario</div>
+    <div id="parkingBlock" class="card">
+      <div class="card-label">3. Scenario</div>
       <div class="chip-row" id="psRow">
         <span class="chip on-blue" data-ps="full">🔴 Lots full</span>
         <span class="chip" data-ps="space">🟢 Lots have space</span>
@@ -136,33 +306,33 @@ select:focus { outline: none; border-color: #1A4F96; }
       <div id="lotSection">
         <div class="sub-label" id="lotNote">Select lots that are full:</div>
         <div class="lot-grid" id="lotGrid">
-          <div class="lot-chip" data-lot="Masjid School Parking"><span class="dot"></span>Masjid School Parking</div>
-          <div class="lot-chip" data-lot="Church of Latter Day Saints"><span class="dot"></span>Church of Latter Day Saints</div>
+          <div class="lot-chip" data-lot="Masjid School Parking"><span class="dot"></span>Masjid School</div>
+          <div class="lot-chip" data-lot="Church of Latter Day Saints"><span class="dot"></span>Church of LDS</div>
           <div class="lot-chip" data-lot="Elvis Stojko Arena"><span class="dot"></span>Elvis Stojko Arena</div>
           <div class="lot-chip" data-lot="Lauremont School"><span class="dot"></span>Lauremont School</div>
           <div class="lot-chip" data-lot="Loblaws"><span class="dot"></span>Loblaws</div>
         </div>
       </div>
-      <div id="nizaamNote" class="hidden"><p class="auto-note">Full daily parking nizaam generated automatically.</p></div>
+      <div id="nizaamNote" class="hidden"><p class="auto-note" style="margin-top:10px">Full parking nizaam generated automatically from day selected above.</p></div>
     </div>
 
     <!-- FLOW NIZAAM -->
-    <div id="flowNizaamBlock" class="section hidden">
-      <div class="row-label">3. Flow Nizaam</div>
+    <div id="flowNizaamBlock" class="card hidden">
+      <div class="card-label">3. Flow Nizaam</div>
       <p class="auto-note">Full entry, ITS and exit nizaam generated automatically.</p>
     </div>
 
     <!-- ENTRY & FLOW -->
-    <div id="entryBlock" class="section hidden">
-      <div class="row-label">3. Scenario</div>
+    <div id="entryBlock" class="card hidden">
+      <div class="card-label">3. Scenario</div>
       <div class="chip-row">
         <span class="chip on-blue">🚶 Entry flow (Gents & Ladies)</span>
       </div>
     </div>
 
     <!-- NIYAZ -->
-    <div id="niyazBlock" class="section hidden">
-      <div class="row-label">3. Scenario</div>
+    <div id="niyazBlock" class="card hidden">
+      <div class="card-label">3. Scenario</div>
       <div class="chip-row" id="niyazRow">
         <span class="chip on-blue" data-ns="nizaam">🍽️ Niyaz Nizaam</span>
         <span class="chip" data-ns="registration">📋 Registration reminder</span>
@@ -177,8 +347,8 @@ select:focus { outline: none; border-color: #1A4F96; }
     </div>
 
     <!-- SEHAT -->
-    <div id="sehatBlock" class="section hidden">
-      <div class="row-label">3. Scenario</div>
+    <div id="sehatBlock" class="card hidden">
+      <div class="card-label">3. Scenario</div>
       <div class="chip-row" id="sehatRow">
         <span class="chip on-blue" data-sc="open">🏥 Mahal us Shifa open</span>
         <span class="chip" data-sc="emergency">🚨 Medical emergency</span>
@@ -187,14 +357,14 @@ select:focus { outline: none; border-color: #1A4F96; }
     </div>
 
     <!-- RAHAT -->
-    <div id="rahatBlock" class="section hidden">
-      <div class="row-label">3. Rahat Nizaam</div>
+    <div id="rahatBlock" class="card hidden">
+      <div class="card-label">3. Rahat Nizaam</div>
       <p class="auto-note">Full Rahat nizaam generated automatically.</p>
     </div>
 
     <!-- GENERAL -->
-    <div id="generalBlock" class="section hidden">
-      <div class="row-label">3. Scenario</div>
+    <div id="generalBlock" class="card hidden">
+      <div class="card-label">3. Scenario</div>
       <div class="chip-row" id="generalRow">
         <span class="chip on-blue" data-gs="update">📋 General daily update</span>
         <span class="chip" data-gs="helpline">📞 Helpline reminder</span>
@@ -209,11 +379,9 @@ select:focus { outline: none; border-color: #1A4F96; }
       </div>
     </div>
 
-    <div class="divider"></div>
-
     <!-- TONE -->
-    <div class="section">
-      <div class="row-label">4. Tone</div>
+    <div class="card">
+      <div class="card-label">4. Tone</div>
       <div class="tone-grid" id="toneGrid">
         <div class="tone-chip on" data-tone="standard">📋 Standard update</div>
         <div class="tone-chip" data-tone="attention">⚠️ Attention required</div>
@@ -223,22 +391,24 @@ select:focus { outline: none; border-color: #1A4F96; }
       </div>
     </div>
 
-    <div class="divider"></div>
-
     <!-- PREVIEW -->
-    <div class="preview-wrap">
+    <div class="preview-card">
       <div class="preview-label"><span class="live-dot"></span> Live preview</div>
       <div class="preview-msg" id="preview">Select options above to generate your message...</div>
+      <div class="char-count" id="charCount"></div>
     </div>
-    <div class="char-count" id="charCount"></div>
 
+  </div><!-- end .content -->
+
+  <!-- STICKY FOOTER COPY BUTTON -->
+  <div class="footer">
     <button class="copy-btn" id="copyBtn" onclick="copyMsg()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
       Copy message
     </button>
-
   </div>
-</div>
+
+</div><!-- end .screen -->
 
 <script>
 const LOTS = {
@@ -327,13 +497,12 @@ function msgNiyaz() {
 }
 
 function msgSehat() {
-  const h=hdr("🏥 SEHAT UPDATE");
   const msgs={
     open:"🏥 *Mahal us Shifa* is open today from *9:00 AM* until after Raat Majlis.\n\nAll services are *FREE*. First come, first served — no appointment needed.\n\nFor emergencies: Dr. Shabbir bhai Rangwala — 647-869-7952",
     emergency:"🚨 *Medical Emergency Protocol:*\n\n1. Find nearest medical Khidmatguzaar (stationed throughout)\n2. On-the-spot assessment\n3. BGI transport to Mahal us Shifa if needed\n4. Life-threatening: *call 911*\n\n🏥 Nearest ER: Mackenzie Health Richmond Hill Hospital — 10 Trench St",
     services:"🏥 *Mahal us Shifa services available:*\n\nFirst aid · Health screening · Physiotherapy\nDental & optometrist · Pharmacist · Dietician\nFamily physicians · Internal medicine\n\nAll services FREE. Dedicated section in ladies tent — separate entrance.",
   };
-  return h+"\n\n"+(msgs[S.sehatSc]||"");
+  return hdr("🏥 SEHAT UPDATE")+"\n\n"+(msgs[S.sehatSc]||"");
 }
 
 function msgRahat() {
@@ -374,8 +543,11 @@ function copyMsg() {
   navigator.clipboard.writeText(document.getElementById("preview").textContent).then(()=>{
     const btn=document.getElementById("copyBtn");
     btn.classList.add("copied");
-    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-    setTimeout(()=>{btn.classList.remove("copied");btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy message';},2200);
+    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied to clipboard!';
+    setTimeout(()=>{
+      btn.classList.remove("copied");
+      btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy message';
+    },2500);
   });
 }
 
@@ -400,7 +572,6 @@ function updateParkingScenario() {
   }
 }
 
-// Listeners
 document.getElementById("daySelect").addEventListener("change",e=>{S.day=e.target.value;render();});
 document.getElementById("timeSelect").addEventListener("change",e=>{S.time=e.target.value;render();});
 
