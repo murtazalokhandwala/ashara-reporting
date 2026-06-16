@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -311,23 +312,9 @@ function validate() {
   return valid;
 }
 
-// ── SUBMIT WITH RETRY ───────────────────────────────────────────────────────
-async function submitWithRetry(payload, maxRetries=3, delayMs=2000) {
-  for (let i = 1; i <= maxRetries; i++) {
-    try {
-      const resp = await fetch(APPSCRIPT_URL, {
-        method:'POST',
-        headers:{'Content-Type':'text/plain;charset=utf-8'},
-        body: JSON.stringify(payload)
-      });
-      if (resp.ok) return true;
-    } catch(e) {
-      if (i < maxRetries) await new Promise(r => setTimeout(r, delayMs * i));
-    }
-  }
-  return false;
-}
-
+// ── SUBMIT — SINGLE ATTEMPT, NO RETRY ──────────────────────────────────────
+// Retry logic was causing duplicate rows because AppScript was succeeding
+// but the browser timed out waiting. Now: one attempt, show success regardless.
 async function submitForm() {
   if (submitting) return;
   if (!validate()) return;
@@ -344,7 +331,24 @@ async function submitForm() {
   answers.submissionTime = now.toLocaleTimeString('en-CA', { timeZone:'America/Toronto', hour:'2-digit', minute:'2-digit' });
   answers.comments       = document.getElementById('comments').value.trim();
 
-  await submitWithRetry(answers);
+  // Unique submission ID to prevent duplicates on AppScript side
+  answers.submissionId   = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+  // Single fetch with 30s timeout — no retry
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+    await fetch(APPSCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(answers),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+  } catch(e) {
+    // Fail silently — show success screen regardless
+    // AppScript may have received it even if browser timed out
+  }
 
   document.getElementById('formDiv').style.display = 'none';
   document.getElementById('successDiv').style.display = 'block';
